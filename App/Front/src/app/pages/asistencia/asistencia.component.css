@@ -1,0 +1,115 @@
+.page-container {
+  background: #f8fafc;
+  padding: 1rem 0;
+}
+
+.page-header {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 2rem;
+}
+
+.header-content h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.breadcrumbs {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  align-items: center;
+}
+
+.filter-select, .filter-date {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.export-btn {
+  padding: 0.75rem 1.5rem;
+  background: #B5242B;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.kpi-card.presente { border-top: 6px solid #10b981; }
+.kpi-card.retraso { border-top: 6px solid #f59e0b; }
+.kpi-card.ausente { border-top: 6px solid #ef4444; }
+
+.kpi-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.kpi-label {
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.asistencia-table {
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.asistencia-table th {
+  background: #f8fafc;
+  padding: 1.5rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.asistencia-table td {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.estado-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.estado-badge.presente { background: #d1fae5; color: #065f46; }
+.estado-badge.retraso { background: #fef3c7; color: #92400e; }
+.estado-badge.ausente { background: #fee2e2; color: #991b1b; }

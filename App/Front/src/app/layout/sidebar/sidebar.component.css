@@ -1,0 +1,32 @@
+.sidebar {
+  padding: 1.5rem 0;
+}
+
+.nav-item {
+  display: block;
+  padding: 1rem 1.5rem;
+  color: #64748b;
+  text-decoration: none;
+  border-radius: 0 20px 20px 0;
+  margin: 0.25rem 0;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  background: #FEE2E2;
+  color: #B5242B;
+  transform: translateX(4px);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, #B5242B, #E53935);
+  color: white;
+  box-shadow: 4px 0 15px rgba(181,36,43,0.3);
+}
+
+.nav-item i {
+  margin-right: 0.75rem;
+  width: 20px;
+}
+

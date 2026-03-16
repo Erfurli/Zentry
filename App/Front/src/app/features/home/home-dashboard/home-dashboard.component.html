@@ -1,0 +1,49 @@
+<div class="dashboard">
+  <div class="dashboard-container">
+    <!-- HEADER -->
+    <header class="dashboard-header">
+      <div class="logo">Z</div>
+      <div class="welcome-section">
+        <h1>¡Hola, {{ summary.userName }}!</h1>
+        <p>Resumen de tu jornada laboral</p>
+      </div>
+    </header>
+
+    <!-- STATS CARDS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Saldo Vacaciones</div>
+        <div class="stat-value">{{ summary.vacationBalance }}<span class="stat-unit"> días</span></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Horas Hoy</div>
+        <div class="stat-value">{{ summary.todayHours }}<span class="stat-unit"> h</span></div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-label">Próximas Vacaciones</div>
+        <div class="stat-value">{{ summary.upcomingVacations[0]?.dates || 'Ninguna' }}</div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <section class="actions-section">
+      <h3 class="actions-title"><i class="fa-solid fa-bolt" style="color: #B5242B;"></i> Acciones rápidas</h3>
+      <div class="actions-grid">
+        <button class="action-btn primary-btn" (click)="fichar('entrada')">
+          <i class="fa-solid fa-door-open" style="color: rgb(255, 255, 255);"></i> Fichar Entrada
+        </button>
+        <button class="action-btn primary-btn" (click)="fichar('salida')">
+          <i class="fa-solid fa-door-closed" style="color: rgb(255, 255, 255);"></i> Fichar Salida
+        </button>
+        <button class="action-btn primary-btn" (click)="solicitar('vacaciones')">
+          <i class="fa-solid fa-umbrella-beach" style="color: rgb(255, 255, 255);"></i> Solicitar Vacaciones
+        </button>
+        <button class="action-btn primary-btn" (click)="solicitar('ausencia')">
+          <i class="fa-solid fa-calendar-xmark" style="color: rgb(255, 255, 255);"></i> Solicitar Ausencia
+        </button>
+      </div>
+    </section>
+  </div>
+</div>

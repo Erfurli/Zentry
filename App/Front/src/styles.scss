@@ -1,0 +1,38 @@
+@use '@angular/material' as mat;
+
+// Color primario ZENTRY #B5242B
+$zentry-primary: mat.define-palette(mat.$indigo-palette, 700);
+$zentry-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$zentry-warn: mat.define-palette(mat.$red-palette);
+
+// Tema claro ZENTRY
+$zentry-light-theme: mat.define-light-theme((
+  color: (
+    primary: $zentry-primary,
+    accent: $zentry-accent,
+    warn: $zentry-warn,
+  )
+));
+
+// Tema oscuro (opcional)
+$zentry-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $zentry-primary,
+    accent: $zentry-accent,
+    warn: $zentry-warn,
+  )
+));
+
+// Aplicar tema claro por defecto
+@include mat.all-component-themes($zentry-light-theme);
+
+// CSS Variables personalizadas para ZENTRY
+:root {
+  --zentry-primary: #B5242B;
+  --zentry-primary-light: #E53935;
+  --zentry-primary-dark: #AD1818;
+  --zentry-gray-100: #F5F5F5;
+  --zentry-gray-200: #E0E0E0;
+  --zentry-white: #FFFFFF;
+  --zentry-shadow: 0 4px 20px rgba(181, 36, 43, 0.1);
+}

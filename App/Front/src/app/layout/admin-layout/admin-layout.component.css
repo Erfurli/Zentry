@@ -1,0 +1,40 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.layout-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 280px;
+  background: white;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  position: fixed;
+  left: 0;
+  top: 70px;  /* Altura del header */
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.main-content {
+  margin-left: 280px;  /* Ancho sidebar */
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;  /* ← SOLO AQUÍ scroll */
+  height: calc(100vh - 70px);  /* ← Altura completa */
+}
