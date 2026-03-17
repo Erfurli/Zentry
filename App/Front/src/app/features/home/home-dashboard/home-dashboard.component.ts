@@ -12,7 +12,7 @@ interface DashboardSummary {
 @Component({
   selector: 'app-home-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './home-dashboard.component.html',
   styleUrls: ['./home-dashboard.component.css']
 })
