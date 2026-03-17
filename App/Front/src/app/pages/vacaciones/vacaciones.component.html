@@ -1,0 +1,125 @@
+<div class="page-container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Gestión de Vacaciones</h1>
+      <div class="breadcrumbs">
+        <a routerLink="/dashboard">Dashboard</a> / <strong>Vacaciones</strong>
+      </div>
+    </div>
+
+    <div class="filters">
+      <select
+        class="filter-select"
+        [value]="filtroEstado()"
+        (change)="cambiarFiltroEstado($any($event.target).value)"
+        aria-label="Filtrar por estado">
+        <option value="Todos">Todos los estados</option>
+        <option value="Aprobada">Aprobadas</option>
+        <option value="Pendiente">Pendientes</option>
+        <option value="Rechazada">Rechazadas</option>
+      </select>
+
+      <select
+        class="filter-select"
+        [value]="filtroDepartamento()"
+        (change)="cambiarFiltroDepartamento($any($event.target).value)"
+        aria-label="Filtrar por departamento">
+        <option value="Todos">Todos los departamentos</option>
+        <option value="RRHH">RRHH</option>
+        <option value="IT">IT</option>
+        <option value="Ventas">Ventas</option>
+      </select>
+
+      <button class="export-btn" (click)="exportar()">
+        <i class="fa-solid fa-download" aria-hidden="true"></i> Exportar
+      </button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid" role="list" aria-label="Resumen de solicitudes">
+    <div class="kpi-card aprobada" role="listitem">
+      <div class="kpi-number">{{ totalAprobadas() }}</div>
+      <div class="kpi-label">Aprobadas</div>
+    </div>
+    <div class="kpi-card pendiente" role="listitem">
+      <div class="kpi-number">{{ totalPendientes() }}</div>
+      <div class="kpi-label">Pendientes</div>
+    </div>
+    <div class="kpi-card rechazada" role="listitem">
+      <div class="kpi-number">{{ totalRechazadas() }}</div>
+      <div class="kpi-label">Rechazadas</div>
+    </div>
+    <div class="kpi-card dias" role="listitem">
+      <div class="kpi-number">{{ totalDiasSolicitados() }}</div>
+      <div class="kpi-label">Días Solicitados</div>
+    </div>
+  </div>
+
+  <!-- TABLA -->
+  <div class="table-container">
+    <table class="vacaciones-table" aria-label="Solicitudes de vacaciones">
+      <thead>
+        <tr>
+          <th scope="col">Empleado</th>
+          <th scope="col">Departamento</th>
+          <th scope="col">Fecha inicio</th>
+          <th scope="col">Fecha fin</th>
+          <th scope="col">Días</th>
+          <th scope="col">Motivo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (solicitud of solicitudesFiltradas(); track solicitud.id) {
+          <tr>
+            <td>{{ solicitud.empleado }}</td>
+            <td>{{ solicitud.departamento }}</td>
+            <td>{{ solicitud.fechaInicio }}</td>
+            <td>{{ solicitud.fechaFin }}</td>
+            <td><strong>{{ solicitud.dias }}</strong></td>
+            <td class="motivo-cell">{{ solicitud.motivo }}</td>
+            <td>
+              <span
+                class="estado-badge"
+                [class.aprobada]="solicitud.estado === 'Aprobada'"
+                [class.pendiente]="solicitud.estado === 'Pendiente'"
+                [class.rechazada]="solicitud.estado === 'Rechazada'">
+                {{ solicitud.estado }}
+              </span>
+            </td>
+            <td class="acciones-cell">
+              @if (solicitud.estado === 'Pendiente') {
+                <button
+                  class="accion-btn aprobar"
+                  (click)="aprobar(solicitud.id)"
+                  [attr.aria-label]="'Aprobar solicitud de ' + solicitud.empleado">
+                  <i class="fa-solid fa-check" aria-hidden="true"></i>
+                </button>
+                <button
+                  class="accion-btn rechazar"
+                  (click)="rechazar(solicitud.id)"
+                  [attr.aria-label]="'Rechazar solicitud de ' + solicitud.empleado">
+                  <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+              } @else {
+                <span class="sin-acciones">—</span>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="8" class="empty-state">
+              <i class="fa-solid fa-inbox" aria-hidden="true"></i>
+              <p>No hay solicitudes para los filtros seleccionados</p>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+</div>
