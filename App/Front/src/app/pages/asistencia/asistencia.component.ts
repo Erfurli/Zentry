@@ -13,7 +13,7 @@ interface Empleado {
 @Component({
   selector: 'app-asistencia',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule,],
   templateUrl: './asistencia.component.html',
   styleUrls: ['./asistencia.component.css']
 })
