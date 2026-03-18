@@ -1,19 +1,19 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from '../header/header.component';     // ← CORRECTO
-import { SidebarComponent } from '../sidebar/sidebar.component';  // ← CORRECTO
+import { HeaderComponent } from '../header/header.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-admin-layout',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterOutlet,
-    HeaderComponent,    // ← NOMBRE REAL
-    SidebarComponent    // ← NOMBRE REAL
-  ],
+  imports: [RouterOutlet, HeaderComponent, SidebarComponent],
   templateUrl: './admin-layout.component.html',
-  styleUrls: ['./admin-layout.component.css']
+  styleUrls: ['./admin-layout.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminLayoutComponent { }
+export class AdminLayoutComponent {
+  readonly sidebarCollapsed = signal(false);
+
+  onSidebarToggle(collapsed: boolean): void {
+    this.sidebarCollapsed.set(collapsed);
+  }
+}

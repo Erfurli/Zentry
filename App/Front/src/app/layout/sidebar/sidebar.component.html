@@ -1,28 +1,42 @@
-<aside class="sidebar">
-  <nav class="sidebar-nav">
-    <a routerLink="/home" routerLinkActive="active" class="nav-item">
-      <i class="fa-solid fa-chart-bar" style="color: #b5242b"></i> Dashboard
+<aside class="sidebar" [class.collapsed]="collapsed()">
+
+  <button
+    class="toggle-btn"
+    (click)="toggle()"
+    [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'"
+    [attr.aria-expanded]="!collapsed()">
+    <i class="fa-solid" [class.fa-chevron-left]="!collapsed()" [class.fa-chevron-right]="collapsed()" aria-hidden="true"></i>
+  </button>
+
+  <nav class="sidebar-nav" aria-label="Menú principal">
+    <a routerLink="/dashboard" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? 'Dashboard' : null">
+      <i class="fa-solid fa-chart-bar" aria-hidden="true"></i>
+      @if (!collapsed()) { <span>Dashboard</span> }
     </a>
-    <a routerLink="/asistencia" routerLinkActive="active" class="nav-item">
-      <i class="fa-solid fa-users" style="color: #b5242b"></i> Asistencia
-      Empleados
+    <a routerLink="/asistencia" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? 'Asistencia Empleados' : null">
+      <i class="fa-solid fa-users" aria-hidden="true"></i>
+      @if (!collapsed()) { <span>Asistencia Empleados</span> }
     </a>
-    <a routerLink="/empleados" routerLinkActive="active" class="nav-item">
-      <i class="fa-solid fa-user" style="color: #b5242b"></i> Empleados
+    <a routerLink="/empleados" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? 'Empleados' : null">
+      <i class="fa-solid fa-user" aria-hidden="true"></i>
+      @if (!collapsed()) { <span>Empleados</span> }
     </a>
-    <a routerLink="/vacaciones" routerLinkActive="active" class="nav-item">
-      <i class="fa-solid fa-umbrella-beach" style="color: #b5242b"></i>
-      Vacaciones
+    <a routerLink="/vacaciones" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? 'Vacaciones' : null">
+      <i class="fa-solid fa-umbrella-beach" aria-hidden="true"></i>
+      @if (!collapsed()) { <span>Vacaciones</span> }
     </a>
-    <a routerLink="/ausencias" routerLinkActive="active" class="nav-item">
-      <i class="fa-solid fa-calendar-xmark" style="color: #b5242b"></i>
-      Ausencias
+    <a routerLink="/ausencias" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? 'Ausencias' : null">
+      <i class="fa-solid fa-calendar-xmark" aria-hidden="true"></i>
+      @if (!collapsed()) { <span>Ausencias</span> }
     </a>
-    <a routerLink="/reportes" routerLinkActive="active" class="nav-item">
-      <i class="fa-solid fa-chart-line" style="color: #b5242b"></i> Reportes
+    <a routerLink="/reportes" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? 'Reportes' : null">
+      <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+      @if (!collapsed()) { <span>Reportes</span> }
     </a>
-    <a routerLink="/admin-dashboard" routerLinkActive="active" class="nav-item">
-      <i class="fa-solid fa-gauge-high" style="color: #b5242b"></i> Admin Dashboard
+    <a routerLink="/admin-dashboard" routerLinkActive="active" class="nav-item" [attr.title]="collapsed() ? 'Admin Dashboard' : null">
+      <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
+      @if (!collapsed()) { <span>Admin Dashboard</span> }
     </a>
   </nav>
+
 </aside>
