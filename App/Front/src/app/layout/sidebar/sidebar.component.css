@@ -80,7 +80,7 @@
 .nav-item:hover {
   background: #FEE2E2;
   color: #B5242B;
-  transform: translateX(4px);
+  /* transform: translateX(4px); */
 }
 
 .nav-item.active {

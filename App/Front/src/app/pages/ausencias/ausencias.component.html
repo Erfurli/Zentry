@@ -1,0 +1,116 @@
+<div class="page-container">
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Ausencias</h1>
+      <div class="breadcrumbs">
+        <a routerLink="/dashboard">Dashboard</a> / Ausencias
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filters-section">
+    <div class="filters">
+      <!-- FILTRO TIPO -->
+<select class="filter-select" [value]="filtroTipo()" (change)="onTipoChange($event)">
+  <option value="Todos">Todos los tipos</option>
+  <option value="Enfermedad">Enfermedad</option>
+  <option value="Asunto Personal">Asunto Personal</option>
+  <option value="Médico">Médico</option>
+  <option value="Familiar">Familiar</option>
+</select>
+
+<select class="filter-select" [value]="filtroEstado()" (change)="onEstadoChange($event)">
+  <option value="Todos">Todos los estados</option>
+  <option value="Justificada">Justificadas</option>
+  <option value="Pendiente">Pendientes</option>
+  <option value="No Justificada">No Justificadas</option>
+</select>
+
+
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <!-- CAMBIAR KPIs (de 2 → 3 tarjetas) -->
+<div class="kpi-grid">
+  <div class="kpi-card justificadas">
+    <div class="kpi-number">{{ totalJustificadas() }}</div>
+    <div class="kpi-label">Justificadas</div>
+  </div>
+  <div class="kpi-card pendientes">
+    <div class="kpi-number">{{ totalPendientes() }}</div>
+    <div class="kpi-label">Pendientes</div>
+  </div>
+  <div class="kpi-card no-justificadas">  <!-- ← NUEVO -->
+    <div class="kpi-number">{{ totalNoJustificadas() }}</div>
+    <div class="kpi-label">No Justificadas</div>
+  </div>
+</div>
+
+
+  <!-- TABLA -->
+  <div class="table-container">
+    @if (ausenciasFiltradas().length > 0) {
+      <table class="ausencias-table">
+        <thead>
+          <tr>
+            <th>Empleado</th>
+            <th>Departamento</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Días</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ausencia of ausenciasFiltradas(); track ausencia.id) {
+            <tr>
+  <td class="nombre-cell">
+    {{ ausencia.empleado }}
+  </td>
+  <td>{{ ausencia.departamento }}</td>
+  <td>{{ ausencia.fechaInicio }}</td>
+  <td>{{ ausencia.fechaFin }}</td>
+  <td class="dias-cell">{{ ausencia.dias }}</td>
+  <td><span class="tipo-badge">{{ ausencia.tipo }}</span></td>
+  <td>
+    <span class="estado-badge"
+          [class.justificada]="ausencia.estado === 'Justificada'"
+          [class.pendiente]="ausencia.estado === 'Pendiente'"
+          [class.no-justificada]="ausencia.estado === 'No Justificada'">
+      {{ ausencia.estado }}
+    </span>
+  </td>
+  <td class="acciones-cell">
+    @if (ausencia.estado === 'Pendiente') {
+      <button class="accion-btn justificar"
+              (click)="justificar(ausencia.id)"
+              title="Justificar ausencia">
+        <i class="fa-solid fa-check"></i>
+      </button>
+      <button class="accion-btn no-justificar"
+              (click)="noJustificar(ausencia.id)"
+              title="No justificar">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    } @else {
+      <span class="sin-acciones">—</span>
+    }
+  </td>
+</tr>
+
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="empty-state">
+        <i class="fa-solid fa-calendar-xmark"></i>
+        <p>No hay ausencias para los filtros seleccionados</p>
+      </div>
+    }
+  </div>
+</div>

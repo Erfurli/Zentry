@@ -1,0 +1,99 @@
+<div class="notif-container" [class.abierto]="abierto()">
+  <!-- BOTÓN CAMPANA -->
+  <button class="campana-btn" (click)="toggleNotifs()" title="Notificaciones ({{ noLeidas().length }})">
+    <i class="fa-solid fa-bell"></i>
+    @if (noLeidas().length > 0) {
+      <span class="badge">{{ noLeidas().length }}</span>
+    }
+  </button>
+
+  <!-- PANEL NOTIFICACIONES -->
+  @if (abierto()) {
+    <div class="notif-panel">
+      <div class="notif-header">
+        <h3>Notificaciones</h3>
+        <button class="close-btn" (click)="cerrarNotifs()" title="Cerrar">
+          <i class="fa-solid fa-times"></i>
+        </button>
+      </div>
+
+      @if (notificaciones().length === 0) {
+        <div class="empty-state">
+          <i class="fa-solid fa-bell-slash"></i>
+          <p>No hay notificaciones</p>
+        </div>
+      } @else {
+        <div class="notif-list">
+          <!-- NO LEÍDAS (PRIORIDAD) -->
+          @for (notif of noLeidas(); track notif.id) {
+            <div class="notif-item no-leida" [class]="notif.tipo">
+              <div class="notif-icon">
+                @switch (notif.tipo) {
+                  @case ('entrada') {
+                    <i class="fa-solid fa-clock"></i>
+                  }
+                  @case ('salida') {
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                  }
+                  @case ('vacaciones') {
+                    <i class="fa-solid fa-plane"></i>
+                  }
+                  @case ('ausencia') {
+                    <i class="fa-solid fa-user-slash"></i>
+                  }
+                }
+              </div>
+              <div class="notif-content">
+                <h4>{{ notif.titulo }}</h4>
+                <p>{{ notif.mensaje }}</p>
+                <span class="notif-time">{{ formatoFecha(notif.fecha) }}</span>
+              </div>
+              <div class="notif-actions">
+                @if (notif.ruta) {
+                  <button class="ver-btn" (click)="irARuta(notif.ruta); marcarLeida(notif.id)">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                }
+                <button class="leer-btn" (click)="marcarLeida(notif.id)" title="Marcar como leída">
+                  <i class="fa-solid fa-check"></i>
+                </button>
+              </div>
+            </div>
+          }
+
+          <!-- DIVISOR -->
+          @if (leidas().length > 0 && noLeidas().length > 0) {
+            <div class="divider"></div>
+          }
+
+          <!-- LEÍDAS -->
+          @for (notif of leidas(); track notif.id) {
+            <div class="notif-item leida" [class]="notif.tipo">
+              <div class="notif-icon">
+                @switch (notif.tipo) {
+                  @case ('entrada') {
+                    <i class="fa-solid fa-clock"></i>
+                  }
+                  @case ('salida') {
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                  }
+                  @case ('vacaciones') {
+                    <i class="fa-solid fa-plane"></i>
+                  }
+                  @case ('ausencia') {
+                    <i class="fa-solid fa-user-slash"></i>
+                  }
+                }
+              </div>
+              <div class="notif-content">
+                <h4>{{ notif.titulo }}</h4>
+                <p>{{ notif.mensaje }}</p>
+                <span class="notif-time">{{ formatoFecha(notif.fecha) }}</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>
