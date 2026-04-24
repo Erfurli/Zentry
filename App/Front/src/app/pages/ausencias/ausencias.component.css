@@ -25,7 +25,7 @@
 }
 
 .breadcrumbs a {
-  color: #B5242B;
+  color: var(--zentry-primary);
   text-decoration: none;
 }
 
@@ -63,7 +63,7 @@
 
 .filter-select:focus {
   outline: none;
-  border-color: #B5242B;
+  border-color: var(--zentry-primary);
 }
 
 /* KPIs */

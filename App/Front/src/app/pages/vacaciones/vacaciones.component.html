@@ -1,20 +1,21 @@
 <div class="page-container">
-
-  <!-- HEADER -->
   <div class="page-header">
     <div class="header-content">
       <h1>Gestión de Vacaciones</h1>
       <div class="breadcrumbs">
-        <a routerLink="/dashboard">Dashboard</a> / <strong>Vacaciones</strong>
+        <a routerLink="/dashboard">Dashboard</a> / Vacaciones
       </div>
     </div>
+  </div>
 
+  <div class="filters-section">
     <div class="filters">
       <select
         class="filter-select"
         [value]="filtroEstado()"
         (change)="cambiarFiltroEstado($any($event.target).value)"
-        aria-label="Filtrar por estado">
+        aria-label="Filtrar por estado"
+      >
         <option value="Todos">Todos los estados</option>
         <option value="Aprobada">Aprobadas</option>
         <option value="Pendiente">Pendientes</option>
@@ -25,20 +26,20 @@
         class="filter-select"
         [value]="filtroDepartamento()"
         (change)="cambiarFiltroDepartamento($any($event.target).value)"
-        aria-label="Filtrar por departamento">
+        aria-label="Filtrar por departamento"
+      >
         <option value="Todos">Todos los departamentos</option>
         <option value="RRHH">RRHH</option>
         <option value="IT">IT</option>
         <option value="Ventas">Ventas</option>
       </select>
 
-      <button class="export-btn" (click)="exportar()">
+      <button class="export-btn" type="button" (click)="exportar()">
         <i class="fa-solid fa-download" aria-hidden="true"></i> Exportar
       </button>
     </div>
   </div>
 
-  <!-- KPIs -->
   <div class="kpi-grid" role="list" aria-label="Resumen de solicitudes">
     <div class="kpi-card aprobada" role="listitem">
       <div class="kpi-number">{{ totalAprobadas() }}</div>
@@ -58,7 +59,6 @@
     </div>
   </div>
 
-  <!-- TABLA -->
   <div class="table-container">
     <table class="vacaciones-table" aria-label="Solicitudes de vacaciones">
       <thead>
@@ -87,7 +87,8 @@
                 class="estado-badge"
                 [class.aprobada]="solicitud.estado === 'Aprobada'"
                 [class.pendiente]="solicitud.estado === 'Pendiente'"
-                [class.rechazada]="solicitud.estado === 'Rechazada'">
+                [class.rechazada]="solicitud.estado === 'Rechazada'"
+              >
                 {{ solicitud.estado }}
               </span>
             </td>
@@ -96,13 +97,15 @@
                 <button
                   class="accion-btn aprobar"
                   (click)="aprobar(solicitud.id)"
-                  [attr.aria-label]="'Aprobar solicitud de ' + solicitud.empleado">
+                  [attr.aria-label]="'Aprobar solicitud de ' + solicitud.empleado"
+                >
                   <i class="fa-solid fa-check" aria-hidden="true"></i>
                 </button>
                 <button
                   class="accion-btn rechazar"
                   (click)="rechazar(solicitud.id)"
-                  [attr.aria-label]="'Rechazar solicitud de ' + solicitud.empleado">
+                  [attr.aria-label]="'Rechazar solicitud de ' + solicitud.empleado"
+                >
                   <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                 </button>
               } @else {
@@ -121,5 +124,4 @@
       </tbody>
     </table>
   </div>
-
 </div>

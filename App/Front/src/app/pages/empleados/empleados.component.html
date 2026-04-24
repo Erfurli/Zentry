@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- HEADER -->
   <div class="page-header">
     <div class="header-content">
       <h1>Empleados</h1>
@@ -9,35 +8,38 @@
     </div>
 
     <div class="header-actions">
-      <button class="primary-btn">
+      <button class="primary-btn" (click)="abrirModalCrear()">
         <i class="fa-solid fa-plus"></i>
         Nuevo Empleado
       </button>
     </div>
   </div>
 
-  <!-- FILTROS -->
   <div class="filters-section">
     <div class="filters">
-      <!-- FILTROS - CAMBIAR ESTOS 2 -->
-<select class="filter-select" [value]="filtroDepartamento()" (change)="onDeptoChange($event)">
-  <option value="Todos">Todos los departamentos</option>
-  <option value="IT">IT</option>
-  <option value="RRHH">RRHH</option>
-  <option value="Ventas">Ventas</option>
-</select>
+      <select
+        class="filter-select"
+        [value]="filtroDepartamento()"
+        (change)="onDeptoChange($event)"
+      >
+        <option value="Todos">Todos los departamentos</option>
+        <option value="IT">IT</option>
+        <option value="RRHH">RRHH</option>
+        <option value="Ventas">Ventas</option>
+      </select>
 
-<select class="filter-select" [value]="filtroEstado()"
-        (change)="onEstadoChange($event)">
-  <option value="Todos">Todos los estados</option>
-  <option value="activo">Activos</option>
-  <option value="inactivo">Inactivos</option>
-</select>
-
+      <select
+        class="filter-select"
+        [value]="filtroEstado()"
+        (change)="onEstadoChange($event)"
+      >
+        <option value="Todos">Todos los estados</option>
+        <option value="Activos">Activos</option>
+        <option value="Inactivos">Inactivos</option>
+      </select>
     </div>
   </div>
 
-  <!-- KPIs -->
   <div class="kpi-grid">
     <div class="kpi-card activos">
       <div class="kpi-number">{{ totalActivos() }}</div>
@@ -49,7 +51,6 @@
     </div>
   </div>
 
-  <!-- TABLA -->
   <div class="table-container">
     @if (empleadosFiltrados().length > 0) {
       <table class="empleados-table">
@@ -59,7 +60,6 @@
             <th>Email</th>
             <th>Departamento</th>
             <th>Puesto</th>
-            <th>Teléfono</th>
             <th>Estado</th>
             <th>Fecha Alta</th>
             <th>Acciones</th>
@@ -68,31 +68,39 @@
         <tbody>
           @for (empleado of empleadosFiltrados(); track empleado.id) {
             <tr>
-              <td class="nombre-cell">
-                {{ empleado.nombre }}
-              </td>
+              <td class="nombre-cell">{{ empleado.nombre }}</td>
               <td>{{ empleado.email }}</td>
               <td>{{ empleado.departamento }}</td>
               <td>{{ empleado.puesto }}</td>
-              <td>{{ empleado.telefono }}</td>
               <td>
-                <span class="estado-badge"
-                      [class.activo]="empleado.activo"
-                      [class.inactivo]="!empleado.activo">
-                  {{ empleado.activo ? 'Activo' : 'Inactivo' }}
+                <span
+                  class="estado-badge"
+                  [class.activo]="empleado.activo"
+                  [class.inactivo]="!empleado.activo"
+                >
+                  {{ empleado.activo ? "Activo" : "Inactivo" }}
                 </span>
               </td>
               <td>{{ empleado.fechaAlta }}</td>
               <td class="acciones-cell">
-                <button class="accion-btn toggle-estado"
-                        (click)="toggleActivo(empleado.id)"
-                        [title]="empleado.activo ? 'Inactivar' : 'Activar'">
+                <button
+                  class="accion-btn toggle-estado"
+                  (click)="toggleActivo(empleado.id)"
+                  [title]="empleado.activo ? 'Desactivar' : 'Activar'"
+                >
                   <i class="fa-solid fa-power-off"></i>
                 </button>
-                <button class="accion-btn editar">
+                <button
+                  class="accion-btn editar"
+                  (click)="abrirModalEditar(empleado)"
+                  [title]="empleado.activo ? 'Editar'   : 'Editar (inactivo)'"
+                >
                   <i class="fa-solid fa-edit"></i>
                 </button>
-                <button class="accion-btn eliminar">
+                <button
+                  class="accion-btn eliminar"
+                  [title]="empleado.activo ? 'Eliminar' : 'Activar'"
+                >
                   <i class="fa-solid fa-trash"></i>
                 </button>
               </td>
@@ -108,3 +116,12 @@
     }
   </div>
 </div>
+
+@if (modalAbierto()) {
+  <app-empleado-modal
+  [empleado]="empleadoEditando()"
+  [class.abierto]="modalAbierto()"
+  (cerrar)="cerrarModal()"
+  (empleadoGuardado)="onEmpleadoGuardado($event)">
+</app-empleado-modal>
+}

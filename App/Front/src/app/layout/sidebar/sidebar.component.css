@@ -23,8 +23,8 @@
   height: 28px;
   margin: 0 0 1rem auto;
   margin-right: 12px;
-  background: #FEE2E2;
-  color: #B5242B;
+  background: #e2e9fe;
+  color: var(--zentry-primary);
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -34,12 +34,12 @@
 }
 
 .toggle-btn:hover {
-  background: #B5242B;
+  background: var(--zentry-primary);
   color: white;
 }
 
 .toggle-btn:focus-visible {
-  outline: 3px solid #B5242B;
+  outline: 3px solid var(--zentry-primary);
   outline-offset: 2px;
 }
 
@@ -68,7 +68,7 @@
   width: 20px;
   text-align: center;
   flex-shrink: 0;
-  color: #B5242B;
+  color: var(--zentry-primary);
   font-size: 1rem;
 }
 
@@ -78,13 +78,12 @@
 }
 
 .nav-item:hover {
-  background: #FEE2E2;
-  color: #B5242B;
-  /* transform: translateX(4px); */
+  background: #e2e9fe;
+  color: var(--zentry-primary);
 }
 
 .nav-item.active {
-  background: linear-gradient(135deg, #B5242B, #E53935);
+  background: linear-gradient(135deg, var(--zentry-primary), var(--zentry-primary-light));
   color: white;
   box-shadow: 4px 0 15px rgba(181, 36, 43, 0.3);
 }

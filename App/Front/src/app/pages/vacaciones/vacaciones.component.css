@@ -30,12 +30,21 @@
 }
 
 .breadcrumbs a {
-  color: #B5242B;
+  color: var(--zentry-primary);
   text-decoration: none;
 }
 
 .breadcrumbs a:hover {
   text-decoration: underline;
+}
+
+/* FILTROS */
+.filters-section {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
 }
 
 .filters {
@@ -58,12 +67,12 @@
 
 .filter-select:focus {
   outline: none;
-  border-color: #B5242B;
+  border-color: var(--zentry-primary);
 }
 
 .export-btn {
   padding: 0.75rem 1.5rem;
-  background: #B5242B;
+  background: var(--zentry-button);
   color: white;
   border: none;
   border-radius: 12px;
@@ -76,11 +85,11 @@
 }
 
 .export-btn:hover {
-  background: #AD1818;
+  background: var(--zentry-primary-dark);
 }
 
 .export-btn:focus-visible {
-  outline: 3px solid #B5242B;
+  outline: 3px solid var(--zentry-primary);
   outline-offset: 2px;
 }
 
@@ -104,7 +113,7 @@
 .kpi-card.aprobada { border-top-color: #10b981; }
 .kpi-card.pendiente { border-top-color: #f59e0b; }
 .kpi-card.rechazada { border-top-color: #ef4444; }
-.kpi-card.dias      { border-top-color: #B5242B; }
+.kpi-card.dias { border-top-color: var(--zentry-primary); }
 
 .kpi-number {
   font-size: 2.5rem;
@@ -174,7 +183,7 @@
   white-space: nowrap;
 }
 
-.estado-badge.aprobada  { background: #d1fae5; color: #065f46; }
+.estado-badge.aprobada { background: #d1fae5; color: #065f46; }
 .estado-badge.pendiente { background: #fef3c7; color: #92400e; }
 .estado-badge.rechazada { background: #fee2e2; color: #991b1b; }
 
@@ -199,7 +208,7 @@
 }
 
 .accion-btn:focus-visible {
-  outline: 3px solid #B5242B;
+  outline: 3px solid var(--zentry-primary);
   outline-offset: 2px;
 }
 
@@ -254,7 +263,8 @@
   }
 
   .filters {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .table-container {

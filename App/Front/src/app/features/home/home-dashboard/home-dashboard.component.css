@@ -1,19 +1,5 @@
 /* ZENTRY Design System - #B5242B */
-:root {
-  --zentry-primary: #B5242B;
-  --zentry-primary-light: #E53935;
-  --zentry-primary-dark: #AD1818;
-  --zentry-gray-50: #FAFAFA;
-  --zentry-gray-100: #F5F5F5;
-  --zentry-gray-200: #E5E7EB;
-  --zentry-gray-500: #6B7280;
-  --zentry-gray-700: #374151;
-  --zentry-white: #FFFFFF;
-  --zentry-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --zentry-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --zentry-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --zentry-border-radius: 12px;
-}
+
 
 * {
   box-sizing: border-box;
@@ -130,6 +116,10 @@
 }
 
 /* ACTIONS */
+.fa-bolt {
+  color: var(--zentry-primary);
+}
+
 .actions-section {
   background: var(--zentry-white);
   padding: 2rem;
@@ -166,10 +156,11 @@
   align-items: center;
   gap: 0.75rem;
   justify-content: center;
+    background: var(--zentry-button);
 }
 
 .primary-btn {
-  background: var(--zentry-primary);
+
   color: white;
   box-shadow: var(--zentry-shadow-md);
 }

@@ -35,7 +35,7 @@
 
 .export-btn {
   padding: 0.75rem 1.5rem;
-  background: #B5242B;
+  background: var(--zentry-button);
   color: white;
   border: none;
   border-radius: 8px;
@@ -96,8 +96,6 @@ th {
   color: #374151;
   border-bottom: 2px solid #e5e7eb;
 }
-
-/* COMPLETAR CSS - EXACTAMENTE COMO TU MOCKUP */
 
 td {
   padding: 1.5rem 1rem;

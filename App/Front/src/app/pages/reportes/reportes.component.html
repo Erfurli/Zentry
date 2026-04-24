@@ -1,20 +1,21 @@
 <div class="page-container">
-
-  <!-- HEADER -->
   <div class="page-header">
     <div class="header-content">
       <h1>Reportes</h1>
       <div class="breadcrumbs">
-        <a routerLink="/dashboard">Dashboard</a> / <strong>Reportes</strong>
+        <a routerLink="/dashboard">Dashboard</a> / Reportes
       </div>
     </div>
+  </div>
 
+  <div class="filters-section">
     <div class="filters">
       <select
         class="filter-select"
         [value]="filtroTipo()"
         (change)="cambiarFiltroTipo($any($event.target).value)"
-        aria-label="Filtrar por tipo de reporte">
+        aria-label="Filtrar por tipo de reporte"
+      >
         <option value="Todos">Todos los tipos</option>
         <option value="Asistencia">Asistencia</option>
         <option value="Vacaciones">Vacaciones</option>
@@ -26,20 +27,20 @@
         class="filter-select"
         [value]="filtroDepartamento()"
         (change)="cambiarFiltroDepartamento($any($event.target).value)"
-        aria-label="Filtrar por departamento">
+        aria-label="Filtrar por departamento"
+      >
         <option value="Todos">Todos los departamentos</option>
         <option value="RRHH">RRHH</option>
         <option value="IT">IT</option>
         <option value="Ventas">Ventas</option>
       </select>
 
-      <button class="export-btn" (click)="nuevoReporte()">
+      <button class="export-btn" type="button" (click)="nuevoReporte()">
         <i class="fa-solid fa-plus" aria-hidden="true"></i> Nuevo Reporte
       </button>
     </div>
   </div>
 
-  <!-- KPIs -->
   <div class="kpi-grid" role="list" aria-label="Resumen de reportes">
     <div class="kpi-card generado" role="listitem">
       <div class="kpi-number">{{ totalGenerados() }}</div>
@@ -59,7 +60,6 @@
     </div>
   </div>
 
-  <!-- TABLA -->
   <div class="table-container">
     <table class="reportes-table" aria-label="Listado de reportes">
       <thead>
@@ -84,8 +84,8 @@
                 [class.icon-asistencia]="reporte.tipo === 'Asistencia'"
                 [class.icon-vacaciones]="reporte.tipo === 'Vacaciones'"
                 [class.icon-ausencias]="reporte.tipo === 'Ausencias'"
-                [class.icon-rendimiento]="reporte.tipo === 'Rendimiento'">
-              </i>
+                [class.icon-rendimiento]="reporte.tipo === 'Rendimiento'"
+              ></i>
               {{ reporte.nombre }}
             </td>
             <td>
@@ -94,7 +94,8 @@
                 [class.asistencia]="reporte.tipo === 'Asistencia'"
                 [class.vacaciones]="reporte.tipo === 'Vacaciones'"
                 [class.ausencias]="reporte.tipo === 'Ausencias'"
-                [class.rendimiento]="reporte.tipo === 'Rendimiento'">
+                [class.rendimiento]="reporte.tipo === 'Rendimiento'"
+              >
                 {{ reporte.tipo }}
               </span>
             </td>
@@ -107,7 +108,8 @@
                 class="estado-badge"
                 [class.generado]="reporte.estado === 'Generado'"
                 [class.pendiente]="reporte.estado === 'Pendiente'"
-                [class.error]="reporte.estado === 'Error'">
+                [class.error]="reporte.estado === 'Error'"
+              >
                 {{ reporte.estado }}
               </span>
             </td>
@@ -116,7 +118,8 @@
                 <button
                   class="accion-btn descargar"
                   (click)="descargar(reporte)"
-                  [attr.aria-label]="'Descargar reporte ' + reporte.nombre">
+                  [attr.aria-label]="'Descargar reporte ' + reporte.nombre"
+                >
                   <i class="fa-solid fa-download" aria-hidden="true"></i>
                 </button>
               }
@@ -124,7 +127,8 @@
                 <button
                   class="accion-btn regenerar"
                   (click)="regenerar(reporte)"
-                  [attr.aria-label]="'Regenerar reporte ' + reporte.nombre">
+                  [attr.aria-label]="'Regenerar reporte ' + reporte.nombre"
+                >
                   <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
                 </button>
               }
@@ -141,5 +145,4 @@
       </tbody>
     </table>
   </div>
-
 </div>

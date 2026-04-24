@@ -23,24 +23,19 @@
   font-weight: 700;
   color: #1e293b;
 }
-
 .breadcrumbs {
   color: #64748b;
   font-size: 0.95rem;
-}
-
-.breadcrumbs a {
-  color: #B5242B;
-  text-decoration: none;
 }
 
 .breadcrumbs a:hover {
   text-decoration: underline;
 }
 
+
 .primary-btn {
   padding: 0.75rem 1.5rem;
-  background: #B5242B;
+  background: var(--zentry-button);
   color: white;
   border: none;
   border-radius: 12px;
@@ -53,7 +48,7 @@
 }
 
 .primary-btn:hover {
-  background: #AD1818;
+  background: var(--zentry-primary-dark);
 }
 
 /* FILTROS */
@@ -85,7 +80,7 @@
 
 .filter-select:focus {
   outline: none;
-  border-color: #B5242B;
+  border-color: var(--zentry-primary);
 }
 
 /* KPIs */

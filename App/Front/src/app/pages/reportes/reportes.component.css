@@ -7,7 +7,7 @@
   background: white;
   padding: 2rem;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
 }
 
@@ -23,20 +23,24 @@
   font-size: 0.95rem;
 }
 
-.breadcrumbs a {
-  color: #B5242B;
-  text-decoration: none;
-}
-
 .breadcrumbs a:hover {
   text-decoration: underline;
+}
+
+/* FILTROS */
+.filters-section {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
 }
 
 .filters {
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .filter-select {
@@ -44,11 +48,18 @@
   border: 2px solid #e2e8f0;
   border-radius: 12px;
   font-size: 0.9rem;
+  color: #374151;
+  background: white;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: var(--zentry-primary);
 }
 
 .export-btn {
   padding: 0.75rem 1.5rem;
-  background: #B5242B;
+  background: var(--zentry-button);
   color: white;
   border: none;
   border-radius: 12px;
@@ -60,15 +71,9 @@
 }
 
 .export-btn:hover {
-  background: #AD1818;
+  background: var(--zentry-primary-dark);
 }
 
-.export-btn:focus-visible {
-  outline: 3px solid #B5242B;
-  outline-offset: 2px;
-}
-
-/* KPIs */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -81,13 +86,13 @@
   padding: 2rem;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.kpi-card.generado   { border-top: 6px solid #10b981; }
-.kpi-card.pendiente  { border-top: 6px solid #f59e0b; }
-.kpi-card.error      { border-top: 6px solid #ef4444; }
-.kpi-card.registros  { border-top: 6px solid #B5242B; }
+.kpi-card.generado { border-top: 6px solid #10b981; }
+.kpi-card.pendiente { border-top: 6px solid #f59e0b; }
+.kpi-card.error { border-top: 6px solid #ef4444; }
+.kpi-card.registros { border-top: 6px solid var(--zentry-primary); }
 
 .kpi-number {
   font-size: 2.5rem;
@@ -110,7 +115,7 @@
   background: white;
   border-radius: 16px;
   overflow-x: auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .reportes-table {
@@ -140,7 +145,6 @@
   border-bottom: none;
 }
 
-/* NOMBRE */
 .nombre-cell {
   display: flex;
   align-items: center;
@@ -154,12 +158,11 @@
   font-size: 0.95rem;
 }
 
-.icon-asistencia  { color: #3b82f6; }
-.icon-vacaciones  { color: #10b981; }
-.icon-ausencias   { color: #f59e0b; }
+.icon-asistencia { color: #3b82f6; }
+.icon-vacaciones { color: #10b981; }
+.icon-ausencias { color: #f59e0b; }
 .icon-rendimiento { color: #8b5cf6; }
 
-/* BADGES TIPO */
 .tipo-badge {
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
@@ -167,12 +170,11 @@
   font-weight: 600;
 }
 
-.tipo-badge.asistencia  { background: #dbeafe; color: #1d4ed8; }
-.tipo-badge.vacaciones  { background: #d1fae5; color: #065f46; }
-.tipo-badge.ausencias   { background: #fef3c7; color: #92400e; }
+.tipo-badge.asistencia { background: #dbeafe; color: #1d4ed8; }
+.tipo-badge.vacaciones { background: #d1fae5; color: #065f46; }
+.tipo-badge.ausencias { background: #fef3c7; color: #92400e; }
 .tipo-badge.rendimiento { background: #ede9fe; color: #5b21b6; }
 
-/* BADGES ESTADO */
 .estado-badge {
   padding: 0.25rem 0.75rem;
   border-radius: 20px;
@@ -180,11 +182,10 @@
   font-weight: 600;
 }
 
-.estado-badge.generado  { background: #d1fae5; color: #065f46; }
+.estado-badge.generado { background: #d1fae5; color: #065f46; }
 .estado-badge.pendiente { background: #fef3c7; color: #92400e; }
-.estado-badge.error     { background: #fee2e2; color: #991b1b; }
+.estado-badge.error { background: #fee2e2; color: #991b1b; }
 
-/* ACCIONES */
 .acciones-cell {
   display: flex;
   gap: 0.5rem;
@@ -205,7 +206,7 @@
 }
 
 .accion-btn:focus-visible {
-  outline: 3px solid #B5242B;
+  outline: 3px solid var(--zentry-primary);
   outline-offset: 2px;
 }
 
@@ -229,7 +230,6 @@
   color: white;
 }
 
-/* EMPTY STATE */
 .empty-state {
   text-align: center;
   padding: 3rem !important;
@@ -245,4 +245,11 @@
 .empty-state p {
   margin: 0;
   font-size: 1rem;
+}
+
+@media (max-width: 900px) {
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

@@ -1,73 +1,98 @@
 <div class="page-container">
-  <!-- HEADER PÁGINA -->
   <div class="page-header">
     <div class="header-content">
       <h1>Asistencia Empleados</h1>
       <div class="breadcrumbs">
-        <span>Dashboard</span> / <strong>Asistencia</strong>
+        <a routerLink="/dashboard">Dashboard</a> / Asistencia
       </div>
     </div>
+  </div>
 
-    <!-- FILTROS -->
+  <div class="filters-section">
     <div class="filters">
-      <select class="filter-select">
-        <option>Todos los departamentos</option>
-        <option>RRHH</option>
-        <option>IT</option>
+      <select
+        class="filter-select"
+        [value]="filtroDepartamento()"
+        (change)="onDeptoChange($event)"
+      >
+        <option value="Todos">Todos los departamentos</option>
+        <option value="RRHH">RRHH</option>
+        <option value="IT">IT</option>
+        <option value="Ventas">Ventas</option>
       </select>
-      <input type="date" class="filter-date">
-      <button class="filter-btn">Buscar</button>
-      <button class="export-btn">
+
+      <select
+        class="filter-select"
+        [value]="filtroEstado()"
+        (change)="onEstadoChange($event)"
+      >
+        <option value="Todos">Todos los estados</option>
+        <option value="Presente">Presentes</option>
+        <option value="Retraso">Con retraso</option>
+        <option value="Ausente">Ausentes</option>
+      </select>
+
+      <button class="export-btn" type="button">
         <i class="fa-solid fa-download"></i> Exportar
       </button>
     </div>
   </div>
 
-  <!-- KPIS -->
   <div class="kpi-grid">
     <div class="kpi-card presente">
-      <div class="kpi-number">150</div>
+      <div class="kpi-number">{{ totalPresentes() }}</div>
       <div class="kpi-label">Presentes</div>
     </div>
-    <div class="kpi-card">
-      <div class="kpi-number">125</div>
+
+    <div class="kpi-card total">
+      <div class="kpi-number">{{ totalEmpleados() }}</div>
       <div class="kpi-label">Total Empleados</div>
     </div>
+
     <div class="kpi-card retraso">
-      <div class="kpi-number">15</div>
+      <div class="kpi-number">{{ totalRetrasos() }}</div>
       <div class="kpi-label">Retrasos</div>
     </div>
+
     <div class="kpi-card ausente">
-      <div class="kpi-number">5</div>
+      <div class="kpi-number">{{ totalAusentes() }}</div>
       <div class="kpi-label">Ausentes</div>
     </div>
   </div>
 
-  <!-- TABLA -->
   <div class="table-container">
-    <table class="asistencia-table">
-      <thead>
-        <tr>
-          <th>Empleado</th>
-          <th>Departamento</th>
-          <th>Estado</th>
-          <th>Entrada</th>
-          <th>Salida</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let empleado of empleados">
-          <td>{{ empleado.nombre }}</td>
-          <td>{{ empleado.departamento }}</td>
-          <td>
-            <span class="estado-badge" [ngClass]="empleado.estado.toLowerCase()">
-              {{ empleado.estado }}
-            </span>
-          </td>
-          <td>{{ empleado.entrada }}</td>
-          <td>{{ empleado.salida }}</td>
-        </tr>
-      </tbody>
-    </table>
+    @if (empleadosFiltrados().length > 0) {
+      <table class="asistencia-table">
+        <thead>
+          <tr>
+            <th>Empleado</th>
+            <th>Departamento</th>
+            <th>Estado</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (empleado of empleadosFiltrados(); track empleado.nombre) {
+            <tr>
+              <td>{{ empleado.nombre }}</td>
+              <td>{{ empleado.departamento }}</td>
+              <td>
+                <span class="estado-badge" [ngClass]="empleado.estado.toLowerCase()">
+                  {{ empleado.estado }}
+                </span>
+              </td>
+              <td>{{ empleado.entrada || '-' }}</td>
+              <td>{{ empleado.salida || '-' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="empty-state">
+        <i class="fa-solid fa-calendar-check"></i>
+        <p>No hay registros de asistencia para los filtros seleccionados</p>
+      </div>
+    }
   </div>
 </div>
