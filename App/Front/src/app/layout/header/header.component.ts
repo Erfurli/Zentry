@@ -1,17 +1,35 @@
-import { Component } from '@angular/core';
-imports: [CommonModule, RouterLink, NotificacionesComponent];  // ← AÑADIR
-import { NotificacionesComponent } from '../../shared/notificaciones/notificaciones.component';  // ← AÑADIR
-import { RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
-
-
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService, CompanyRole, SystemRole } from '../../services/auth.service';
+import { NotificacionesComponent } from '../../shared/notificaciones/notificaciones.component';
 
 @Component({
   selector: 'app-header',
-  imports: [NotificacionesComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrls: ['./header.component.css'],
+  standalone: true,
+  imports: [NotificacionesComponent]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  username = '';
+  systemRole: SystemRole | '' = '';
+  companyRole: CompanyRole | '' = '';
 
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.currentUser$.subscribe(user => {
+      this.username = user?.username ?? '';
+      this.systemRole = user?.systemRole ?? '';
+      this.companyRole = user?.companyRole ?? '';
+    });
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

@@ -46,7 +46,7 @@ public class UsuarioController {
                     usuario.setEmpleadoId(actualizado.getEmpleadoId());
                     usuario.setUsername(actualizado.getUsername());
                     usuario.setPassword(actualizado.getPassword());
-                    usuario.setRol(actualizado.getRol());
+                    usuario.setRolSistema(actualizado.getRolSistema());
                     usuario.setActivo(actualizado.getActivo());
                     return ResponseEntity.ok(usuarioRepository.save(usuario));
                 })

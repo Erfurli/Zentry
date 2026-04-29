@@ -54,3 +54,25 @@
 .icon-btn:hover {
   background: rgba(255,255,255,0.25);
 }
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  font-size: 0.85rem;
+}
+
+.user-name { font-weight: 600; }
+.user-role {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  white-space: nowrap;
+}

@@ -1,13 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-
-interface DashboardSummary {
-  vacationBalance: number;
-  upcomingVacations: { dates: string; status: string }[];
-  todayHours: number;
-  userName: string;
-}
+import { DashboardService, DashboardSummary } from '../../../services/dashboard.service';
 
 @Component({
   selector: 'app-home-dashboard',
@@ -16,15 +9,33 @@ interface DashboardSummary {
   templateUrl: './home-dashboard.component.html',
   styleUrls: ['./home-dashboard.component.css']
 })
-export class HomeDashboardComponent {
+export class HomeDashboardComponent implements OnInit {
+  private dashboardService = inject(DashboardService);
+
   summary: DashboardSummary = {
-    vacationBalance: 22,
-    upcomingVacations: [
-      { dates: '25-29 Mar', status: 'Aprobada' }
-    ],
-    todayHours: 4.5,
-    userName: 'Paula'
+    vacationBalance: 0,
+    upcomingVacations: [],
+    todayHours: 0,
+    userName: ''
   };
+
+  loading = true;
+  error = '';
+
+  ngOnInit(): void {
+  this.dashboardService.getHomeSummary().subscribe({
+    next: (data) => {
+      console.log('Datos recibidos del backend:', data); // <--- MIRA LA CONSOLA
+      this.summary = data;
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error('Error al cargar dashboard:', err); // <--- MIRA LA CONSOLA
+      this.error = 'No se pudo cargar el resumen.';
+      this.loading = false;
+    }
+  });
+}
 
   fichar(accion: 'entrada' | 'salida') {
     alert(`Fichando ${accion}...`);

@@ -24,6 +24,5 @@ public class Empleado {
     private String puesto;
     private String fechaAlta;
     private Boolean activo;
-    private String rol;
-
+    private RolEmpresa rolEmpresa;
 }

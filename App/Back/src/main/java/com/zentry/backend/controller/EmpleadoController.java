@@ -61,7 +61,7 @@ public class EmpleadoController {
                     empleado.setPuesto(empleadoActualizado.getPuesto());
                     empleado.setFechaAlta(empleadoActualizado.getFechaAlta());
                     empleado.setActivo(empleadoActualizado.getActivo());
-                    empleado.setRol(empleadoActualizado.getRol());
+                    empleado.setRolEmpresa(empleadoActualizado.getRolEmpresa());
                     return ResponseEntity.ok(empleadoRepository.save(empleado));
                 })
                 .orElse(ResponseEntity.notFound().build());

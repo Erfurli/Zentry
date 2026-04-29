@@ -20,6 +20,6 @@ public class Usuario {
     private Long empleadoId;
     private String username;
     private String password;
-    private String rol;
+    private RolSistema rolSistema;
     private Boolean activo;
 }

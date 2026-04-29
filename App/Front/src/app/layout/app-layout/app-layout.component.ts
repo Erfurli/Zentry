@@ -1,17 +1,17 @@
-import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
-  selector: 'app-admin-layout',
+  selector: 'app-layout',
+  standalone: true,
   imports: [RouterOutlet, HeaderComponent, SidebarComponent],
-  templateUrl: './admin-layout.component.html',
-  styleUrls: ['./admin-layout.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './app-layout.component.html',
+  styleUrl: './app-layout.component.css'
 })
-export class AdminLayoutComponent {
-  readonly sidebarCollapsed = signal(false);
+export class AppLayoutComponent {
+  sidebarCollapsed = signal(false);
 
   onSidebarToggle(collapsed: boolean): void {
     this.sidebarCollapsed.set(collapsed);
