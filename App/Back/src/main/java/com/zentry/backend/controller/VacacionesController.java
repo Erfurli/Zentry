@@ -1,88 +1,67 @@
 package com.zentry.backend.controller;
 
+import com.zentry.backend.dto.VacacionesVistaDTO;
+import com.zentry.backend.model.Empleado;
 import com.zentry.backend.model.Vacaciones;
+import com.zentry.backend.repository.EmpleadoRepository;
 import com.zentry.backend.repository.VacacionesRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/vacaciones")
-@RequiredArgsConstructor
 public class VacacionesController {
 
     private final VacacionesRepository vacacionesRepository;
+    private final EmpleadoRepository empleadoRepository;
+
+    public VacacionesController(VacacionesRepository vacacionesRepository,
+                                EmpleadoRepository empleadoRepository) {
+        this.vacacionesRepository = vacacionesRepository;
+        this.empleadoRepository = empleadoRepository;
+    }
 
     @GetMapping
     public List<Vacaciones> getAll() {
         return vacacionesRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Vacaciones> getById(@PathVariable Long id) {
-        return vacacionesRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/empleado/{empleadoId}")
-    public List<Vacaciones> getByEmpleadoId(@PathVariable Long empleadoId) {
-        return vacacionesRepository.findByEmpleadoId(empleadoId);
-    }
-
-    @GetMapping("/estado/{estado}")
-    public List<Vacaciones> getByEstado(@PathVariable String estado) {
-        return vacacionesRepository.findByEstado(estado);
-    }
-
-    @PostMapping
-    public Vacaciones crear(@RequestBody Vacaciones vacaciones) {
-        return vacacionesRepository.save(vacaciones);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Vacaciones> actualizar(@PathVariable Long id, @RequestBody Vacaciones actualizada) {
-        return vacacionesRepository.findById(id)
-                .map(vacaciones -> {
-                    vacaciones.setEmpleadoId(actualizada.getEmpleadoId());
-                    vacaciones.setFechaInicio(actualizada.getFechaInicio());
-                    vacaciones.setFechaFin(actualizada.getFechaFin());
-                    vacaciones.setDias(actualizada.getDias());
-                    vacaciones.setEstado(actualizada.getEstado());
-                    vacaciones.setFechaSolicitud(actualizada.getFechaSolicitud());
-                    return ResponseEntity.ok(vacacionesRepository.save(vacaciones));
+    @GetMapping("/vista")
+    public List<VacacionesVistaDTO> getVista(@RequestParam(required = false) String estado,
+                                             @RequestParam(required = false) Integer year) {
+        return vacacionesRepository.findAll().stream()
+                .filter(v -> estado == null || estado.equalsIgnoreCase(v.getEstado()))
+                .filter(v -> year == null || (v.getFechaInicio() != null && v.getFechaInicio().startsWith(String.valueOf(year))))
+                .map(v -> {
+                    Empleado emp = empleadoRepository.findById(v.getEmpleadoId()).orElse(null);
+                    return new VacacionesVistaDTO(
+                            v.getId(),
+                            v.getEmpleadoId(),
+                            emp != null ? emp.getNombre() : "Empleado desconocido",
+                            emp != null ? emp.getDepartamento() : "-",
+                            v.getFechaInicio(),
+                            v.getFechaFin(),
+                            v.getDias(),
+                            v.getEstado(),
+                            v.getMotivo() != null ? v.getMotivo() : "Vacaciones anuales"
+                    );
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .collect(Collectors.toList());
     }
 
     @PatchMapping("/{id}/aprobar")
-    public ResponseEntity<Vacaciones> aprobar(@PathVariable Long id) {
-        return vacacionesRepository.findById(id)
-                .map(vacaciones -> {
-                    vacaciones.setEstado("Aprobada");
-                    return ResponseEntity.ok(vacacionesRepository.save(vacaciones));
-                })
-                .orElse(ResponseEntity.notFound().build());
+    public Vacaciones aprobar(@PathVariable Long id) {
+        Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
+        vacacion.setEstado("Aprobada");
+        return vacacionesRepository.save(vacacion);
     }
 
     @PatchMapping("/{id}/rechazar")
-    public ResponseEntity<Vacaciones> rechazar(@PathVariable Long id) {
-        return vacacionesRepository.findById(id)
-                .map(vacaciones -> {
-                    vacaciones.setEstado("Rechazada");
-                    return ResponseEntity.ok(vacacionesRepository.save(vacaciones));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        if (!vacacionesRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        vacacionesRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public Vacaciones rechazar(@PathVariable Long id) {
+        Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
+        vacacion.setEstado("Rechazada");
+        return vacacionesRepository.save(vacacion);
     }
 }

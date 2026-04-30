@@ -31,18 +31,10 @@ export class EmpleadosService {
   }
 
   actualizarEmpleado(id: number, empleado: CreateEmpleadoRequest): Observable<Empleado> {
-  return this.http.put<Empleado>(`${this.apiUrl}/${id}`, empleado);
-}
+    return this.http.put<Empleado>(`${this.apiUrl}/${id}`, empleado);
+  }
 
   toggleActivo(id: number): Observable<Empleado> {
     return this.http.patch<Empleado>(`${this.apiUrl}/${id}/toggle-activo`, {});
-  }
-
-  getDepartamentos(): string[] {
-    return ['IT', 'RRHH', 'Ventas', 'Administración', 'Marketing'];
-  }
-
-  getRoles(): string[] {
-    return ['Empleado', 'Admin', 'Mando'];
   }
 }

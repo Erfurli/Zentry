@@ -23,4 +23,13 @@ public class Vacaciones {
     private Integer dias;
     private String estado;
     private String fechaSolicitud;
+    private String motivo;
+
+    public String getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
 }

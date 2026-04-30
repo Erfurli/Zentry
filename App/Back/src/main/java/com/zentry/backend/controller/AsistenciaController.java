@@ -1,68 +1,73 @@
 package com.zentry.backend.controller;
 
+import com.zentry.backend.dto.AsistenciaVistaDTO;
 import com.zentry.backend.model.Asistencia;
+import com.zentry.backend.model.Empleado;
 import com.zentry.backend.repository.AsistenciaRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import com.zentry.backend.repository.EmpleadoRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/asistencia")
-@RequiredArgsConstructor
 public class AsistenciaController {
 
     private final AsistenciaRepository asistenciaRepository;
+    private final EmpleadoRepository empleadoRepository;
+
+    public AsistenciaController(AsistenciaRepository asistenciaRepository,
+                                EmpleadoRepository empleadoRepository) {
+        this.asistenciaRepository = asistenciaRepository;
+        this.empleadoRepository = empleadoRepository;
+    }
 
     @GetMapping
     public List<Asistencia> getAll() {
         return asistenciaRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Asistencia> getById(@PathVariable Long id) {
-        return asistenciaRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+    @GetMapping("/vista")
+    public List<AsistenciaVistaDTO> getVista(@RequestParam(required = false) String fecha) {
+        List<Empleado> empleados = empleadoRepository.findAll();
+        List<Asistencia> asistencias = asistenciaRepository.findAll();
+        List<AsistenciaVistaDTO> resultado = new ArrayList<>();
 
-    @GetMapping("/empleado/{empleadoId}")
-    public List<Asistencia> getByEmpleadoId(@PathVariable Long empleadoId) {
-        return asistenciaRepository.findByEmpleadoId(empleadoId);
-    }
+        for (Empleado emp : empleados) {
+            Optional<Asistencia> asistenciaOpt = asistencias.stream()
+                    .filter(a -> a.getEmpleadoId().equals(emp.getId()))
+                    .filter(a -> fecha == null || fecha.equals(a.getFecha()))
+                    .findFirst();
 
-    @GetMapping("/fecha/{fecha}")
-    public List<Asistencia> getByFecha(@PathVariable String fecha) {
-        return asistenciaRepository.findByFecha(fecha);
-    }
+            String entrada = "-";
+            String salida = "-";
+            String estado = "Ausente";
+            String fechaFinal = fecha != null ? fecha : "";
 
-    @PostMapping
-    public Asistencia crear(@RequestBody Asistencia asistencia) {
-        return asistenciaRepository.save(asistencia);
-    }
+            if (asistenciaOpt.isPresent()) {
+                Asistencia asistencia = asistenciaOpt.get();
+                entrada = asistencia.getEntrada() != null ? asistencia.getEntrada() : "-";
+                salida = asistencia.getSalida() != null ? asistencia.getSalida() : "-";
+                fechaFinal = asistencia.getFecha() != null ? asistencia.getFecha() : fechaFinal;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Asistencia> actualizar(@PathVariable Long id, @RequestBody Asistencia actualizada) {
-        return asistenciaRepository.findById(id)
-                .map(asistencia -> {
-                    asistencia.setEmpleadoId(actualizada.getEmpleadoId());
-                    asistencia.setFecha(actualizada.getFecha());
-                    asistencia.setEntrada(actualizada.getEntrada());
-                    asistencia.setSalida(actualizada.getSalida());
-                    asistencia.setHoras(actualizada.getHoras());
-                    asistencia.setModo(actualizada.getModo());
-                    return ResponseEntity.ok(asistenciaRepository.save(asistencia));
-                })
-                .orElse(ResponseEntity.notFound().build());
-    }
+                if (asistencia.getEntrada() != null) {
+                    estado = asistencia.getEntrada().compareTo("09:15") > 0 ? "Retraso" : "Presente";
+                }
+            }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        if (!asistenciaRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+            resultado.add(new AsistenciaVistaDTO(
+                    emp.getId(),
+                    emp.getNombre(),
+                    emp.getDepartamento(),
+                    estado,
+                    entrada,
+                    salida,
+                    fechaFinal
+            ));
         }
-        asistenciaRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+
+        return resultado;
     }
 }

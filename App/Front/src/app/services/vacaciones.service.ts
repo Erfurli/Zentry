@@ -1,12 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
-import { Vacaciones } from '../models/vacaciones.model';
-import { Empleado } from '../models/empleado.model';
+import { Observable } from 'rxjs';
 import { environment } from '../../enviroments/enviroment';
 
 export interface VacacionesVista {
   id: number;
+  empleadoId: number;
   empleado: string;
   departamento: string;
   fechaInicio: string;
@@ -21,37 +20,21 @@ export interface VacacionesVista {
 })
 export class VacacionesService {
   private http = inject(HttpClient);
-  private apiVacaciones = `${environment.apiUrl}/vacaciones`;
-  private apiEmpleados = `${environment.apiUrl}/empleados`;
+  private apiUrl = `${environment.apiUrl}/vacaciones`;
 
-  getVacacionesVista(): Observable<VacacionesVista[]> {
-    return forkJoin({
-      vacaciones: this.http.get<Vacaciones[]>(this.apiVacaciones),
-      empleados: this.http.get<Empleado[]>(this.apiEmpleados)
-    }).pipe(
-      map(({ vacaciones, empleados }) =>
-        vacaciones.map(v => {
-          const empleado = empleados.find(e => e.id === v.empleadoId);
-          return {
-            id: v.id,
-            empleado: empleado?.nombre ?? 'Empleado desconocido',
-            departamento: empleado?.departamento ?? '-',
-            fechaInicio: v.fechaInicio,
-            fechaFin: v.fechaFin,
-            dias: v.dias,
-            estado: v.estado,
-            motivo: 'Vacaciones anuales'
-          };
-        })
-      )
-    );
+  getVacacionesVista(estado?: string, year?: number): Observable<VacacionesVista[]> {
+    const params: Record<string, string> = {};
+    if (estado && estado !== 'Todos') params['estado'] = estado;
+    if (year) params['year'] = String(year);
+
+    return this.http.get<VacacionesVista[]>(`${this.apiUrl}/vista`, { params });
   }
 
-  aprobar(id: number): Observable<Vacaciones> {
-    return this.http.patch<Vacaciones>(`${this.apiVacaciones}/${id}/aprobar`, {});
+  aprobar(id: number): Observable<VacacionesVista> {
+    return this.http.patch<VacacionesVista>(`${this.apiUrl}/${id}/aprobar`, {});
   }
 
-  rechazar(id: number): Observable<Vacaciones> {
-    return this.http.patch<Vacaciones>(`${this.apiVacaciones}/${id}/rechazar`, {});
+  rechazar(id: number): Observable<VacacionesVista> {
+    return this.http.patch<VacacionesVista>(`${this.apiUrl}/${id}/rechazar`, {});
   }
 }

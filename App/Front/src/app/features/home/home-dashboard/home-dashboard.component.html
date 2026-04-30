@@ -10,21 +10,21 @@
 
     <div class="stats-grid">
       <div class="stat-card">
-        <div class="stat-label">Saldo Vacaciones</div>
+        <div class="stat-label">Vacaciones pendientes</div>
         <div class="stat-value">
           {{ summary.vacationBalance }}<span class="stat-unit"> días</span>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-label">Horas Hoy</div>
+        <div class="stat-label">Horas trabajadas hoy</div>
         <div class="stat-value">
           {{ summary.todayHours }}<span class="stat-unit"> h</span>
         </div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-label">Próximas Vacaciones</div>
+        <div class="stat-label">Próximas vacaciones</div>
         <div class="stat-value">
           {{ summary.upcomingVacations.length ? summary.upcomingVacations[0].dates : 'Ninguna' }}
         </div>
@@ -53,6 +53,12 @@
           <i class="fa-solid fa-calendar-xmark"></i> Solicitar Ausencia
         </button>
       </div>
+
+
     </section>
+<!-- <img
+  src="/assets/img/imagen_2026-04-30_201525425-removebg-preview.png"
+  alt="Imagen dashboard"
+/> -->
   </div>
 </div>

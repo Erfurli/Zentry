@@ -24,7 +24,12 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              {
+    "glob": "**/*",
+    "input": "src/assets",
+    "output": "assets"
+  }
             ],
             "styles": [
               "@angular/material/prebuilt-themes/rose-red.css",
