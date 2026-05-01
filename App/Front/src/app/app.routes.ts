@@ -9,11 +9,12 @@ import { EmpleadosComponent } from './pages/empleados/empleados.component';
 import { AusenciasComponent } from './pages/ausencias/ausencias.component';
 import { authGuard } from './guards/auth.guard';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
+import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 
 export const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: '',
@@ -24,49 +25,55 @@ export const routes: Routes = [
         path: 'dashboard',
         component: HomeDashboardComponent,
         canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] }
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
       {
         path: 'asistencia',
         component: AsistenciaComponent,
         canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] }
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
       {
         path: 'vacaciones',
         component: VacacionesComponent,
         canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] }
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
       {
         path: 'ausencias',
         component: AusenciasComponent,
         canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] }
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
       {
         path: 'admin-dashboard',
         component: AdminDashboardComponent,
         canActivate: [authGuard],
-        data: { roles: ['RRHH'] }
+        data: { roles: ['RRHH'] },
       },
       {
         path: 'reportes',
         component: ReportesComponent,
         canActivate: [authGuard],
-        data: { roles: ['RRHH'] }
+        data: { roles: ['RRHH'] },
       },
       {
         path: 'empleados',
         component: EmpleadosComponent,
         canActivate: [authGuard],
-        data: { roles: ['RRHH', 'MANDO'] }
+        data: { roles: ['RRHH', 'MANDO'] },
       },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
-    ]
+      {
+        path: 'usuarios',
+        component: UsuariosComponent,
+        canActivate: [authGuard],
+        data: { roles: ['RRHH'] },
+      },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    ],
   },
   {
     path: '**',
-    redirectTo: 'login'
-  }
+    redirectTo: 'login',
+  },
 ];

@@ -17,7 +17,7 @@ public class Usuario {
     @Id
     private Long id;
 
-    private Long empleadoId;
+    private String empleadoId;
     private String username;
     private String password;
     private RolSistema rolSistema;

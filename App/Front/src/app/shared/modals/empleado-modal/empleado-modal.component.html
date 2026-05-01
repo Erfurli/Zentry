@@ -1,7 +1,7 @@
 <div class="modal-backdrop" (click)="onCerrar()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>Nuevo empleado</h2>
+      <h2>{{ esEdicion ? 'Editar empleado' : 'Nuevo empleado' }}</h2>
       <button type="button" class="close-btn" (click)="onCerrar()" aria-label="Cerrar modal">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -57,8 +57,8 @@
         </div>
 
         <div class="form-field">
-          <label for="rol">Rol</label>
-          <select id="rol" formControlName="rol">
+          <label for="rolEmpresa">Rol</label>
+          <select id="rolEmpresa" formControlName="rolEmpresa">
             <option value="">Selecciona rol</option>
             @for (rol of roles; track rol) {
               <option [value]="rol">{{ rol }}</option>
@@ -85,7 +85,7 @@
           Cancelar
         </button>
         <button type="submit" class="primary-btn" [disabled]="loading">
-          {{ loading ? 'Guardando...' : 'Crear empleado' }}
+          {{ loading ? 'Guardando...' : (esEdicion ? 'Guardar cambios' : 'Crear empleado') }}
         </button>
       </div>
     </form>

@@ -12,7 +12,7 @@ export interface CreateEmpleadoRequest {
   puesto: string;
   fechaAlta: string;
   activo: boolean;
-  rol: string;
+  rolEmpresa: string;
 }
 
 @Injectable({
@@ -30,11 +30,11 @@ export class EmpleadosService {
     return this.http.post<Empleado>(this.apiUrl, empleado);
   }
 
-  actualizarEmpleado(id: number, empleado: CreateEmpleadoRequest): Observable<Empleado> {
+  actualizarEmpleado(id: string, empleado: CreateEmpleadoRequest): Observable<Empleado> {
     return this.http.put<Empleado>(`${this.apiUrl}/${id}`, empleado);
   }
 
-  toggleActivo(id: number): Observable<Empleado> {
+  toggleActivo(id: string): Observable<Empleado> {
     return this.http.patch<Empleado>(`${this.apiUrl}/${id}/toggle-activo`, {});
   }
 }

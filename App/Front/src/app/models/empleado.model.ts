@@ -1,5 +1,5 @@
 export interface Empleado {
-  id: number;
+  id: string;
   nombre: string;
   email: string;
   dni: string;
@@ -7,5 +7,5 @@ export interface Empleado {
   puesto: string;
   fechaAlta: string;
   activo: boolean;
-  rol: string;
+  rolEmpresa: string;
 }

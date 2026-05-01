@@ -47,10 +47,10 @@ export class AsistenciaComponent implements OnInit {
   readonly totalEmpleados = computed(() => this.empleados().length);
 
   ngOnInit(): void {
-    // this.asistenciaService.getAsistenciaVista().subscribe({
-    //   next: data => this.empleados.set(data),
-    //   error: err => console.error('Error cargando asistencia', err)
-    // });
+    this.asistenciaService.getAsistenciaVista().subscribe({
+      next: data => this.empleados.set(data),
+      error: err => console.error('Error cargando asistencia', err)
+    });
   }
 
   onDeptoChange(event: Event): void {

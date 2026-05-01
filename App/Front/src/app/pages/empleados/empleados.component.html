@@ -28,29 +28,9 @@
         <option value="Ventas">Ventas</option>
       </select>
 
-      <select
-        class="filter-select"
-        [value]="filtroEstado()"
-        (change)="onEstadoChange($event)"
-      >
-        <option value="Todos">Todos los estados</option>
-        <option value="Activos">Activos</option>
-        <option value="Inactivos">Inactivos</option>
-      </select>
+      
     </div>
   </div>
-
-  <div class="kpi-grid">
-    <div class="kpi-card activos">
-      <div class="kpi-number">{{ totalActivos() }}</div>
-      <div class="kpi-label">Activos</div>
-    </div>
-    <div class="kpi-card inactivos">
-      <div class="kpi-number">{{ totalInactivos() }}</div>
-      <div class="kpi-label">Inactivos</div>
-    </div>
-  </div>
-
   <div class="table-container">
     @if (empleadosFiltrados().length > 0) {
       <table class="empleados-table">
@@ -83,13 +63,6 @@
               </td>
               <td>{{ empleado.fechaAlta }}</td>
               <td class="acciones-cell">
-                <button
-                  class="accion-btn toggle-estado"
-                  (click)="toggleActivo(empleado.id)"
-                  [title]="empleado.activo ? 'Desactivar' : 'Activar'"
-                >
-                  <i class="fa-solid fa-power-off"></i>
-                </button>
                 <button
                   class="accion-btn editar"
                   (click)="abrirModalEditar(empleado)"

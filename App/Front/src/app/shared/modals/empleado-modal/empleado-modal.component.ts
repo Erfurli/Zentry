@@ -12,9 +12,9 @@ import { Empleado } from '../../../models/empleado.model';
   styleUrl: './empleado-modal.component.css'
 })
 export class EmpleadoModalComponent implements OnInit {
-  @Input() empleado?: Empleado; // ← Nuevo: recibe empleado para editar
+  @Input() empleado?: Empleado;
   @Output() cerrar = new EventEmitter<void>();
-  @Output() empleadoGuardado = new EventEmitter<Empleado>(); // ← Cambiado: unificado
+  @Output() empleadoGuardado = new EventEmitter<Empleado>();
 
   private fb = inject(FormBuilder);
   private empleadosService = inject(EmpleadosService);
@@ -34,13 +34,22 @@ export class EmpleadoModalComponent implements OnInit {
     puesto: ['', [Validators.required, Validators.minLength(2)]],
     fechaAlta: ['', Validators.required],
     activo: [true, Validators.required],
-    rol: ['', Validators.required]
+    rolEmpresa: ['', Validators.required]
   });
 
   ngOnInit(): void {
     if (this.empleado) {
       this.esEdicion = true;
-      this.formulario.patchValue(this.empleado);
+      this.formulario.patchValue({
+        nombre: this.empleado.nombre,
+        email: this.empleado.email,
+        dni: this.empleado.dni,
+        departamento: this.empleado.departamento,
+        puesto: this.empleado.puesto,
+        fechaAlta: this.empleado.fechaAlta,
+        activo: this.empleado.activo,
+        rolEmpresa: this.empleado.rolEmpresa
+      });
     }
   }
 
@@ -53,10 +62,21 @@ export class EmpleadoModalComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    const datos: CreateEmpleadoRequest = this.formulario.getRawValue() as CreateEmpleadoRequest;
+    const formValue = this.formulario.getRawValue();
 
-    if (this.esEdicion) {
-      this.empleadosService.actualizarEmpleado(this.empleado!.id!, datos).subscribe({
+    const datos: CreateEmpleadoRequest = {
+      nombre: formValue.nombre ?? '',
+      email: formValue.email ?? '',
+      dni: formValue.dni ?? '',
+      departamento: formValue.departamento ?? '',
+      puesto: formValue.puesto ?? '',
+      fechaAlta: formValue.fechaAlta ?? '',
+      activo: formValue.activo ?? true,
+      rolEmpresa: formValue.rolEmpresa ?? ''
+    };
+
+    if (this.esEdicion && this.empleado) {
+      this.empleadosService.actualizarEmpleado(this.empleado.id, datos).subscribe({
         next: (empleadoActualizado) => {
           this.loading = false;
           this.empleadoGuardado.emit(empleadoActualizado);
@@ -67,7 +87,6 @@ export class EmpleadoModalComponent implements OnInit {
         }
       });
     } else {
-      // Crear nuevo empleado (código anterior)
       this.empleadosService.crearEmpleado(datos).subscribe({
         next: (nuevoEmpleado) => {
           this.loading = false;

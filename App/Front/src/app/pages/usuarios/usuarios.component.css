@@ -157,6 +157,23 @@
   font-weight: 500;
 }
 
+/* BADGES */
+.estado-badge {
+  padding: 0.3rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.estado-badge.activo {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.estado-badge.inactivo {
+  background: #fee2e2;
+  color: #991b1b;
+}
 
 /* ACCIONES */
 .acciones-cell {
@@ -180,6 +197,16 @@
 
 .accion-btn:hover {
   transform: translateY(-1px);
+}
+
+.accion-btn.toggle-estado {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.accion-btn.toggle-estado:hover {
+  background: #f59e0b;
+  color: white;
 }
 
 .accion-btn.editar {
@@ -235,4 +262,119 @@
   .empleados-table {
     min-width: 800px;
   }
+}
+
+
+.rol-badge {
+  padding: 0.3rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.rol-badge.admin {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.accion-btn.reset {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.accion-btn.reset:hover {
+  background: #a855f7;
+  color: white;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1e293b;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #94a3b8;
+  width: auto;
+  padding: 0;
+}
+
+.modal-body {
+  padding: 1.5rem 2rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-field label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #374151;
+}
+
+.form-field input,
+.form-field select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+.secondary-btn {
+  padding: 0.75rem 1.5rem;
+  background: #f1f5f9;
+  color: #374151;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  background: #e2e8f0;
 }

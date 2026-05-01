@@ -8,7 +8,6 @@ import com.zentry.backend.repository.VacacionesRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/vacaciones")
@@ -33,7 +32,8 @@ public class VacacionesController {
                                              @RequestParam(required = false) Integer year) {
         return vacacionesRepository.findAll().stream()
                 .filter(v -> estado == null || estado.equalsIgnoreCase(v.getEstado()))
-                .filter(v -> year == null || (v.getFechaInicio() != null && v.getFechaInicio().startsWith(String.valueOf(year))))
+                .filter(v -> year == null || (v.getFechaInicio() != null
+                        && v.getFechaInicio().startsWith(String.valueOf(year))))
                 .map(v -> {
                     Empleado emp = empleadoRepository.findById(v.getEmpleadoId()).orElse(null);
                     return new VacacionesVistaDTO(
@@ -45,21 +45,21 @@ public class VacacionesController {
                             v.getFechaFin(),
                             v.getDias(),
                             v.getEstado(),
-                            v.getMotivo() != null ? v.getMotivo() : "Vacaciones anuales"
+                            "Vacaciones anuales"
                     );
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @PatchMapping("/{id}/aprobar")
-    public Vacaciones aprobar(@PathVariable Long id) {
+    public Vacaciones aprobar(@PathVariable String id) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
         vacacion.setEstado("Aprobada");
         return vacacionesRepository.save(vacacion);
     }
 
     @PatchMapping("/{id}/rechazar")
-    public Vacaciones rechazar(@PathVariable Long id) {
+    public Vacaciones rechazar(@PathVariable String id) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
         vacacion.setEstado("Rechazada");
         return vacacionesRepository.save(vacacion);

@@ -55,4 +55,10 @@ export class LoginComponent {
       }
     });
   }
+
+  showPassword = false;
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
 }

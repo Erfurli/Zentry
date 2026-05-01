@@ -21,7 +21,7 @@ public class EmpleadoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Empleado> getById(@PathVariable Long id) {
+    public ResponseEntity<Empleado> getById(@PathVariable String id) {
         return empleadoRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -39,19 +39,12 @@ public class EmpleadoController {
 
     @PostMapping
     public Empleado crear(@RequestBody Empleado empleado) {
-        if (empleado.getId() == null) {
-            Long siguienteId = empleadoRepository.findTopByOrderByIdDesc()
-                    .map(e -> e.getId() + 1)
-                    .orElse(1L);
-
-            empleado.setId(siguienteId);
-        }
-
+        empleado.setId(null);
         return empleadoRepository.save(empleado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Empleado> actualizar(@PathVariable Long id, @RequestBody Empleado empleadoActualizado) {
+    public ResponseEntity<Empleado> actualizar(@PathVariable String id, @RequestBody Empleado empleadoActualizado) {
         return empleadoRepository.findById(id)
                 .map(empleado -> {
                     empleado.setNombre(empleadoActualizado.getNombre());
@@ -68,7 +61,7 @@ public class EmpleadoController {
     }
 
     @PatchMapping("/{id}/toggle-activo")
-    public ResponseEntity<Empleado> toggleActivo(@PathVariable Long id) {
+    public ResponseEntity<Empleado> toggleActivo(@PathVariable String id) {
         return empleadoRepository.findById(id)
                 .map(empleado -> {
                     empleado.setActivo(!Boolean.TRUE.equals(empleado.getActivo()));
@@ -78,7 +71,7 @@ public class EmpleadoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@PathVariable String id) {
         if (!empleadoRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

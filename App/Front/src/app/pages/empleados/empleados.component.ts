@@ -25,30 +25,18 @@ export class EmpleadosComponent implements OnInit {
 
   readonly empleados = signal<Empleado[]>([]);
   readonly filtroDepartamento = signal('Todos');
-  readonly filtroEstado = signal('Todos');
   readonly modalAbierto = signal(false);
   readonly empleadoEditando = signal<Empleado | undefined>(undefined);
 
   readonly empleadosFiltrados = computed(() => {
     const depto = this.filtroDepartamento();
-    const estado = this.filtroEstado();
 
     return this.empleados().filter((e) => {
       const coincideDepto = depto === 'Todos' || e.departamento === depto;
-      const coincideEstado =
-        estado === 'Todos' || (estado === 'Activos' ? e.activo : !e.activo);
 
-      return coincideDepto && coincideEstado;
+      return coincideDepto;
     });
   });
-
-  readonly totalActivos = computed(
-    () => this.empleados().filter((e) => e.activo).length,
-  );
-  readonly totalInactivos = computed(
-    () => this.empleados().filter((e) => !e.activo).length,
-  );
-
   ngOnInit(): void {
     this.cargarEmpleados();
   }
@@ -76,30 +64,20 @@ export class EmpleadosComponent implements OnInit {
   }
 
   onEmpleadoGuardado(actualizado: Empleado): void {
-    this.empleados.update((lista) =>
-      lista.map((e) => (e.id === actualizado.id ? actualizado : e)),
-    );
-    this.cerrarModal();
-  }
+  this.empleados.update((lista) => {
+    const existe = lista.some((e) => e.id === actualizado.id);
+    return existe
+      ? lista.map((e) => (e.id === actualizado.id ? actualizado : e))
+      : [...lista, actualizado];
+  });
+
+  this.cerrarModal();
+}
 
   onDeptoChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.filtroDepartamento.set(select.value);
   }
 
-  onEstadoChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.filtroEstado.set(select.value);
-  }
 
-  toggleActivo(id: number): void {
-    this.empleadosService.toggleActivo(id).subscribe({
-      next: (actualizado) => {
-        this.empleados.update((lista) =>
-          lista.map((e) => (e.id === id ? actualizado : e)),
-        );
-      },
-      error: (err) => console.error('Error actualizando empleado', err),
-    });
-  }
 }

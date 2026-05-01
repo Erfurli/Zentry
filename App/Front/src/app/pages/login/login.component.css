@@ -2,17 +2,27 @@
   min-height: 100vh;
   display: grid;
   place-items: center;
-  background: #f8fafc;
   padding: 2rem;
+  position: relative;
+  background: url('/assets/img/login_office_bg.jpg') center center / cover no-repeat;
+}
+
+.login-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
 }
 
 .login-card {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 420px;
   background: white;
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 1);
 }
 
 .login-card h1 {
@@ -63,4 +73,49 @@ button:disabled {
   border-radius: 12px;
   background: #e2eafe;
   color: var(--zentry-button);
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 3rem;
+}
+
+.eye-btn {
+  position: absolute;
+  right: 0.75rem;
+  width: auto;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.eye-btn:hover {
+  color: #475569;
+}
+
+.forgot-password {
+  text-align: left;
+  margin-bottom: 1rem;
+  margin-top: -0.25rem;
+}
+
+.forgot-password a {
+  font-size: 0.85rem;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
 }

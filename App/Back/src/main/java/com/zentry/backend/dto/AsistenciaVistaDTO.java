@@ -2,7 +2,7 @@ package com.zentry.backend.dto;
 
 public class AsistenciaVistaDTO {
 
-    private Long empleadoId;
+    private String empleadoId;
     private String nombre;
     private String departamento;
     private String estado;
@@ -12,7 +12,7 @@ public class AsistenciaVistaDTO {
 
     public AsistenciaVistaDTO() {}
 
-    public AsistenciaVistaDTO(Long empleadoId, String nombre, String departamento,
+    public AsistenciaVistaDTO(String empleadoId, String nombre, String departamento,
                               String estado, String entrada, String salida, String fecha) {
         this.empleadoId = empleadoId;
         this.nombre = nombre;
@@ -23,8 +23,8 @@ public class AsistenciaVistaDTO {
         this.fecha = fecha;
     }
 
-    public Long getEmpleadoId() { return empleadoId; }
-    public void setEmpleadoId(Long empleadoId) { this.empleadoId = empleadoId; }
+    public String getEmpleadoId() { return empleadoId; }
+    public void setEmpleadoId(String empleadoId) { this.empleadoId = empleadoId; }
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
     public String getDepartamento() { return departamento; }
@@ -38,5 +38,3 @@ public class AsistenciaVistaDTO {
     public String getFecha() { return fecha; }
     public void setFecha(String fecha) { this.fecha = fecha; }
 }
-
-

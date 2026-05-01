@@ -1,9 +1,9 @@
-export interface Asistencia {
-  id: number;
-  empleadoId: number;
+export interface AsistenciaVista {
+  empleadoId: string;
+  nombre: string;
+  departamento: string;
+  estado: 'Presente' | 'Ausente' | 'Retraso';
+  entrada: string;
+  salida: string;
   fecha: string;
-  entrada: string | null;
-  salida: string | null;
-  horas: number | null;
-  modo: string;
 }

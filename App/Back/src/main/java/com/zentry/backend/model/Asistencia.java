@@ -15,9 +15,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Asistencia {
 
     @Id
-    private Long id;
+    private String id;
 
-    private Long empleadoId;
+    private String empleadoId;
     private String fecha;
     private String entrada;
     private String salida;

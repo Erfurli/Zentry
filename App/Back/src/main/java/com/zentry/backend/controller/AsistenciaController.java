@@ -32,13 +32,15 @@ public class AsistenciaController {
     @GetMapping("/vista")
     public List<AsistenciaVistaDTO> getVista(@RequestParam(required = false) String fecha) {
         List<Empleado> empleados = empleadoRepository.findAll();
-        List<Asistencia> asistencias = asistenciaRepository.findAll();
+        List<Asistencia> asistencias = fecha == null
+                ? asistenciaRepository.findAll()
+                : asistenciaRepository.findByFecha(fecha);
+
         List<AsistenciaVistaDTO> resultado = new ArrayList<>();
 
         for (Empleado emp : empleados) {
             Optional<Asistencia> asistenciaOpt = asistencias.stream()
                     .filter(a -> a.getEmpleadoId().equals(emp.getId()))
-                    .filter(a -> fecha == null || fecha.equals(a.getFecha()))
                     .findFirst();
 
             String entrada = "-";

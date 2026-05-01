@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../enviroments/enviroment';
 
 export interface VacacionesVista {
-  id: number;
-  empleadoId: number;
+  id: string;
+  empleadoId: string;
   empleado: string;
   departamento: string;
   fechaInicio: string;
@@ -30,11 +30,11 @@ export class VacacionesService {
     return this.http.get<VacacionesVista[]>(`${this.apiUrl}/vista`, { params });
   }
 
-  aprobar(id: number): Observable<VacacionesVista> {
+  aprobar(id: string): Observable<VacacionesVista> {
     return this.http.patch<VacacionesVista>(`${this.apiUrl}/${id}/aprobar`, {});
   }
 
-  rechazar(id: number): Observable<VacacionesVista> {
+  rechazar(id: string): Observable<VacacionesVista> {
     return this.http.patch<VacacionesVista>(`${this.apiUrl}/${id}/rechazar`, {});
   }
 }

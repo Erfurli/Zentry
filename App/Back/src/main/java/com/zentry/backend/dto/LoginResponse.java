@@ -14,5 +14,5 @@ public class LoginResponse {
     private String username;
     private String systemRole;
     private String companyRole;
-    private Long empleadoId;
+    private String empleadoId;
 }

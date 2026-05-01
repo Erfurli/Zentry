@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../enviroments/enviroment';
 
 export interface AsistenciaVista {
-  empleadoId: number;
+  empleadoId: string;
   nombre: string;
   departamento: string;
   estado: 'Presente' | 'Ausente' | 'Retraso';
@@ -20,8 +20,10 @@ export class AsistenciaService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/asistencia`;
 
-  // getAsistenciaVista(fecha?: string): Observable<AsistenciaVista[]> {
-  //   const params = fecha ? { fecha } : {};
-  //   return this.http.get<AsistenciaVista[]>(`${this.apiUrl}/vista`, { params });
-  // }
+  getAsistenciaVista(fecha?: string): Observable<AsistenciaVista[]> {
+  const params: Record<string, string> = {};
+  if (fecha) params['fecha'] = fecha;
+
+  return this.http.get<AsistenciaVista[]>(`${this.apiUrl}/vista`, { params });
+}
 }

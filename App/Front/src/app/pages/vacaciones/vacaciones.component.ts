@@ -22,7 +22,8 @@ export class VacacionesComponent implements OnInit {
   readonly solicitudesFiltradas = computed(() => {
     const estado = this.filtroEstado();
     const depto = this.filtroDepartamento();
-    return this.solicitudes().filter(s => {
+
+    return this.solicitudes().filter((s) => {
       const coincideEstado = estado === 'Todos' || s.estado === estado;
       const coincideDepto = depto === 'Todos' || s.departamento === depto;
       return coincideEstado && coincideDepto;
@@ -30,14 +31,17 @@ export class VacacionesComponent implements OnInit {
   });
 
   readonly totalAprobadas = computed(() =>
-    this.solicitudes().filter(s => s.estado === 'Aprobada').length
+    this.solicitudes().filter((s) => s.estado === 'Aprobada').length
   );
+
   readonly totalPendientes = computed(() =>
-    this.solicitudes().filter(s => s.estado === 'Pendiente').length
+    this.solicitudes().filter((s) => s.estado === 'Pendiente').length
   );
+
   readonly totalRechazadas = computed(() =>
-    this.solicitudes().filter(s => s.estado === 'Rechazada').length
+    this.solicitudes().filter((s) => s.estado === 'Rechazada').length
   );
+
   readonly totalDiasSolicitados = computed(() =>
     this.solicitudes().reduce((acc, s) => acc + s.dias, 0)
   );
@@ -48,8 +52,8 @@ export class VacacionesComponent implements OnInit {
 
   cargarVacaciones(): void {
     this.vacacionesService.getVacacionesVista().subscribe({
-      next: data => this.solicitudes.set(data),
-      error: err => console.error('Error cargando vacaciones', err)
+      next: (data) => this.solicitudes.set(data),
+      error: (err) => console.error('Error cargando vacaciones', err)
     });
   }
 
@@ -61,17 +65,17 @@ export class VacacionesComponent implements OnInit {
     this.filtroDepartamento.set(valor);
   }
 
-  aprobar(id: number): void {
+  aprobar(id: string): void {
     this.vacacionesService.aprobar(id).subscribe({
       next: () => this.cargarVacaciones(),
-      error: err => console.error('Error aprobando vacaciones', err)
+      error: (err) => console.error('Error al aprobar vacaciones', err)
     });
   }
 
-  rechazar(id: number): void {
+  rechazar(id: string): void {
     this.vacacionesService.rechazar(id).subscribe({
       next: () => this.cargarVacaciones(),
-      error: err => console.error('Error rechazando vacaciones', err)
+      error: (err) => console.error('Error al rechazar vacaciones', err)
     });
   }
 
