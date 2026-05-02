@@ -19,10 +19,15 @@
         </div>
 
         <div class="form-field">
-          <label for="empleadoId">ID Empleado</label>
-          <input id="empleadoId" type="text" formControlName="empleadoId" />
+          <label for="empleadoId">Empleado</label>
+          <select id="empleadoId" formControlName="empleadoId" (change)="onEmpleadoChange($event)">
+            <option value="">Selecciona un empleado</option>
+            @for (emp of empleados; track emp.id) {
+              <option [value]="emp.id">{{ emp.nombre }} — {{ emp.departamento }}</option>
+            }
+          </select>
           @if (formulario.controls.empleadoId.touched && formulario.controls.empleadoId.invalid) {
-            <small class="error-text">Campo obligatorio.</small>
+            <small class="error-text">Selecciona un empleado.</small>
           }
         </div>
 
