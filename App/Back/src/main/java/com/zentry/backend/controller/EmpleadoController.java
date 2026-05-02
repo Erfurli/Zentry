@@ -2,9 +2,11 @@ package com.zentry.backend.controller;
 
 import com.zentry.backend.model.Empleado;
 import com.zentry.backend.repository.EmpleadoRepository;
+import com.zentry.backend.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.zentry.backend.model.Usuario;
 
 import java.util.List;
 
@@ -14,6 +16,8 @@ import java.util.List;
 public class EmpleadoController {
 
     private final EmpleadoRepository empleadoRepository;
+    private final UsuarioRepository usuarioRepository;
+
 
     @GetMapping
     public List<Empleado> getAll() {
@@ -78,4 +82,17 @@ public class EmpleadoController {
         empleadoRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/sin-usuario")
+    public List<Empleado> getSinUsuario() {
+        List<String> empleadoIdsConUsuario = usuarioRepository.findAll()
+                .stream()
+                .map(Usuario::getEmpleadoId)
+                .toList();
+
+        return empleadoRepository.findByActivo(true)
+                .stream()
+                .filter(e -> !empleadoIdsConUsuario.contains(e.getId()))
+                .toList();
+    }
+
 }

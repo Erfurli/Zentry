@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Usuario } from '../../models/usuario.model';
+import { Empleado } from '../../models/empleado.model';
 import { UsuariosService } from '../../services/usuario.service';
+import { EmpleadosService } from '../../services/empleados.service';
 import { UsuarioModalComponent } from '../../shared/modals/usuario-modal/usuario-modal.component';
-
 
 @Component({
   selector: 'app-usuarios',
@@ -17,8 +18,10 @@ import { UsuarioModalComponent } from '../../shared/modals/usuario-modal/usuario
 })
 export class UsuariosComponent implements OnInit {
   private usuariosService = inject(UsuariosService);
+  private empleadosService = inject(EmpleadosService);
 
   readonly usuarios = signal<Usuario[]>([]);
+  readonly empleados = signal<Empleado[]>([]);
   readonly filtroRol = signal('Todos');
   readonly filtroEstado = signal('Todos');
   readonly modalResetAbierto = signal(false);
@@ -26,6 +29,8 @@ export class UsuariosComponent implements OnInit {
   readonly usuarioReseteando = signal<Usuario | undefined>(undefined);
   readonly modalAbierto = signal(false);
   readonly usuarioEditando = signal<Usuario | undefined>(undefined);
+  readonly modalInfoAbierto = signal(false);
+  readonly empleadoInfo = signal<Empleado | undefined>(undefined);
 
   readonly usuariosFiltrados = computed(() => {
     const rol = this.filtroRol();
@@ -45,6 +50,9 @@ export class UsuariosComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarUsuarios();
+    this.empleadosService.getEmpleados().subscribe({
+      next: data => this.empleados.set(data)
+    });
   }
 
   cargarUsuarios(): void {
@@ -53,6 +61,22 @@ export class UsuariosComponent implements OnInit {
       error: err => console.error('Error cargando usuarios', err)
     });
   }
+
+  getNombreEmpleado(empleadoId: string): string {
+    return this.empleados().find(e => e.id === empleadoId)?.nombre ?? empleadoId;
+  }
+
+  abrirModalInfo(usuario: Usuario): void {
+    const emp = this.empleados().find(e => e.id === usuario.empleadoId);
+    this.empleadoInfo.set(emp);
+    this.modalInfoAbierto.set(true);
+  }
+
+  cerrarModalInfo(): void {
+    this.modalInfoAbierto.set(false);
+    this.empleadoInfo.set(undefined);
+  }
+
   guardarEdicion(): void {
     const u = this.usuarioEditando();
     if (!u) return;
@@ -98,27 +122,27 @@ export class UsuariosComponent implements OnInit {
   }
 
   abrirModalCrear(): void {
-  this.usuarioEditando.set(undefined);
-  this.modalAbierto.set(true);
-}
+    this.usuarioEditando.set(undefined);
+    this.modalAbierto.set(true);
+  }
 
-abrirModalEditar(usuario: Usuario): void {
-  this.usuarioEditando.set(usuario);
-  this.modalAbierto.set(true);
-}
+  abrirModalEditar(usuario: Usuario): void {
+    this.usuarioEditando.set(usuario);
+    this.modalAbierto.set(true);
+  }
 
-cerrarModal(): void {
-  this.modalAbierto.set(false);
-  this.usuarioEditando.set(undefined);
-}
+  cerrarModal(): void {
+    this.modalAbierto.set(false);
+    this.usuarioEditando.set(undefined);
+  }
 
-onUsuarioGuardado(usuario: Usuario): void {
-  this.usuarios.update(lista => {
-    const existe = lista.some(u => u.id === usuario.id);
-    return existe
-      ? lista.map(u => u.id === usuario.id ? usuario : u)
-      : [...lista, usuario];
-  });
-  this.cerrarModal();
-}
+  onUsuarioGuardado(usuario: Usuario): void {
+    this.usuarios.update(lista => {
+      const existe = lista.some(u => u.id === usuario.id);
+      return existe
+        ? lista.map(u => u.id === usuario.id ? usuario : u)
+        : [...lista, usuario];
+    });
+    this.cerrarModal();
+  }
 }
