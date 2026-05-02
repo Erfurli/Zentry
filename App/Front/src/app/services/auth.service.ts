@@ -15,7 +15,7 @@ export interface LoginResponse {
   username: string;
   systemRole: SystemRole;
   companyRole: CompanyRole;
-  empleadoId: number;
+  empleadoId: string;
 }
 
 @Injectable({
@@ -75,10 +75,9 @@ export class AuthService {
     return this.getCurrentUser()?.companyRole || localStorage.getItem('companyRole') as CompanyRole | null;
   }
 
-  getEmpleadoId(): number | null {
-    const value = this.getCurrentUser()?.empleadoId ?? localStorage.getItem('empleadoId');
-    return value !== null ? Number(value) : null;
-  }
+  getEmpleadoId(): string | null {
+  return this.getCurrentUser()?.empleadoId ?? localStorage.getItem('empleadoId');
+}
 
   isLoggedIn(): boolean {
     return !!this.getToken();
@@ -97,6 +96,8 @@ export class AuthService {
     const role = this.getCompanyRole();
     return !!role && roles.includes(role);
   }
+
+
 
   logout(): void {
   localStorage.removeItem('token');

@@ -20,28 +20,32 @@ export class EmpleadoModalComponent implements OnInit {
   private empleadosService = inject(EmpleadosService);
 
   readonly departamentos: string[] = ['IT', 'RRHH', 'Ventas'];
-  readonly roles: string[] = ['Empleado', 'Admin', 'Mando'];
 
   loading = false;
   error = '';
   esEdicion = false;
 
   readonly formulario = this.fb.group({
-    nombre: ['', [Validators.required, Validators.minLength(3)]],
+    nombre: ['', [Validators.required, Validators.minLength(2)]],
+    apellidos: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', [Validators.required, Validators.email]],
     dni: ['', [Validators.required, Validators.pattern(/^[0-9]{8}[A-Za-z]$/)]],
     departamento: ['', Validators.required],
     puesto: ['', [Validators.required, Validators.minLength(2)]],
     fechaAlta: ['', Validators.required],
-    activo: [true, Validators.required],
+    activo: [true],
     rolEmpresa: ['', Validators.required]
   });
 
   ngOnInit(): void {
     if (this.empleado) {
       this.esEdicion = true;
+      const partes = this.empleado.nombre.split(' ');
+      const nombre = partes[0] ?? '';
+      const apellidos = partes.slice(1).join(' ');
       this.formulario.patchValue({
-        nombre: this.empleado.nombre,
+        nombre,
+        apellidos,
         email: this.empleado.email,
         dni: this.empleado.dni,
         departamento: this.empleado.departamento,
@@ -53,6 +57,15 @@ export class EmpleadoModalComponent implements OnInit {
     }
   }
 
+  get usernameSugerido(): string {
+    const nombre = this.formulario.get('nombre')?.value ?? '';
+    const apellidos = this.formulario.get('apellidos')?.value ?? '';
+    if (!nombre || !apellidos) return '';
+    const primerApellido = apellidos.trim().split(' ')[0];
+    return `${nombre.trim().toLowerCase()}.${primerApellido.toLowerCase()}`
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // quita acentos
+  }
+
   guardar(): void {
     if (this.formulario.invalid) {
       this.formulario.markAllAsTouched();
@@ -62,24 +75,25 @@ export class EmpleadoModalComponent implements OnInit {
     this.loading = true;
     this.error = '';
 
-    const formValue = this.formulario.getRawValue();
+    const { nombre, apellidos, email, dni, departamento, puesto, fechaAlta, activo, rolEmpresa } =
+      this.formulario.getRawValue();
 
     const datos: CreateEmpleadoRequest = {
-      nombre: formValue.nombre ?? '',
-      email: formValue.email ?? '',
-      dni: formValue.dni ?? '',
-      departamento: formValue.departamento ?? '',
-      puesto: formValue.puesto ?? '',
-      fechaAlta: formValue.fechaAlta ?? '',
-      activo: formValue.activo ?? true,
-      rolEmpresa: formValue.rolEmpresa ?? ''
+      nombre: `${nombre} ${apellidos}`.trim(),
+      email: email ?? '',
+      dni: dni ?? '',
+      departamento: departamento ?? '',
+      puesto: puesto ?? '',
+      fechaAlta: fechaAlta ?? '',
+      activo: activo ?? true,
+      rolEmpresa: rolEmpresa ?? ''
     };
 
     if (this.esEdicion && this.empleado) {
       this.empleadosService.actualizarEmpleado(this.empleado.id, datos).subscribe({
-        next: (empleadoActualizado) => {
+        next: actualizado => {
           this.loading = false;
-          this.empleadoGuardado.emit(empleadoActualizado);
+          this.empleadoGuardado.emit(actualizado);
         },
         error: () => {
           this.loading = false;
@@ -88,9 +102,9 @@ export class EmpleadoModalComponent implements OnInit {
       });
     } else {
       this.empleadosService.crearEmpleado(datos).subscribe({
-        next: (nuevoEmpleado) => {
+        next: nuevo => {
           this.loading = false;
-          this.empleadoGuardado.emit(nuevoEmpleado);
+          this.empleadoGuardado.emit(nuevo);
         },
         error: () => {
           this.loading = false;
@@ -101,8 +115,6 @@ export class EmpleadoModalComponent implements OnInit {
   }
 
   onCerrar(): void {
-    if (!this.loading) {
-      this.cerrar.emit();
-    }
+    if (!this.loading) this.cerrar.emit();
   }
 }

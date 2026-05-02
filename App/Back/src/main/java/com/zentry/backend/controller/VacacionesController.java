@@ -5,6 +5,7 @@ import com.zentry.backend.model.Empleado;
 import com.zentry.backend.model.Vacaciones;
 import com.zentry.backend.repository.EmpleadoRepository;
 import com.zentry.backend.repository.VacacionesRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,11 +16,14 @@ public class VacacionesController {
 
     private final VacacionesRepository vacacionesRepository;
     private final EmpleadoRepository empleadoRepository;
+    private final com.zentry.backend.repository.UsuarioRepository usuarioRepository;
 
     public VacacionesController(VacacionesRepository vacacionesRepository,
-                                EmpleadoRepository empleadoRepository) {
+                                EmpleadoRepository empleadoRepository,
+                                com.zentry.backend.repository.UsuarioRepository usuarioRepository) {
         this.vacacionesRepository = vacacionesRepository;
         this.empleadoRepository = empleadoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @GetMapping
@@ -49,6 +53,33 @@ public class VacacionesController {
                     );
                 })
                 .toList();
+    }
+
+    @PostMapping("/solicitar")
+    public ResponseEntity<Vacaciones> solicitar(@RequestBody java.util.Map<String, String> body,
+                                                org.springframework.security.core.Authentication authentication) {
+        String username = authentication.getName();
+
+        com.zentry.backend.model.Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        String fechaInicio = body.get("fechaInicio");
+        String fechaFin = body.get("fechaFin");
+
+        long dias = java.time.temporal.ChronoUnit.DAYS.between(
+                java.time.LocalDate.parse(fechaInicio),
+                java.time.LocalDate.parse(fechaFin)
+        ) + 1;
+
+        Vacaciones vacacion = Vacaciones.builder()
+                .empleadoId(usuario.getEmpleadoId())
+                .fechaInicio(fechaInicio)
+                .fechaFin(fechaFin)
+                .dias((int) dias)
+                .estado("Pendiente")
+                .build();
+
+        return ResponseEntity.ok(vacacionesRepository.save(vacacion));
     }
 
     @PatchMapping("/{id}/aprobar")

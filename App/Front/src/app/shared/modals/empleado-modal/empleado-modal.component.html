@@ -1,7 +1,7 @@
 <div class="modal-backdrop" (click)="onCerrar()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ esEdicion ? 'Editar empleado' : 'Nuevo empleado' }}</h2>
+      <h2>{{ esEdicion ? "Editar empleado" : "Nuevo empleado" }}</h2>
       <button type="button" class="close-btn" (click)="onCerrar()" aria-label="Cerrar modal">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -9,11 +9,20 @@
 
     <form [formGroup]="formulario" (ngSubmit)="guardar()" class="modal-form">
       <div class="form-grid">
-        <div class="form-field full">
-          <label for="nombre">Nombre completo</label>
+
+        <div class="form-field">
+          <label for="nombre">Nombre</label>
           <input id="nombre" type="text" formControlName="nombre" />
           @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
             <small class="error-text">Introduce un nombre válido.</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="apellidos">Apellidos</label>
+          <input id="apellidos" type="text" formControlName="apellidos" />
+          @if (formulario.controls.apellidos.touched && formulario.controls.apellidos.invalid) {
+            <small class="error-text">Introduce los apellidos.</small>
           }
         </div>
 
@@ -60,9 +69,9 @@
           <label for="rolEmpresa">Rol</label>
           <select id="rolEmpresa" formControlName="rolEmpresa">
             <option value="">Selecciona rol</option>
-            @for (rol of roles; track rol) {
-              <option [value]="rol">{{ rol }}</option>
-            }
+            <option value="EMPLEADO">Empleado</option>
+            <option value="MANDO">Mando intermedio</option>
+            <option value="RRHH">RRHH</option>
           </select>
         </div>
 
@@ -72,12 +81,11 @@
             <span>Empleado activo</span>
           </label>
         </div>
+
       </div>
 
       @if (error) {
-        <div class="error-box">
-          {{ error }}
-        </div>
+        <div class="error-box">{{ error }}</div>
       }
 
       <div class="modal-actions">
@@ -85,7 +93,7 @@
           Cancelar
         </button>
         <button type="submit" class="primary-btn" [disabled]="loading">
-          {{ loading ? 'Guardando...' : (esEdicion ? 'Guardar cambios' : 'Crear empleado') }}
+          {{ loading ? "Guardando..." : esEdicion ? "Guardar cambios" : "Crear empleado" }}
         </button>
       </div>
     </form>

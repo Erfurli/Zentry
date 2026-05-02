@@ -7,10 +7,10 @@
       </div>
     </div>
     <div class="header-actions">
-  <button class="primary-btn" (click)="abrirModalCrear()">
-    <i class="fa-solid fa-plus"></i> Nuevo Usuario
-  </button>
-</div>
+      <button class="primary-btn" (click)="abrirModalCrear()">
+        <i class="fa-solid fa-plus"></i> Nuevo Usuario
+      </button>
+    </div>
   </div>
 
   <div class="filters-section">
@@ -45,7 +45,7 @@
         <thead>
           <tr>
             <th>Username</th>
-            <th>ID Empleado</th>
+            <th>Empleado</th>
             <th>Rol</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -54,8 +54,13 @@
         <tbody>
           @for (usuario of usuariosFiltrados(); track usuario.id) {
             <tr>
-              <td><i class="fa-solid fa-user" style="margin-right:0.5rem;color:#94a3b8"></i>{{ usuario.username }}</td>
-              <td>{{ usuario.empleadoId }}</td>
+              <td>
+                <i class="fa-solid fa-user" style="margin-right:0.5rem;color:#94a3b8"></i>
+                {{ usuario.username }}
+              </td>
+              <td class="nombre-link" (click)="abrirModalInfo(usuario)">
+                {{ getNombreEmpleado(usuario.empleadoId) }}
+              </td>
               <td>
                 <span class="rol-badge" [class.admin]="usuario.rolSistema === 'ADMIN'">
                   {{ usuario.rolSistema === 'ADMIN' ? 'Administrador' : 'Usuario' }}
@@ -91,34 +96,6 @@
   </div>
 </div>
 
-@if (modalAbierto()) {
-  <div class="modal-overlay" (click)="cerrarModal()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2>Editar usuario</h2>
-        <button class="modal-close" (click)="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-field">
-          <label>Username</label>
-          <input type="text" [(ngModel)]="editUsername" />
-        </div>
-        <div class="form-field">
-          <label>Rol</label>
-          <select [(ngModel)]="editRol">
-            <option value="USER">Usuario</option>
-            <option value="ADMIN">Administrador</option>
-          </select>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="secondary-btn" (click)="cerrarModal()">Cancelar</button>
-        <button class="primary-btn" (click)="guardarEdicion()">Guardar</button>
-      </div>
-    </div>
-  </div>
-}
-
 @if (modalResetAbierto()) {
   <div class="modal-overlay" (click)="cerrarResetModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
@@ -142,10 +119,52 @@
     </div>
   </div>
 }
+
 @if (modalAbierto()) {
   <app-usuario-modal
     [usuario]="usuarioEditando()"
     (cerrar)="cerrarModal()"
     (usuarioGuardado)="onUsuarioGuardado($event)">
   </app-usuario-modal>
+}
+
+@if (modalInfoAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModalInfo()">
+    <div class="modal-info-card" (click)="$event.stopPropagation()">
+      <div class="modal-info-header">
+        <div class="modal-info-avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div>
+          <h2>{{ empleadoInfo()?.nombre ?? 'Empleado' }}</h2>
+          <span class="modal-info-puesto">{{ empleadoInfo()?.puesto }}</span>
+        </div>
+        <button class="modal-close-btn" (click)="cerrarModalInfo()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-info-body">
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-envelope"></i> Email</span>
+          <span>{{ empleadoInfo()?.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-id-card"></i> DNI</span>
+          <span>{{ empleadoInfo()?.dni }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-building"></i> Departamento</span>
+          <span>{{ empleadoInfo()?.departamento }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-briefcase"></i> Rol empresa</span>
+          <span>{{ empleadoInfo()?.rolEmpresa }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-calendar"></i> Fecha alta</span>
+          <span>{{ empleadoInfo()?.fechaAlta }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 }

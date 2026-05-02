@@ -7,19 +7,23 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "users")
+@Document("sugerencias_vacaciones")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Usuario {
+public class SugerenciaVacaciones {
 
     @Id
     private String id;
 
+    private String vacacionesId;
     private String empleadoId;
-    private String username;
-    private String password;
-    private RolSistema rolSistema;
-    private Boolean activo;
+    private String creadoPor;
+    private String nuevaFechaInicio;
+    private String nuevaFechaFin;
+    private Integer nuevosDias;
+    private String estado;
+    private String fechaCreacion;
+    private String mensaje;
 }

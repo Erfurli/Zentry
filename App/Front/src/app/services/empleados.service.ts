@@ -26,6 +26,10 @@ export class EmpleadosService {
     return this.http.get<Empleado[]>(this.apiUrl);
   }
 
+  getEmpleadosSinUsuario(): Observable<Empleado[]> {
+  return this.http.get<Empleado[]>(`${this.apiUrl}/sin-usuario`);
+}
+
   crearEmpleado(empleado: CreateEmpleadoRequest): Observable<Empleado> {
     return this.http.post<Empleado>(this.apiUrl, empleado);
   }

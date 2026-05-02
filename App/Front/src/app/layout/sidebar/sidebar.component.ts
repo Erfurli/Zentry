@@ -1,7 +1,17 @@
-import { Component, EventEmitter, Output, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostBinding,
+  Output,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AuthService, CompanyRole, SystemRole } from '../../services/auth.service';
+import {
+  AuthService,
+  CompanyRole,
+  SystemRole,
+} from '../../services/auth.service';
 
 interface MenuItem {
   label: string;
@@ -16,9 +26,13 @@ interface MenuItem {
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css'
+  styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
+  @HostBinding('class.collapsed')
+  get isCollapsed() {
+    return this.collapsed();
+  }
   @Output() collapsedChange = new EventEmitter<boolean>();
 
   collapsed = signal(false);
@@ -28,56 +42,56 @@ export class SidebarComponent {
       label: 'Inicio',
       route: '/dashboard',
       icon: 'fa-chart-bar',
-      systemRoles: ['ADMIN', 'USER']
+      systemRoles: ['ADMIN', 'USER'],
     },
     {
       label: 'Asistencia',
       route: '/asistencia',
       icon: 'fa-users',
-      systemRoles: ['ADMIN', 'USER']
+      systemRoles: ['ADMIN', 'USER'],
     },
     {
       label: 'Vacaciones',
       route: '/vacaciones',
       icon: 'fa-umbrella-beach',
-      systemRoles: ['ADMIN', 'USER']
+      systemRoles: ['ADMIN', 'USER'],
     },
     {
       label: 'Ausencias',
       route: '/ausencias',
       icon: 'fa-calendar-xmark',
-      systemRoles: ['ADMIN', 'USER']
+      systemRoles: ['ADMIN', 'USER'],
     },
     {
       label: 'Empleados',
       route: '/empleados',
       icon: 'fa-user',
-      systemRoles: ['ADMIN']
+      systemRoles: ['ADMIN'],
     },
     {
       label: 'Usuarios',
       route: '/usuarios',
       icon: 'fa-user-shield',
-      systemRoles: ['ADMIN']
+      systemRoles: ['ADMIN'],
     },
     {
       label: 'Panel RRHH',
       route: '/admin-dashboard',
       icon: 'fa-gauge-high',
-      systemRoles: ['ADMIN']
+      systemRoles: ['ADMIN'],
     },
     {
       label: 'Reportes',
       route: '/reportes',
       icon: 'fa-chart-line',
-      systemRoles: ['ADMIN']
+      systemRoles: ['ADMIN'],
     },
     {
       label: 'Chat',
       route: '/chat',
       icon: 'fa-comments',
-      systemRoles: ['ADMIN', 'USER']
-    }
+      systemRoles: ['ADMIN', 'USER'],
+    },
   ];
 
   constructor(private authService: AuthService) {}
@@ -92,7 +106,7 @@ export class SidebarComponent {
     const systemRole = this.authService.getSystemRole();
     const companyRole = this.authService.getCompanyRole();
 
-    return this.menuItems.filter(item => {
+    return this.menuItems.filter((item) => {
       const matchesSystemRole =
         !!systemRole &&
         !!item.systemRoles &&
@@ -108,6 +122,8 @@ export class SidebarComponent {
   }
 
   getIconClass(route: string): string {
-    return this.menuItems.find(item => item.route === route)?.icon ?? 'fa-circle';
+    return (
+      this.menuItems.find((item) => item.route === route)?.icon ?? 'fa-circle'
+    );
   }
 }

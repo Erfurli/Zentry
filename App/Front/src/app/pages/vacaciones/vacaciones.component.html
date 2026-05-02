@@ -6,122 +6,257 @@
         <a routerLink="/dashboard">Dashboard</a> / Vacaciones
       </div>
     </div>
+    <div class="header-actions">
+  <button class="primary-btn" (click)="modalSolicitarAbierto.set(true)" style="margin-right:1rem">
+    <i class="fa-solid fa-plus"></i> Solicitar vacaciones
+  </button>
+      <div class="vista-toggle">
+        <button class="toggle-btn-vista" [class.active]="!vistaCalendario()" (click)="vistaCalendario.set(false)" title="Vista lista">
+          <i class="fa-solid fa-list"></i>
+        </button>
+        <button class="toggle-btn-vista" [class.active]="vistaCalendario()" (click)="activarVistaCalendario()" title="Vista calendario">
+          <i class="fa-solid fa-calendar-days"></i>
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="filters-section">
     <div class="filters">
-      <select
-        class="filter-select"
-        [value]="filtroEstado()"
-        (change)="cambiarFiltroEstado($any($event.target).value)"
-        aria-label="Filtrar por estado"
-      >
+      <select class="filter-select" [value]="filtroEstado()" (change)="cambiarFiltroEstado($any($event.target).value)">
         <option value="Todos">Todos los estados</option>
         <option value="Aprobada">Aprobadas</option>
         <option value="Pendiente">Pendientes</option>
         <option value="Rechazada">Rechazadas</option>
       </select>
-
-      <select
-        class="filter-select"
-        [value]="filtroDepartamento()"
-        (change)="cambiarFiltroDepartamento($any($event.target).value)"
-        aria-label="Filtrar por departamento"
-      >
+      <select class="filter-select" [value]="filtroDepartamento()" (change)="cambiarFiltroDepartamento($any($event.target).value)">
         <option value="Todos">Todos los departamentos</option>
         <option value="RRHH">RRHH</option>
         <option value="IT">IT</option>
         <option value="Ventas">Ventas</option>
       </select>
-
       <button class="export-btn" type="button" (click)="exportar()">
-        <i class="fa-solid fa-download" aria-hidden="true"></i> Exportar
+        <i class="fa-solid fa-download"></i> Exportar
       </button>
     </div>
   </div>
 
-  <div class="kpi-grid" role="list" aria-label="Resumen de solicitudes">
-    <div class="kpi-card aprobada" role="listitem">
-      <div class="kpi-number">{{ totalAprobadas() }}</div>
-      <div class="kpi-label">Aprobadas</div>
+  <div class="kpi-grid">
+    <div class="kpi-card aprobada"><div class="kpi-number">{{ totalAprobadas() }}</div><div class="kpi-label">Aprobadas</div></div>
+    <div class="kpi-card pendiente"><div class="kpi-number">{{ totalPendientes() }}</div><div class="kpi-label">Pendientes</div></div>
+    <div class="kpi-card rechazada"><div class="kpi-number">{{ totalRechazadas() }}</div><div class="kpi-label">Rechazadas</div></div>
+    <div class="kpi-card dias"><div class="kpi-number">{{ totalDiasSolicitados() }}</div><div class="kpi-label">Días Solicitados</div></div>
+  </div>
+
+  <!-- VISTA LISTA -->
+  @if (!vistaCalendario()) {
+    <div class="table-container">
+      <table class="vacaciones-table">
+        <thead>
+          <tr>
+            <th>Empleado</th><th>Departamento</th><th>Fecha inicio</th>
+            <th>Fecha fin</th><th>Días</th><th>Motivo</th><th>Estado</th><th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (solicitud of solicitudesFiltradas(); track solicitud.id) {
+            <tr>
+              <td>{{ solicitud.empleado }}</td>
+              <td>{{ solicitud.departamento }}</td>
+              <td>{{ solicitud.fechaInicio }}</td>
+              <td>{{ solicitud.fechaFin }}</td>
+              <td><strong>{{ solicitud.dias }}</strong></td>
+              <td class="motivo-cell">{{ solicitud.motivo }}</td>
+              <td>
+                <span class="estado-badge"
+                  [class.aprobada]="solicitud.estado === 'Aprobada'"
+                  [class.pendiente]="solicitud.estado === 'Pendiente'"
+                  [class.rechazada]="solicitud.estado === 'Rechazada'">
+                  {{ solicitud.estado }}
+                </span>
+              </td>
+              <td class="acciones-cell">
+                @if (solicitud.estado === 'Pendiente') {
+                  <button class="accion-btn aprobar" (click)="aprobar(solicitud.id)"><i class="fa-solid fa-check"></i></button>
+                  <button class="accion-btn rechazar" (click)="rechazar(solicitud.id)"><i class="fa-solid fa-xmark"></i></button>
+                } @else {
+                  <span class="sin-acciones">—</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="8" class="empty-state"><i class="fa-solid fa-inbox"></i><p>No hay solicitudes</p></td></tr>
+          }
+        </tbody>
+      </table>
     </div>
-    <div class="kpi-card pendiente" role="listitem">
-      <div class="kpi-number">{{ totalPendientes() }}</div>
-      <div class="kpi-label">Pendientes</div>
+  }
+
+  <!-- VISTA CALENDARIO -->
+  @if (vistaCalendario()) {
+    <div class="calendario-container">
+      <div class="calendario-izquierda">
+        <mat-calendar #cal [dateClass]="dateClass" (selectedChange)="onDateSelected($event)"></mat-calendar>
+        <div class="leyenda">
+          <span class="leyenda-item"><span class="dot aprobada"></span> Aprobada</span>
+          <span class="leyenda-item"><span class="dot pendiente"></span> Pendiente</span>
+          <span class="leyenda-item"><span class="dot rechazada"></span> Rechazada</span>
+        </div>
+        @if (esAdmin()) {
+          <div class="drag-hint">
+            <i class="fa-solid fa-hand-pointer"></i>
+            Arrastra una solicitud para sugerir nuevas fechas
+          </div>
+        }
+      </div>
+
+      <div class="calendario-derecha"
+           cdkDropList
+           id="lista-solicitudes"
+           [cdkDropListData]="solicitudesDelMes()"
+           (cdkDropListDropped)="onDropped($event)">
+        <h3>
+          Solicitudes de {{ getNombreMes() }}
+          <span class="mes-badge">{{ solicitudesDelMes().length }}</span>
+        </h3>
+
+        @if (solicitudesDelMes().length > 0) {
+          <div class="solicitudes-lista">
+            @for (s of solicitudesDelMes(); track s.id) {
+              <div
+                class="solicitud-card"
+                [class.aprobada]="s.estado === 'Aprobada'"
+                [class.pendiente]="s.estado === 'Pendiente'"
+                [class.rechazada]="s.estado === 'Rechazada'"
+                [class.draggable]="puedeArrastrar(s)"
+                cdkDrag
+                [cdkDragDisabled]="!puedeArrastrar(s)"
+                (cdkDragStarted)="onDragStarted(s)">
+
+                <!-- Preview mientras se arrastra -->
+                <div *cdkDragPlaceholder class="drag-placeholder"></div>
+                <div *cdkDragPreview class="drag-preview">
+                  <i class="fa-solid fa-calendar-days"></i>
+                  {{ s.empleado }} — {{ s.fechaInicio }} → {{ s.fechaFin }}
+                </div>
+
+                <div class="solicitud-card-top">
+                  <div class="solicitud-info">
+                    <span class="solicitud-nombre">
+                      {{ s.empleado }}
+                      @if (puedeArrastrar(s)) {
+                        <i class="fa-solid fa-grip-dots drag-icon" title="Arrastra para sugerir nuevas fechas"></i>
+                      }
+                    </span>
+                    <span class="solicitud-depto">{{ s.departamento }}</span>
+                  </div>
+                  <span class="estado-badge"
+                    [class.aprobada]="s.estado === 'Aprobada'"
+                    [class.pendiente]="s.estado === 'Pendiente'"
+                    [class.rechazada]="s.estado === 'Rechazada'">
+                    {{ s.estado }}
+                  </span>
+                </div>
+                <div class="solicitud-card-bottom">
+                  <span class="solicitud-fechas">
+                    <i class="fa-solid fa-calendar-range"></i>
+                    {{ s.fechaInicio }} → {{ s.fechaFin }}
+                    <strong>({{ s.dias }} días)</strong>
+                  </span>
+                  @if (s.estado === 'Pendiente') {
+                    <div class="solicitud-acciones">
+                      <button class="accion-btn aprobar" (click)="aprobar(s.id)" title="Aprobar"><i class="fa-solid fa-check"></i></button>
+                      <button class="accion-btn rechazar" (click)="rechazar(s.id)" title="Rechazar"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="empty-calendario">
+            <i class="fa-solid fa-calendar-xmark"></i>
+            <p>No hay solicitudes este mes</p>
+          </div>
+        }
+      </div>
     </div>
-    <div class="kpi-card rechazada" role="listitem">
-      <div class="kpi-number">{{ totalRechazadas() }}</div>
-      <div class="kpi-label">Rechazadas</div>
-    </div>
-    <div class="kpi-card dias" role="listitem">
-      <div class="kpi-number">{{ totalDiasSolicitados() }}</div>
-      <div class="kpi-label">Días Solicitados</div>
+  }
+</div>
+
+<!-- MODAL SUGERENCIA -->
+@if (modalSugerenciaAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModalSugerencia()">
+    <div class="modal-sugerencia" (click)="$event.stopPropagation()">
+      <div class="modal-sugerencia-header">
+        <div>
+          <h2>Sugerir nuevas fechas</h2>
+          <p>{{ solicitudArrastrada()?.empleado }} — {{ solicitudArrastrada()?.fechaInicio }} → {{ solicitudArrastrada()?.fechaFin }}</p>
+        </div>
+        <button class="modal-close-btn" (click)="cerrarModalSugerencia()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-sugerencia-body">
+        <div class="form-field">
+          <label>Nueva fecha inicio</label>
+          <input type="date" [(ngModel)]="nuevaFechaInicio" />
+        </div>
+        <div class="form-field">
+          <label>Nueva fecha fin</label>
+          <input type="date" [(ngModel)]="nuevaFechaFin" />
+        </div>
+        <div class="form-field">
+          <label>Mensaje (opcional)</label>
+          <textarea [(ngModel)]="mensajeSugerencia" rows="3" placeholder="Explica el motivo del cambio..."></textarea>
+        </div>
+        @if (errorSugerencia) {
+          <div class="error-box">{{ errorSugerencia }}</div>
+        }
+      </div>
+      <div class="modal-sugerencia-footer">
+        <button class="secondary-btn" (click)="cerrarModalSugerencia()" [disabled]="loadingSugerencia">Cancelar</button>
+        <button class="primary-btn" (click)="confirmarSugerencia()" [disabled]="loadingSugerencia">
+          {{ loadingSugerencia ? 'Enviando...' : 'Enviar sugerencia' }}
+        </button>
+      </div>
     </div>
   </div>
 
-  <div class="table-container">
-    <table class="vacaciones-table" aria-label="Solicitudes de vacaciones">
-      <thead>
-        <tr>
-          <th scope="col">Empleado</th>
-          <th scope="col">Departamento</th>
-          <th scope="col">Fecha inicio</th>
-          <th scope="col">Fecha fin</th>
-          <th scope="col">Días</th>
-          <th scope="col">Motivo</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (solicitud of solicitudesFiltradas(); track solicitud.id) {
-          <tr>
-            <td>{{ solicitud.empleado }}</td>
-            <td>{{ solicitud.departamento }}</td>
-            <td>{{ solicitud.fechaInicio }}</td>
-            <td>{{ solicitud.fechaFin }}</td>
-            <td><strong>{{ solicitud.dias }}</strong></td>
-            <td class="motivo-cell">{{ solicitud.motivo }}</td>
-            <td>
-              <span
-                class="estado-badge"
-                [class.aprobada]="solicitud.estado === 'Aprobada'"
-                [class.pendiente]="solicitud.estado === 'Pendiente'"
-                [class.rechazada]="solicitud.estado === 'Rechazada'"
-              >
-                {{ solicitud.estado }}
-              </span>
-            </td>
-            <td class="acciones-cell">
-              @if (solicitud.estado === 'Pendiente') {
-                <button
-                  class="accion-btn aprobar"
-                  (click)="aprobar(solicitud.id)"
-                  [attr.aria-label]="'Aprobar solicitud de ' + solicitud.empleado"
-                >
-                  <i class="fa-solid fa-check" aria-hidden="true"></i>
-                </button>
-                <button
-                  class="accion-btn rechazar"
-                  (click)="rechazar(solicitud.id)"
-                  [attr.aria-label]="'Rechazar solicitud de ' + solicitud.empleado"
-                >
-                  <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                </button>
-              } @else {
-                <span class="sin-acciones">—</span>
-              }
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="8" class="empty-state">
-              <i class="fa-solid fa-inbox" aria-hidden="true"></i>
-              <p>No hay solicitudes para los filtros seleccionados</p>
-            </td>
-          </tr>
+  @if (modalSolicitarAbierto()) {
+  <div class="modal-overlay" (click)="modalSolicitarAbierto.set(false)">
+    <div class="modal-sugerencia" (click)="$event.stopPropagation()">
+      <div class="modal-sugerencia-header">
+        <div>
+          <h2>Solicitar vacaciones</h2>
+          <p>Introduce las fechas que deseas solicitar</p>
+        </div>
+        <button class="modal-close-btn" (click)="modalSolicitarAbierto.set(false)">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-sugerencia-body">
+        <div class="form-field">
+          <label>Fecha inicio</label>
+          <input type="date" [(ngModel)]="fechaSolicitudInicio" />
+        </div>
+        <div class="form-field">
+          <label>Fecha fin</label>
+          <input type="date" [(ngModel)]="fechaSolicitudFin" />
+        </div>
+        @if (errorSolicitud) {
+          <div class="error-box">{{ errorSolicitud }}</div>
         }
-      </tbody>
-    </table>
+      </div>
+      <div class="modal-sugerencia-footer">
+        <button class="secondary-btn" (click)="modalSolicitarAbierto.set(false)" [disabled]="loadingSolicitud">
+          Cancelar
+        </button>
+        <button class="primary-btn" (click)="confirmarSolicitud()" [disabled]="loadingSolicitud">
+          {{ loadingSolicitud ? 'Enviando...' : 'Solicitar' }}
+        </button>
+      </div>
+    </div>
   </div>
-</div>
+}
+}

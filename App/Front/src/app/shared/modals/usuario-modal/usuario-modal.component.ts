@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { EmpleadosService } from '../../../services/empleados.service';
 import { Usuario } from '../../../models/usuario.model';
+import { Empleado } from '../../../models/empleado.model';
 import { UsuariosService } from '../../../services/usuario.service';
 
 @Component({
@@ -18,10 +20,12 @@ export class UsuarioModalComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private usuariosService = inject(UsuariosService);
+  private empleadosService = inject(EmpleadosService);
 
   loading = false;
   error = '';
   esEdicion = false;
+  empleados: Empleado[] = [];
 
   readonly formulario = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(3)]],
@@ -32,6 +36,10 @@ export class UsuarioModalComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.empleadosService.getEmpleadosSinUsuario().subscribe({
+  next: data => this.empleados = data
+});
+
     if (this.usuario) {
       this.esEdicion = true;
       this.formulario.patchValue({
@@ -57,6 +65,11 @@ export class UsuarioModalComponent implements OnInit {
     this.error = '';
 
     const { username, empleadoId, rolSistema, activo, password } = this.formulario.getRawValue();
+    const obs = this.esEdicion
+  ? this.empleadosService.getEmpleados()
+  : this.empleadosService.getEmpleadosSinUsuario();
+
+obs.subscribe({ next: data => this.empleados = data });
 
     if (this.esEdicion && this.usuario) {
       this.usuariosService.actualizar(this.usuario.id, {
@@ -93,6 +106,21 @@ export class UsuarioModalComponent implements OnInit {
       });
     }
   }
+
+  onEmpleadoChange(event: Event): void {
+  const id = (event.target as HTMLSelectElement).value;
+  const emp = this.empleados.find(e => e.id === id);
+  if (!emp || this.esEdicion) return;
+
+  const partes = emp.nombre.split(' ');
+  const nombre = partes[0] ?? '';
+  const primerApellido = partes[1] ?? '';
+  const sugerencia = `${nombre}.${primerApellido}`
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  this.formulario.patchValue({ username: sugerencia });
+}
 
   onCerrar(): void {
     if (!this.loading) this.cerrar.emit();
