@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="page-container">
   <div class="page-header">
     <div class="header-content">
@@ -148,3 +149,155 @@
     </div>
   </div>
 }
+=======
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Empleados</h1>
+      <div class="breadcrumbs">
+        <a routerLink="/dashboard">Dashboard</a> / Empleados
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="primary-btn" (click)="abrirModalCrear()">
+        <i class="fa-solid fa-plus"></i> Nuevo Empleado
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="filters">
+      <select class="filter-select" [value]="filtroDepartamento()" (change)="onDeptoChange($event)">
+        <option value="Todos">Todos los departamentos</option>
+        <option value="IT">IT</option>
+        <option value="RRHH">RRHH</option>
+        <option value="Ventas">Ventas</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    @if (empleadosFiltrados().length > 0) {
+      <table class="empleados-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Departamento</th>
+            <th>Puesto</th>
+            <th>Usuario</th>
+            <th>Estado</th>
+            <th>Fecha Alta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (empleado of empleadosFiltrados(); track empleado.id) {
+            <tr>
+              <td class="nombre-cell nombre-link" (click)="abrirModalInfo(empleado)">
+                {{ empleado.nombre }}
+              </td>
+              <td>{{ empleado.email }}</td>
+              <td>{{ empleado.departamento }}</td>
+              <td>{{ empleado.puesto }}</td>
+              <td>
+                @if (getUsuarioDeEmpleado(empleado.id); as usuario) {
+                  <span class="usuario-badge">
+                    <i class="fa-solid fa-user" style="margin-right:0.4rem"></i>{{ usuario.username }}
+                  </span>
+                } @else {
+                  <span class="sin-usuario">Sin usuario</span>
+                }
+              </td>
+              <td>
+                <span class="estado-badge" [class.activo]="empleado.activo" [class.inactivo]="!empleado.activo">
+                  {{ empleado.activo ? "Activo" : "Inactivo" }}
+                </span>
+              </td>
+              <td>{{ empleado.fechaAlta }}</td>
+              <td class="acciones-cell">
+                <button class="accion-btn editar" (click)="abrirModalEditar(empleado)" title="Editar">
+                  <i class="fa-solid fa-edit"></i>
+                </button>
+                <button class="accion-btn eliminar" title="Eliminar">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    } @else {
+      <div class="empty-state">
+        <i class="fa-solid fa-users"></i>
+        <p>No hay empleados para los filtros seleccionados</p>
+      </div>
+    }
+  </div>
+</div>
+
+@if (modalAbierto()) {
+  <app-empleado-modal
+    [empleado]="empleadoEditando()"
+    (cerrar)="cerrarModal()"
+    (empleadoGuardado)="onEmpleadoGuardado($event)">
+  </app-empleado-modal>
+}
+
+@if (modalInfoAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModalInfo()">
+    <div class="modal-info-card" (click)="$event.stopPropagation()">
+      <div class="modal-info-header">
+        <div class="modal-info-avatar">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div>
+          <h2>{{ empleadoInfo()?.nombre }}</h2>
+          <span class="modal-info-puesto">{{ empleadoInfo()?.puesto }}</span>
+        </div>
+        <button class="modal-close-btn" (click)="cerrarModalInfo()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-info-body">
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-envelope"></i> Email</span>
+          <span>{{ empleadoInfo()?.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-id-card"></i> DNI</span>
+          <span>{{ empleadoInfo()?.dni }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-building"></i> Departamento</span>
+          <span>{{ empleadoInfo()?.departamento }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-briefcase"></i> Rol empresa</span>
+          <span>{{ empleadoInfo()?.rolEmpresa }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-calendar"></i> Fecha alta</span>
+          <span>{{ empleadoInfo()?.fechaAlta }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-user-shield"></i> Usuario</span>
+          @if (empleadoInfo() && getUsuarioDeEmpleado(empleadoInfo()!.id); as usuario) {
+            <span class="usuario-badge">{{ usuario.username }}</span>
+          } @else {
+            <span class="sin-usuario">Sin usuario asignado</span>
+          }
+        </div>
+        <div class="info-row">
+          <span class="info-label"><i class="fa-solid fa-user-shield"></i> Rol sistema</span>
+          @if (empleadoInfo() && getUsuarioDeEmpleado(empleadoInfo()!.id); as usuario) {
+            <span class="usuario-badge">{{ usuario.rolSistema }}</span>
+          } @else {
+            <span class="sin-usuario">Sin rol de sistema asignado</span>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}
+>>>>>>> 18537ca3b30c22e21f03fbfa18e3a3c5afbd546c
