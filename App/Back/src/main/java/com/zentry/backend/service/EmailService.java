@@ -1,13 +1,10 @@
 package com.zentry.backend.service;
 
-import com.mailjet.client.MailjetClient;
-import com.mailjet.client.MailjetRequest;
-import com.mailjet.client.MailjetResponse;
-import com.mailjet.client.resource.Emailv31;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Base64;
 
 @Service
 public class EmailService {
@@ -24,33 +21,40 @@ public class EmailService {
     @Value("${mailjet.from.name}")
     private String fromName;
 
-    private MailjetClient getClient() {
-        return new MailjetClient(apiKey, apiSecret);
-    }
+    private final OkHttpClient client = new OkHttpClient();
 
     private void enviar(String toEmail, String toNombre, String asunto, String cuerpo) {
         try {
-            MailjetRequest request = new MailjetRequest(Emailv31.resource)
-                    .property(Emailv31.MESSAGES, new JSONArray()
-                            .put(new JSONObject()
-                                    .put(Emailv31.Message.FROM, new JSONObject()
-                                            .put("Email", fromEmail)
-                                            .put("Name", fromName))
-                                    .put(Emailv31.Message.TO, new JSONArray()
-                                            .put(new JSONObject()
-                                                    .put("Email", toEmail)
-                                                    .put("Name", toNombre)))
-                                    .put(Emailv31.Message.SUBJECT, asunto)
-                                    .put(Emailv31.Message.TEXTPART, cuerpo)));
+            String credentials = Base64.getEncoder().encodeToString(
+                    (apiKey + ":" + apiSecret).getBytes()
+            );
 
-            MailjetResponse response = getClient().post(request);
-            System.out.println("Email enviado. Status: " + response.getStatus());
-        } catch (com.mailjet.client.errors.MailjetServerException e) {
-            System.err.println("Error Mailjet - Status: " + e.getMessage());
-            System.err.println("Response: " + e.toString());
-            e.printStackTrace();
+            String json = """
+                {
+                  "Messages": [{
+                    "From": {"Email": "%s", "Name": "%s"},
+                    "To": [{"Email": "%s", "Name": "%s"}],
+                    "Subject": "%s",
+                    "TextPart": "%s"
+                  }]
+                }
+                """.formatted(fromEmail, fromName, toEmail, toNombre, asunto, cuerpo);
+
+            RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+
+            Request request = new Request.Builder()
+                    .url("https://api.mailjet.com/v3.1/send")
+                    .post(body)
+                    .addHeader("Authorization", "Basic " + credentials)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                System.out.println("Mailjet status: " + response.code());
+                System.out.println("Mailjet body: " + response.body().string());
+            }
         } catch (Exception e) {
-            System.err.println("Error general: " + e.getMessage());
+            System.err.println("Error enviando email: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -58,26 +62,35 @@ public class EmailService {
     public void enviarSugerenciaVacaciones(String email, String nombre,
                                            String nuevaFechaInicio, String nuevaFechaFin) {
         enviar(
-                email,
-                nombre,
-                "Zentry — Sugerencia de cambio de vacaciones",
-                "Hola " + nombre + ",\n\n" +
-                        "Se ha sugerido un cambio en tus vacaciones.\n" +
-                        "Nuevas fechas propuestas: " + nuevaFechaInicio + " → " + nuevaFechaFin + "\n\n" +
-                        "Accede a Zentry para aceptar o rechazar la sugerencia.\n\n" +
-                        "El equipo de Zentry"
+                email, nombre,
+                "Zentry - Sugerencia de cambio de vacaciones",
+                "Hola " + nombre + ", se ha sugerido un cambio en tus vacaciones. " +
+                        "Nuevas fechas: " + nuevaFechaInicio + " a " + nuevaFechaFin + ". " +
+                        "Accede a Zentry para aceptar o rechazar."
         );
     }
 
     public void enviarCambioEstadoVacaciones(String email, String nombre, String estado) {
         enviar(
-                email,
-                nombre,
-                "Zentry — Actualización de tu solicitud de vacaciones",
+                email, nombre,
+                "Zentry - Actualizacion de vacaciones",
+                "Hola " + nombre + ", tu solicitud de vacaciones ha sido " + estado.toLowerCase() + "."
+        );
+    }
+
+    public void enviarRecuperacionPassword(String email, String nombre, String token) {
+        String enlace = "http://localhost:4200/resetear-password?token=" + token;
+        enviar(
+                email, nombre,
+                "Zentry - Recuperación de contraseña",
                 "Hola " + nombre + ",\n\n" +
-                        "Tu solicitud de vacaciones ha sido " + estado.toLowerCase() + ".\n\n" +
-                        "Accede a Zentry para más detalles.\n\n" +
+                        "Has solicitado restablecer tu contraseña en Zentry.\n" +
+                        "Haz clic en el siguiente enlace (válido 2 horas):\n\n" +
+                        enlace + "\n\n" +
+                        "Si no has solicitado esto, ignora este mensaje.\n\n" +
                         "El equipo de Zentry"
         );
     }
+
+
 }

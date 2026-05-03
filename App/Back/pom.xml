@@ -83,14 +83,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mailjet</groupId>
-            <artifactId>mailjet-client</artifactId>
-            <version>4.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20231013</version>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
         </dependency>
 
 

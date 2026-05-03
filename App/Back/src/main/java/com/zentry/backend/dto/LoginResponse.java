@@ -15,4 +15,5 @@ public class LoginResponse {
     private String systemRole;
     private String companyRole;
     private String empleadoId;
+    private Boolean mustChangePassword;
 }

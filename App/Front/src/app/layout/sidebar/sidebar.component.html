@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <aside class="sidebar">
   <button
     class="toggle-btn"
@@ -25,31 +24,3 @@
     </a>
   </nav>
 </aside>
-=======
-<aside class="sidebar">
-  <button
-    class="toggle-btn"
-    (click)="toggle()"
-    [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'"
-    [attr.aria-expanded]="!collapsed()">
-    <i
-      class="fa-solid"
-      [class.fa-chevron-left]="!collapsed()"
-      [class.fa-chevron-right]="collapsed()"
-      aria-hidden="true">
-    </i>
-  </button>
-
-  <nav class="sidebar-nav" aria-label="Menú principal">
-    <a
-      *ngFor="let item of visibleMenuItems"
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      class="nav-item"
-      [attr.title]="collapsed() ? item.label : null">
-      <i class="fa-solid" [class]="getIconClass(item.route)" aria-hidden="true"></i>
-      @if (!collapsed()) { <span>{{ item.label }}</span> }
-    </a>
-  </nav>
-</aside>
->>>>>>> 18537ca3b30c22e21f03fbfa18e3a3c5afbd546c

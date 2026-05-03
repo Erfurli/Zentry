@@ -10,11 +10,16 @@ import { AusenciasComponent } from './pages/ausencias/ausencias.component';
 import { authGuard } from './guards/auth.guard';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
+import { CambiarPasswordComponent } from './pages/cambiar-password/cambiar-password.component';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'cambiar-password',
+    component: CambiarPasswordComponent,
   },
   {
     path: '',

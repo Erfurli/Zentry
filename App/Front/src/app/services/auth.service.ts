@@ -16,17 +16,18 @@ export interface LoginResponse {
   systemRole: SystemRole;
   companyRole: CompanyRole;
   empleadoId: string;
+  mustChangePassword: boolean;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8080/api/auth';
 
   private currentUserSubject = new BehaviorSubject<LoginResponse | null>(
-    this.getStoredSession()
+    this.getStoredSession(),
   );
 
   currentUser$ = this.currentUserSubject.asObservable();
@@ -35,7 +36,7 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, data).pipe(
       tap((response) => {
         this.saveSession(response);
-      })
+      }),
     );
   }
 
@@ -45,14 +46,14 @@ export class AuthService {
     localStorage.setItem('companyRole', data.companyRole);
     localStorage.setItem('systemRole', data.systemRole);
     localStorage.setItem('empleadoId', String(data.empleadoId));
+    localStorage.setItem('mustChangePassword', String(data.mustChangePassword));
     localStorage.setItem('currentUser', JSON.stringify(data));
-
     this.currentUserSubject.next(data);
   }
 
   private getStoredSession(): LoginResponse | null {
     const stored = localStorage.getItem('currentUser');
-    return stored ? JSON.parse(stored) as LoginResponse : null;
+    return stored ? (JSON.parse(stored) as LoginResponse) : null;
   }
 
   getCurrentUser(): LoginResponse | null {
@@ -68,16 +69,24 @@ export class AuthService {
   }
 
   getSystemRole(): SystemRole | null {
-    return this.getCurrentUser()?.systemRole || localStorage.getItem('systemRole') as SystemRole | null;
+    return (
+      this.getCurrentUser()?.systemRole ||
+      (localStorage.getItem('systemRole') as SystemRole | null)
+    );
   }
 
   getCompanyRole(): CompanyRole | null {
-    return this.getCurrentUser()?.companyRole || localStorage.getItem('companyRole') as CompanyRole | null;
+    return (
+      this.getCurrentUser()?.companyRole ||
+      (localStorage.getItem('companyRole') as CompanyRole | null)
+    );
   }
 
   getEmpleadoId(): string | null {
-  return this.getCurrentUser()?.empleadoId ?? localStorage.getItem('empleadoId');
-}
+    return (
+      this.getCurrentUser()?.empleadoId ?? localStorage.getItem('empleadoId')
+    );
+  }
 
   isLoggedIn(): boolean {
     return !!this.getToken();
@@ -97,16 +106,14 @@ export class AuthService {
     return !!role && roles.includes(role);
   }
 
-
-
   logout(): void {
-  localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  localStorage.removeItem('companyRole');
-  localStorage.removeItem('systemRole');
-  localStorage.removeItem('empleadoId');
-  localStorage.removeItem('currentUser');
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('companyRole');
+    localStorage.removeItem('systemRole');
+    localStorage.removeItem('empleadoId');
+    localStorage.removeItem('currentUser');
 
-  this.currentUserSubject.next(null);
-}
+    this.currentUserSubject.next(null);
+  }
 }

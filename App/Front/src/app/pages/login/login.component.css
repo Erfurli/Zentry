@@ -119,3 +119,95 @@ button:disabled {
 .forgot-password a:hover {
   text-decoration: underline;
 }
+
+.modal-recuperacion-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-recuperacion {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-recuperacion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-recuperacion-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.modal-recuperacion-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #94a3b8;
+  width: auto;
+  padding: 0;
+}
+
+.modal-recuperacion p {
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.modal-recuperacion-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-primario {
+  padding: 0.75rem 1.5rem;
+  background: var(--zentry-button);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: auto;
+}
+
+.btn-secundario {
+  padding: 0.75rem 1.5rem;
+  background: #f1f5f9;
+  color: #374151;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  width: auto;
+}
+
+.email-enviado {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.email-enviado i {
+  font-size: 3rem;
+  color: #10b981;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.email-enviado-sub {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}

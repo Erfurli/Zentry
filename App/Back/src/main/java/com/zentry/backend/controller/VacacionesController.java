@@ -2,13 +2,18 @@ package com.zentry.backend.controller;
 
 import com.zentry.backend.dto.VacacionesVistaDTO;
 import com.zentry.backend.model.Empleado;
+import com.zentry.backend.model.Usuario;
 import com.zentry.backend.model.Vacaciones;
 import com.zentry.backend.repository.EmpleadoRepository;
+import com.zentry.backend.repository.UsuarioRepository;
 import com.zentry.backend.repository.VacacionesRepository;
+import com.zentry.backend.service.EmailService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/vacaciones")
@@ -16,14 +21,18 @@ public class VacacionesController {
 
     private final VacacionesRepository vacacionesRepository;
     private final EmpleadoRepository empleadoRepository;
-    private final com.zentry.backend.repository.UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final EmailService emailService;
 
     public VacacionesController(VacacionesRepository vacacionesRepository,
                                 EmpleadoRepository empleadoRepository,
-                                com.zentry.backend.repository.UsuarioRepository usuarioRepository) {
+                                UsuarioRepository usuarioRepository,
+                                EmailService emailService) {
         this.vacacionesRepository = vacacionesRepository;
         this.empleadoRepository = empleadoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.emailService = emailService;
+
     }
 
     @GetMapping
@@ -56,11 +65,11 @@ public class VacacionesController {
     }
 
     @PostMapping("/solicitar")
-    public ResponseEntity<Vacaciones> solicitar(@RequestBody java.util.Map<String, String> body,
-                                                org.springframework.security.core.Authentication authentication) {
+    public ResponseEntity<Vacaciones> solicitar(@RequestBody Map<String, String> body,
+                                                Authentication authentication) {
         String username = authentication.getName();
 
-        com.zentry.backend.model.Usuario usuario = usuarioRepository.findByUsername(username)
+        Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         String fechaInicio = body.get("fechaInicio");
@@ -86,13 +95,25 @@ public class VacacionesController {
     public Vacaciones aprobar(@PathVariable String id) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
         vacacion.setEstado("Aprobada");
-        return vacacionesRepository.save(vacacion);
+        Vacaciones guardada = vacacionesRepository.save(vacacion);
+
+        empleadoRepository.findById(vacacion.getEmpleadoId()).ifPresent(emp ->
+                emailService.enviarCambioEstadoVacaciones(emp.getEmail(), emp.getNombre(), "Aprobada")
+        );
+
+        return guardada;
     }
 
     @PatchMapping("/{id}/rechazar")
     public Vacaciones rechazar(@PathVariable String id) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
         vacacion.setEstado("Rechazada");
-        return vacacionesRepository.save(vacacion);
+        Vacaciones guardada = vacacionesRepository.save(vacacion);
+
+        empleadoRepository.findById(vacacion.getEmpleadoId()).ifPresent(emp ->
+                emailService.enviarCambioEstadoVacaciones(emp.getEmail(), emp.getNombre(), "Rechazada")
+        );
+
+        return guardada;
     }
 }

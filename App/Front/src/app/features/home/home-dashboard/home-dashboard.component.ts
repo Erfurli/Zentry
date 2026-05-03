@@ -25,12 +25,12 @@ export class HomeDashboardComponent implements OnInit {
   ngOnInit(): void {
   this.dashboardService.getHomeSummary().subscribe({
     next: (data) => {
-      console.log('Datos recibidos del backend:', data); // <--- MIRA LA CONSOLA
+      console.log('Datos recibidos del backend:', data);
       this.summary = data;
       this.loading = false;
     },
     error: (err) => {
-      console.error('Error al cargar dashboard:', err); // <--- MIRA LA CONSOLA
+      console.error('Error al cargar dashboard:', err);
       this.error = 'No se pudo cargar el resumen.';
       this.loading = false;
     }

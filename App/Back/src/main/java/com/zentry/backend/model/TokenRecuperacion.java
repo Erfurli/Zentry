@@ -7,20 +7,18 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "users")
+@Document("tokens_recuperacion")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Usuario {
+public class TokenRecuperacion {
 
     @Id
     private String id;
 
-    private String empleadoId;
-    private String username;
-    private String password;
-    private RolSistema rolSistema;
-    private Boolean activo;
-    private Boolean mustChangePassword;
+    private String usuarioId;
+    private String token;
+    private String fechaExpiracion;
+    private Boolean usado;
 }

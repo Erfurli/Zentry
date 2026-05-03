@@ -20,7 +20,7 @@
       </div>
 
       <div class="forgot-password">
-        <a href="#">¿Olvidaste tu contraseña?</a>
+        <a href="#" (click)="$event.preventDefault(); abrirRecuperacion()">¿Olvidaste tu contraseña?</a>
       </div>
 
       @if (error) {
@@ -33,3 +33,44 @@
     </form>
   </div>
 </div>
+
+@if (modalRecuperacionAbierto) {
+  <div class="modal-recuperacion-overlay" (click)="cerrarRecuperacion()">
+    <div class="modal-recuperacion" (click)="$event.stopPropagation()">
+      <div class="modal-recuperacion-header">
+        <h2>Recuperar contraseña</h2>
+        <button class="modal-recuperacion-close" (click)="cerrarRecuperacion()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      @if (!emailEnviado) {
+        <p>Introduce tu email y te enviaremos un enlace para restablecer tu contraseña.</p>
+        <div class="form-field">
+          <label for="emailRecuperacion">Email</label>
+          <input id="emailRecuperacion" type="email" [(ngModel)]="emailRecuperacion" placeholder="tu@email.com" />
+        </div>
+        @if (errorRecuperacion) {
+          <div class="error-box">{{ errorRecuperacion }}</div>
+        }
+        <div class="modal-recuperacion-footer">
+          <button class="btn-secundario" (click)="cerrarRecuperacion()" [disabled]="loadingRecuperacion">
+            Cancelar
+          </button>
+          <button class="btn-primario" (click)="enviarRecuperacion()" [disabled]="loadingRecuperacion">
+            {{ loadingRecuperacion ? 'Enviando...' : 'Enviar enlace' }}
+          </button>
+        </div>
+      } @else {
+        <div class="email-enviado">
+          <i class="fa-solid fa-envelope-circle-check"></i>
+          <p>Si el email está registrado, recibirás un enlace en breve.</p>
+          <p class="email-enviado-sub">Revisa también tu carpeta de spam.</p>
+        </div>
+        <div class="modal-recuperacion-footer">
+          <button class="btn-primario" (click)="cerrarRecuperacion()">Cerrar</button>
+        </div>
+      }
+    </div>
+  </div>
+}

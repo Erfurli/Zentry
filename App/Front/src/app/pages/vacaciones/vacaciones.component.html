@@ -92,7 +92,6 @@
     </div>
   }
 
-  <!-- VISTA CALENDARIO -->
   @if (vistaCalendario()) {
     <div class="calendario-container">
       <div class="calendario-izquierda">
@@ -133,7 +132,6 @@
                 [cdkDragDisabled]="!puedeArrastrar(s)"
                 (cdkDragStarted)="onDragStarted(s)">
 
-                <!-- Preview mientras se arrastra -->
                 <div *cdkDragPlaceholder class="drag-placeholder"></div>
                 <div *cdkDragPreview class="drag-preview">
                   <i class="fa-solid fa-calendar-days"></i>
@@ -184,7 +182,6 @@
   }
 </div>
 
-<!-- MODAL SUGERENCIA -->
 @if (modalSugerenciaAbierto()) {
   <div class="modal-overlay" (click)="cerrarModalSugerencia()">
     <div class="modal-sugerencia" (click)="$event.stopPropagation()">
@@ -222,6 +219,7 @@
       </div>
     </div>
   </div>
+}
 
   @if (modalSolicitarAbierto()) {
   <div class="modal-overlay" (click)="modalSolicitarAbierto.set(false)">
@@ -258,5 +256,4 @@
       </div>
     </div>
   </div>
-}
 }
