@@ -30,15 +30,68 @@ public class EmailService {
             );
 
             String json = """
-                {
-                  "Messages": [{
-                    "From": {"Email": "%s", "Name": "%s"},
-                    "To": [{"Email": "%s", "Name": "%s"}],
-                    "Subject": "%s",
-                    "TextPart": "%s"
-                  }]
-                }
-                """.formatted(fromEmail, fromName, toEmail, toNombre, asunto, cuerpo);
+            {
+              "Messages": [{
+                "From": {"Email": "%s", "Name": "%s"},
+                "To": [{"Email": "%s", "Name": "%s"}],
+                "Subject": "%s",
+                "TextPart": "%s"
+              }]
+            }
+            """.formatted(
+                    escapeJson(fromEmail),
+                    escapeJson(fromName),
+                    escapeJson(toEmail),
+                    escapeJson(toNombre),
+                    escapeJson(asunto),
+                    escapeJson(cuerpo)
+            );
+
+            System.out.println("JSON enviado a Mailjet:\n" + json);
+
+            RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+
+            Request request = new Request.Builder()
+                    .url("https://api.mailjet.com/v3.1/send")
+                    .post(body)
+                    .addHeader("Authorization", "Basic " + credentials)
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                System.out.println("Mailjet status: " + response.code());
+                System.out.println("Mailjet body: " + response.body().string());
+            }
+        } catch (Exception e) {
+            System.err.println("Error enviando email: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // para reemplazar enlaces por texto
+    private void enviarHtml(String toEmail, String toNombre, String asunto, String htmlCuerpo) {
+        try {
+            String credentials = Base64.getEncoder().encodeToString(
+                    (apiKey + ":" + apiSecret).getBytes()
+            );
+
+            String json = """
+            {
+              "Messages": [{
+                "From": {"Email": "%s", "Name": "%s"},
+                "To": [{"Email": "%s", "Name": "%s"}],
+                "Subject": "%s",
+                "HTMLPart": "%s"
+              }]
+            }
+            """.formatted(
+                    escapeJson(fromEmail),
+                    escapeJson(fromName),
+                    escapeJson(toEmail),
+                    escapeJson(toNombre),
+                    escapeJson(asunto),
+                    escapeJson(htmlCuerpo)
+            );
 
             RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
 
@@ -78,18 +131,29 @@ public class EmailService {
         );
     }
 
+    // es que si no al JSON no le gusta el correo zzzzzz
+    private static String escapeJson(String text) {
+        if (text == null) return "";
+        return text
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
+    }
+
     public void enviarRecuperacionPassword(String email, String nombre, String token) {
         String enlace = "http://localhost:4200/resetear-password?token=" + token;
-        enviar(
-                email, nombre,
-                "Zentry - Recuperación de contraseña",
-                "Hola " + nombre + ",\n\n" +
-                        "Has solicitado restablecer tu contraseña en Zentry.\n" +
-                        "Haz clic en el siguiente enlace (válido 2 horas):\n\n" +
-                        enlace + "\n\n" +
-                        "Si no has solicitado esto, ignora este mensaje.\n\n" +
-                        "El equipo de Zentry"
-        );
+        String cuerpo = """
+            <p>Hola %s,</p>
+            <p>Has solicitado restablecer tu contraseña en Zentry.</p>
+            <p><a href="%s" style="background-color:#264489;color:white;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:bold;">Resetear contraseña</a></p>
+            <p>El enlace es válido durante 2 horas.</p>
+            <p>Si no has solicitado esto, ignora este mensaje.</p>
+            <p>El equipo de Zentry</p>
+            """.formatted(escapeJson(nombre), enlace);
+
+        enviarHtml(email, nombre, "Zentry - Recuperación de contraseña", cuerpo);
     }
 
 

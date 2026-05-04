@@ -8,6 +8,7 @@ import com.zentry.backend.repository.EmpleadoRepository;
 import com.zentry.backend.repository.UsuarioRepository;
 import com.zentry.backend.repository.VacacionesRepository;
 import com.zentry.backend.service.EmailService;
+import com.zentry.backend.service.NotificacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,16 +24,18 @@ public class VacacionesController {
     private final EmpleadoRepository empleadoRepository;
     private final UsuarioRepository usuarioRepository;
     private final EmailService emailService;
+    private final NotificacionService notificacionService;
 
     public VacacionesController(VacacionesRepository vacacionesRepository,
                                 EmpleadoRepository empleadoRepository,
                                 UsuarioRepository usuarioRepository,
-                                EmailService emailService) {
+                                EmailService emailService,
+                                NotificacionService notificacionService) {
         this.vacacionesRepository = vacacionesRepository;
         this.empleadoRepository = empleadoRepository;
         this.usuarioRepository = usuarioRepository;
         this.emailService = emailService;
-
+        this.notificacionService = notificacionService;
     }
 
     @GetMapping
@@ -72,6 +75,9 @@ public class VacacionesController {
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        Empleado empleado = empleadoRepository.findById(usuario.getEmpleadoId())
+                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+
         String fechaInicio = body.get("fechaInicio");
         String fechaFin = body.get("fechaFin");
 
@@ -88,31 +94,82 @@ public class VacacionesController {
                 .estado("Pendiente")
                 .build();
 
-        return ResponseEntity.ok(vacacionesRepository.save(vacacion));
+        vacacionesRepository.save(vacacion);
+
+        notificacionService.notificarAdmins(
+                "Nueva solicitud de vacaciones",
+                empleado.getNombre() + " ha solicitado vacaciones del " + fechaInicio + " al " + fechaFin,
+                "vacaciones",
+                "/vacaciones"
+        );
+
+        return ResponseEntity.ok(vacacion);
     }
 
     @PatchMapping("/{id}/aprobar")
-    public Vacaciones aprobar(@PathVariable String id) {
+    public Vacaciones aprobar(@PathVariable String id, Authentication authentication) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
         vacacion.setEstado("Aprobada");
         Vacaciones guardada = vacacionesRepository.save(vacacion);
 
-        empleadoRepository.findById(vacacion.getEmpleadoId()).ifPresent(emp ->
-                emailService.enviarCambioEstadoVacaciones(emp.getEmail(), emp.getNombre(), "Aprobada")
-        );
+        Empleado emp = empleadoRepository.findById(vacacion.getEmpleadoId()).orElse(null);
+        if (emp != null) {
+            emailService.enviarCambioEstadoVacaciones(emp.getEmail(), emp.getNombre(), "Aprobada");
+
+            usuarioRepository.findAll().stream()
+                    .filter(u -> emp.getId().equals(u.getEmpleadoId()))
+                    .findFirst()
+                    .ifPresent(u -> notificacionService.crear(
+                            u.getId(),
+                            "Vacaciones aprobadas",
+                            "Tu solicitud de vacaciones del " + vacacion.getFechaInicio()
+                                    + " al " + vacacion.getFechaFin() + " ha sido aprobada por "
+                                    + authentication.getName(),
+                            "vacaciones",
+                            "/vacaciones"
+                    ));
+
+            notificacionService.notificarAdmins(
+                    "Vacaciones aprobadas",
+                    authentication.getName() + " ha aprobado las vacaciones de " + emp.getNombre(),
+                    "vacaciones",
+                    "/vacaciones"
+            );
+        }
 
         return guardada;
     }
 
     @PatchMapping("/{id}/rechazar")
-    public Vacaciones rechazar(@PathVariable String id) {
+    public Vacaciones rechazar(@PathVariable String id, Authentication authentication) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
         vacacion.setEstado("Rechazada");
         Vacaciones guardada = vacacionesRepository.save(vacacion);
 
-        empleadoRepository.findById(vacacion.getEmpleadoId()).ifPresent(emp ->
-                emailService.enviarCambioEstadoVacaciones(emp.getEmail(), emp.getNombre(), "Rechazada")
-        );
+        Empleado emp = empleadoRepository.findById(vacacion.getEmpleadoId()).orElse(null);
+        if (emp != null) {
+            emailService.enviarCambioEstadoVacaciones(emp.getEmail(), emp.getNombre(), "Rechazada");
+
+            usuarioRepository.findAll().stream()
+                    .filter(u -> emp.getId().equals(u.getEmpleadoId()))
+                    .findFirst()
+                    .ifPresent(u -> notificacionService.crear(
+                            u.getId(),
+                            "Vacaciones rechazadas",
+                            "Tu solicitud de vacaciones del " + vacacion.getFechaInicio()
+                                    + " al " + vacacion.getFechaFin() + " ha sido rechazada por "
+                                    + authentication.getName(),
+                            "vacaciones",
+                            "/vacaciones"
+                    ));
+
+            notificacionService.notificarAdmins(
+                    "Vacaciones rechazadas",
+                    authentication.getName() + " ha rechazado las vacaciones de " + emp.getNombre(),
+                    "vacaciones",
+                    "/vacaciones"
+            );
+        }
 
         return guardada;
     }

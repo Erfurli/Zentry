@@ -11,6 +11,7 @@ import { authGuard } from './guards/auth.guard';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CambiarPasswordComponent } from './pages/cambiar-password/cambiar-password.component';
+import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
 
 export const routes: Routes = [
   {
@@ -20,6 +21,10 @@ export const routes: Routes = [
   {
     path: 'cambiar-password',
     component: CambiarPasswordComponent,
+  },
+  {
+    path: 'resetear-password',
+    component: ResetearPasswordComponent,
   },
   {
     path: '',

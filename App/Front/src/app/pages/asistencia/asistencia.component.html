@@ -6,10 +6,37 @@
         <a routerLink="/dashboard">Dashboard</a> / Asistencia
       </div>
     </div>
+    <div class="header-actions">
+      <div class="vista-toggle">
+        <button
+          class="toggle-btn-vista"
+          [class.active]="!vistaGrafico()"
+          (click)="activarVistaLista()"
+          title="Vista lista"
+        >
+          <i class="fa-solid fa-list"></i>
+        </button>
+        <button
+          class="toggle-btn-vista"
+          [class.active]="vistaGrafico()"
+          (click)="activarVistaGrafico()"
+          title="Vista gráfico"
+        >
+          <i class="fa-solid fa-chart-pie"></i>
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="filters-section">
     <div class="filters">
+      <input
+        type="date"
+        class="filter-date"
+        [value]="fechaSeleccionada()"
+        (change)="onFechaChange($event)"
+      />
+
       <select
         class="filter-select"
         [value]="filtroDepartamento()"
@@ -21,16 +48,18 @@
         <option value="Ventas">Ventas</option>
       </select>
 
-      <select
-        class="filter-select"
-        [value]="filtroEstado()"
-        (change)="onEstadoChange($event)"
-      >
-        <option value="Todos">Todos los estados</option>
-        <option value="Presente">Presentes</option>
-        <option value="Retraso">Con retraso</option>
-        <option value="Ausente">Ausentes</option>
-      </select>
+      @if (!vistaGrafico()) {
+        <select
+          class="filter-select"
+          [value]="filtroEstado()"
+          (change)="onEstadoChange($event)"
+        >
+          <option value="Todos">Todos los estados</option>
+          <option value="Presente">Presentes</option>
+          <option value="Retraso">Con retraso</option>
+          <option value="Ausente">Ausentes</option>
+        </select>
+      }
 
       <button class="export-btn" type="button">
         <i class="fa-solid fa-download"></i> Exportar
@@ -38,61 +67,121 @@
     </div>
   </div>
 
+  @if (!vistaGrafico()) {
   <div class="kpi-grid">
     <div class="kpi-card presente">
       <div class="kpi-number">{{ totalPresentes() }}</div>
       <div class="kpi-label">Presentes</div>
     </div>
-
     <div class="kpi-card total">
       <div class="kpi-number">{{ totalEmpleados() }}</div>
       <div class="kpi-label">Total Empleados</div>
     </div>
-
     <div class="kpi-card retraso">
       <div class="kpi-number">{{ totalRetrasos() }}</div>
       <div class="kpi-label">Retrasos</div>
     </div>
-
     <div class="kpi-card ausente">
       <div class="kpi-number">{{ totalAusentes() }}</div>
       <div class="kpi-label">Ausentes</div>
     </div>
   </div>
+}
 
-  <div class="table-container">
-    @if (empleadosFiltrados().length > 0) {
-      <table class="asistencia-table">
-        <thead>
-          <tr>
-            <th>Empleado</th>
-            <th>Departamento</th>
-            <th>Estado</th>
-            <th>Entrada</th>
-            <th>Salida</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (empleado of empleadosFiltrados(); track empleado.nombre) {
+  <!-- VISTA LISTA -->
+  @if (!vistaGrafico()) {
+    <div class="table-container">
+      @if (empleadosFiltrados().length > 0) {
+        <table class="asistencia-table">
+          <thead>
             <tr>
-              <td>{{ empleado.nombre }}</td>
-              <td>{{ empleado.departamento }}</td>
-              <td>
-                <span class="estado-badge" [ngClass]="empleado.estado.toLowerCase()">
-                  {{ empleado.estado }}
-                </span>
-              </td>
-              <td>{{ empleado.entrada || '-' }}</td>
-              <td>{{ empleado.salida || '-' }}</td>
+              <th>Empleado</th>
+              <th>Departamento</th>
+              <th>Estado</th>
+              <th>Entrada</th>
+              <th>Salida</th>
             </tr>
-          }
-        </tbody>
-      </table>
-    } @else {
-      <div class="empty-state">
-        <i class="fa-solid fa-calendar-check"></i>
-        <p>No hay registros de asistencia para los filtros seleccionados</p>
-      </div>
-    }
-  </div>
+          </thead>
+          <tbody>
+            @for (empleado of empleadosFiltrados(); track empleado.nombre) {
+              <tr>
+                <td>{{ empleado.nombre }}</td>
+                <td>{{ empleado.departamento }}</td>
+                <td>
+                  <span class="estado-badge" [ngClass]="empleado.estado.toLowerCase()">
+                    {{ empleado.estado }}
+                  </span>
+                </td>
+                <td>{{ empleado.entrada || '-' }}</td>
+                <td>{{ empleado.salida || '-' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <div class="empty-state">
+          <i class="fa-solid fa-calendar-check"></i>
+          <p>No hay registros de asistencia para los filtros seleccionados</p>
+        </div>
+      }
+    </div>
+  }
+
+  @if (vistaGrafico()) {
+    <div class="grafico-container">
+
+      @if (esFuturo()) {
+        <div class="futuro-aviso">
+          <i class="fa-solid fa-clock"></i>
+          <h3>Fecha futura</h3>
+          <p>Los datos de asistencia para el <strong>{{ fechaSeleccionada() }}</strong> aún no están disponibles.</p>
+        </div>
+      } @else {
+
+        <div class="grafico-layout">
+          <div class="donut-wrapper">
+            <div class="donut-inner">
+              <canvas id="donutAsistencia"></canvas>
+              <div class="donut-center-label">
+                <span class="donut-total">{{ totalEmpleados() }}</span>
+                <span class="donut-sublabel">empleados</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grafico-leyenda">
+            <h3 class="leyenda-titulo">Distribución del día</h3>
+
+            <div class="leyenda-item-grande presente">
+              <div class="leyenda-color-bar"></div>
+              <div class="leyenda-datos">
+                <span class="leyenda-nombre">Presentes</span>
+                <span class="leyenda-valor">{{ totalPresentes() }} empleados</span>
+                <span class="leyenda-pct">{{ getPorcentaje(totalPresentes()) }}%</span>
+              </div>
+            </div>
+
+            <div class="leyenda-item-grande retraso">
+              <div class="leyenda-color-bar"></div>
+              <div class="leyenda-datos">
+                <span class="leyenda-nombre">Con retraso</span>
+                <span class="leyenda-valor">{{ totalRetrasos() }} empleados</span>
+                <span class="leyenda-pct">{{ getPorcentaje(totalRetrasos()) }}%</span>
+              </div>
+            </div>
+
+            <div class="leyenda-item-grande ausente">
+              <div class="leyenda-color-bar"></div>
+              <div class="leyenda-datos">
+                <span class="leyenda-nombre">Ausentes</span>
+                <span class="leyenda-valor">{{ totalAusentes() }} empleados</span>
+                <span class="leyenda-pct">{{ getPorcentaje(totalAusentes()) }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      }
+    </div>
+  }
 </div>

@@ -1,60 +1,77 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../enviroments/enviroment';
 
 interface Notificacion {
-  id: number;
+  id: string;
   titulo: string;
   mensaje: string;
   tipo: 'entrada' | 'salida' | 'vacaciones' | 'ausencia';
   leida: boolean;
   ruta?: string;
-  fecha: Date;
+  fecha: string;
 }
 
 @Component({
   selector: 'app-notificaciones',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.css',
 })
-export class NotificacionesComponent {
-  readonly notificaciones = signal<Notificacion[]>([
-    { id: 1, titulo: 'Nueva entrada', mensaje: 'Ana López ha fichado entrada', tipo: 'entrada', leida: false, fecha: new Date('2026-03-20T09:00:00'), ruta: '/asistencia' },
-    { id: 2, titulo: 'Solicitud vacaciones', mensaje: 'Carlos García solicita 10 días', tipo: 'vacaciones', leida: false, fecha: new Date('2026-03-20T10:15:00'), ruta: '/vacaciones' },
-    { id: 3, titulo: 'Salida registrada', mensaje: 'María Pérez ha fichado salida', tipo: 'salida', leida: true, fecha: new Date('2026-03-20T18:30:00') },
-    { id: 4, titulo: 'Ausencia justificada', mensaje: 'Juan Martínez ausencia médica', tipo: 'ausencia', leida: false, fecha: new Date('2026-03-20T14:20:00'), ruta: '/ausencias' },
-  ]);
+export class NotificacionesComponent implements OnInit {
+  private router = inject(Router);
+  private http = inject(HttpClient);
 
-  constructor(private router: Router) {}
-  irARuta(ruta: string): void {
-    this.router.navigate([ruta]);  // ← USA ROUTER
-    this.cerrarNotifs();
-  }
-
+  readonly notificaciones = signal<Notificacion[]>([]);
   readonly abierto = signal(false);
   readonly noLeidas = computed(() => this.notificaciones().filter(n => !n.leida));
   readonly leidas = computed(() => this.notificaciones().filter(n => n.leida));
 
+  ngOnInit(): void {
+    this.cargarNotificaciones();
+  }
+
+  cargarNotificaciones(): void {
+    this.http.get<Notificacion[]>(`${environment.apiUrl}/notificaciones`)
+      .subscribe({
+        next: (data) => this.notificaciones.set(data),
+        error: (err) => console.error('Error cargando notificaciones:', err)
+      });
+  }
+
   toggleNotifs(): void {
     this.abierto.update(v => !v);
+    if (this.abierto()) {
+      this.cargarNotificaciones();
+    }
   }
 
   cerrarNotifs(): void {
     this.abierto.set(false);
   }
 
-  marcarLeida(id: number): void {
-    this.notificaciones.update(notifs =>
-      notifs.map(n => n.id === id ? { ...n, leida: true } : n)
-    );
+  irARuta(ruta: string): void {
+    this.router.navigate([ruta]);
+    this.cerrarNotifs();
   }
 
+  marcarLeida(id: string): void {
+    this.http.patch(`${environment.apiUrl}/notificaciones/${id}/leer`, {})
+      .subscribe({
+        next: () => {
+          this.notificaciones.update(notifs =>
+            notifs.map(n => n.id === id ? { ...n, leida: true } : n)
+          );
+        },
+        error: (err) => console.error('Error marcando notificación:', err)
+      });
+  }
 
-  formatoFecha(fecha: Date): string {
-    return fecha.toLocaleTimeString('es-ES', {
+  formatoFecha(fecha: string): string {
+    return new Date(fecha).toLocaleTimeString('es-ES', {
       hour: '2-digit',
       minute: '2-digit',
       hour12: false
