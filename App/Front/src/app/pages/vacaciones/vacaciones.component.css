@@ -120,7 +120,6 @@
 .kpi-number { font-size: 2.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.25rem; }
 .kpi-label { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.05em; }
 
-/* TABLA */
 .table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 
 .vacaciones-table { width: 100%; border-collapse: collapse; }
@@ -146,7 +145,6 @@
 .vacaciones-table tbody tr:last-child td { border-bottom: none; }
 .motivo-cell { color: #64748b; font-size: 0.9rem; }
 
-/* BADGES */
 .estado-badge {
   display: inline-block;
   padding: 0.3rem 0.85rem;
@@ -160,7 +158,6 @@
 .estado-badge.pendiente { background: #fef3c7; color: #92400e; }
 .estado-badge.rechazada { background: #fee2e2; color: #991b1b; }
 
-/* ACCIONES */
 .acciones-cell { display: flex; gap: 0.5rem; align-items: center; }
 
 .accion-btn {
@@ -186,7 +183,6 @@
 .empty-state i { font-size: 2.5rem; margin-bottom: 0.75rem; display: block; }
 .empty-state p { margin: 0; font-size: 1rem; }
 
-/* CALENDARIO */
 .calendario-container {
   display: grid;
   grid-template-columns: 380px 1fr;
@@ -220,7 +216,6 @@
 .dot.pendiente { background: #f59e0b; }
 .dot.rechazada { background: #ef4444; }
 
-/* PANEL DERECHO */
 .calendario-derecha {
   border-left: 2px solid #f1f5f9;
   padding-left: 2rem;

@@ -31,6 +31,14 @@ export class AuthService {
   );
 
   currentUser$ = this.currentUserSubject.asObservable();
+  getUsuarioActual(): { id: string; nombre: string } | null {
+  const user = this.getCurrentUser();
+  if (!user) return null;
+  return {
+    id: user.empleadoId,
+    nombre: user.username
+  };
+}
 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, data).pipe(

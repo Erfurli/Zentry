@@ -12,6 +12,7 @@ import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CambiarPasswordComponent } from './pages/cambiar-password/cambiar-password.component';
 import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
+import { ChatComponent } from './pages/chat-component/chat.component';
 
 export const routes: Routes = [
   {
@@ -78,6 +79,12 @@ export const routes: Routes = [
         component: UsuariosComponent,
         canActivate: [authGuard],
         data: { roles: ['RRHH'] },
+      },
+      {
+        path: 'chat',
+        component: ChatComponent,
+        canActivate: [authGuard],
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],

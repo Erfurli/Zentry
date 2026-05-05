@@ -64,7 +64,6 @@ onEstadoChange(event: Event): void {
   this.filtroEstado.set(select.value);
 }
 
-// AÑADIR ESTOS MÉTODOS:
 justificar(id: number): void {
   this.ausencias.update(lista =>
     lista.map(a => a.id === id ? { ...a, estado: 'Justificada' } : a)

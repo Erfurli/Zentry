@@ -1,5 +1,4 @@
 <div class="page-container">
-  <!-- HEADER -->
   <div class="page-header">
     <div class="header-content">
       <h1>Ausencias</h1>
@@ -9,10 +8,8 @@
     </div>
   </div>
 
-  <!-- FILTROS -->
   <div class="filters-section">
     <div class="filters">
-      <!-- FILTRO TIPO -->
 <select class="filter-select" [value]="filtroTipo()" (change)="onTipoChange($event)">
   <option value="Todos">Todos los tipos</option>
   <option value="Enfermedad">Enfermedad</option>
@@ -27,13 +24,9 @@
   <option value="Pendiente">Pendientes</option>
   <option value="No Justificada">No Justificadas</option>
 </select>
-
-
     </div>
   </div>
 
-  <!-- KPIs -->
-  <!-- CAMBIAR KPIs (de 2 → 3 tarjetas) -->
 <div class="kpi-grid">
   <div class="kpi-card justificadas">
     <div class="kpi-number">{{ totalJustificadas() }}</div>
@@ -43,14 +36,13 @@
     <div class="kpi-number">{{ totalPendientes() }}</div>
     <div class="kpi-label">Pendientes</div>
   </div>
-  <div class="kpi-card no-justificadas">  <!-- ← NUEVO -->
+  <div class="kpi-card no-justificadas">
     <div class="kpi-number">{{ totalNoJustificadas() }}</div>
     <div class="kpi-label">No Justificadas</div>
   </div>
 </div>
 
 
-  <!-- TABLA -->
   <div class="table-container">
     @if (ausenciasFiltradas().length > 0) {
       <table class="ausencias-table">

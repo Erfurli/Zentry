@@ -14,7 +14,6 @@
   overflow: hidden;
 }
 
-/* BOTÓN TOGGLE */
 .toggle-btn {
   display: flex;
   align-items: center;
@@ -43,7 +42,6 @@
   outline-offset: 2px;
 }
 
-/* NAV */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -85,14 +83,13 @@
 .nav-item.active {
   background: linear-gradient(135deg, var(--zentry-primary), var(--zentry-primary-light));
   color: white;
-  box-shadow: 4px 0 15px rgba(181, 36, 43, 0.3);
+  box-shadow: 4px 0 15px rgba(55, 36, 181, 0.3);
 }
 
 .nav-item.active i {
   color: white;
 }
 
-/* ESTADO COLAPSADO */
 :host.collapsed .nav-item {
   justify-content: center;
   padding: 1rem 0;
@@ -104,7 +101,6 @@
   margin-left: auto;
 }
 
-/* Colapso automático en pantallas pequeñas */
 @media (max-width: 900px) {
   :host {
     width: 68px;
