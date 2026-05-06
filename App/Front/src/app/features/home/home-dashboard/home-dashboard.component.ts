@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { DashboardService, DashboardSummary } from '../../../services/dashboard.service';
 
 @Component({
@@ -23,19 +24,19 @@ export class HomeDashboardComponent implements OnInit {
   error = '';
 
   ngOnInit(): void {
-  this.dashboardService.getHomeSummary().subscribe({
-    next: (data) => {
-      console.log('Datos recibidos del backend:', data);
-      this.summary = data;
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error('Error al cargar dashboard:', err);
-      this.error = 'No se pudo cargar el resumen.';
-      this.loading = false;
-    }
-  });
-}
+    this.dashboardService.getHomeSummary().subscribe({
+      next: (data) => {
+        console.log('Datos recibidos del backend:', data);
+        this.summary = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error al cargar dashboard:', err);
+        this.error = 'No se pudo cargar el resumen.';
+        this.loading = false;
+      }
+    });
+  }
 
   fichar(accion: 'entrada' | 'salida') {
     alert(`Fichando ${accion}...`);
