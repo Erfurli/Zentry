@@ -1,36 +1,56 @@
-import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  computed,
+  OnInit,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-
-interface Ausencia {
-  id: number;
-  empleado: string;
-  departamento: string;
-  fechaInicio: string;
-  fechaFin: string;
-  dias: number;
-  tipo: 'Enfermedad' | 'Asunto Personal' | 'Médico' | 'Familiar';
-  estado: 'Justificada' | 'Pendiente' | 'No Justificada';
-}
+import { RouterLink, ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { AusenciasService, AusenciaVista } from '../../services/ausencias.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-ausencias',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './ausencias.component.html',
   styleUrl: './ausencias.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AusenciasComponent {
-  readonly ausencias = signal<Ausencia[]>([
-    { id: 1, empleado: 'Ana López', departamento: 'RRHH', fechaInicio: '15/03/2026', fechaFin: '17/03/2026', dias: 3, tipo: 'Enfermedad', estado: 'Justificada' },
-    { id: 2, empleado: 'Carlos García', departamento: 'IT', fechaInicio: '20/03/2026', fechaFin: '20/03/2026', dias: 1, tipo: 'Asunto Personal', estado: 'Pendiente' },
-    { id: 3, empleado: 'María Pérez', departamento: 'Ventas', fechaInicio: '10/03/2026', fechaFin: '12/03/2026', dias: 3, tipo: 'Médico', estado: 'Justificada' },
-  ]);
+export class AusenciasComponent implements OnInit {
+  private ausenciasService = inject(AusenciasService);
+  private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
 
+  // ── Rol del usuario ────────────────────────────────────────────────────────
+  // Booleano simple evaluado una vez al inicializar — no necesita ser un signal
+  // porque el rol no cambia durante la sesión.
+  readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
+
+  // ── Datos ──────────────────────────────────────────────────────────────────
+  readonly ausencias = signal<AusenciaVista[]>([]);
+  readonly loading = signal(true);
+  readonly error = signal('');
+
+  // ── Filtros ────────────────────────────────────────────────────────────────
   readonly filtroTipo = signal('Todos');
   readonly filtroEstado = signal('Todos');
 
+  // ── Modal de nueva solicitud ───────────────────────────────────────────────
+  readonly modalAbierto = signal(false);
+  readonly enviando = signal(false);
+  readonly mensajeExito = signal('');
+  readonly errorModal = signal('');
+
+  readonly formTipo = signal('Enfermedad');
+  readonly formFechaInicio = signal('');
+  readonly formFechaFin = signal('');
+  readonly formMotivo = signal('');
+
+  // ── Derivados ──────────────────────────────────────────────────────────────
   readonly ausenciasFiltradas = computed(() => {
     const tipo = this.filtroTipo();
     const estado = this.filtroEstado();
@@ -41,40 +61,115 @@ export class AusenciasComponent {
     });
   });
 
-  readonly totalJustificadas = computed(() => this.ausencias().filter(a => a.estado === 'Justificada').length);
-  readonly totalPendientes = computed(() => this.ausencias().filter(a => a.estado === 'Pendiente').length);
-  readonly totalNoJustificadas = computed(() => this.ausencias().filter(a => a.estado === 'No Justificada').length);
+  readonly totalJustificadas = computed(() =>
+    this.ausencias().filter(a => a.estado === 'Justificada').length
+  );
+  readonly totalPendientes = computed(() =>
+    this.ausencias().filter(a => a.estado === 'Pendiente').length
+  );
+  readonly totalNoJustificadas = computed(() =>
+    this.ausencias().filter(a => a.estado === 'No Justificada').length
+  );
 
+  readonly formValido = computed(() =>
+    this.formFechaInicio().length > 0 && this.formFechaFin().length > 0
+    && this.formFechaFin() >= this.formFechaInicio()
+  );
 
-  cambiarFiltroTipo(valor: string): void {
-    this.filtroTipo.set(valor);
+  // ── Ciclo de vida ──────────────────────────────────────────────────────────
+  ngOnInit(): void {
+    this.cargarAusencias();
+
+    // Si viene del dashboard con ?nuevo=true, abrir el modal automáticamente
+    this.route.queryParams.subscribe(params => {
+      if (params['nuevo'] === 'true') {
+        this.abrirModal();
+      }
+    });
   }
 
-  cambiarFiltroEstado(valor: string): void {
-    this.filtroEstado.set(valor);
+  // ── Carga de datos ─────────────────────────────────────────────────────────
+  cargarAusencias(): void {
+    this.loading.set(true);
+    this.error.set('');
+
+    const peticion = this.isEmpleado
+      ? this.ausenciasService.getMisAusencias()
+      : this.ausenciasService.getVista();
+
+    peticion.subscribe({
+      next: (data) => {
+        this.ausencias.set(data);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('No se pudieron cargar las ausencias. Comprueba la conexión.');
+        this.loading.set(false);
+      }
+    });
   }
 
+  // ── Modal ──────────────────────────────────────────────────────────────────
+  abrirModal(): void {
+    this.formTipo.set('Enfermedad');
+    this.formFechaInicio.set('');
+    this.formFechaFin.set('');
+    this.formMotivo.set('');
+    this.mensajeExito.set('');
+    this.errorModal.set('');
+    this.modalAbierto.set(true);
+  }
+
+  cerrarModal(): void {
+    this.modalAbierto.set(false);
+  }
+
+  enviarSolicitud(): void {
+    if (!this.formValido() || this.enviando()) return;
+
+    this.enviando.set(true);
+    this.errorModal.set('');
+
+    this.ausenciasService.solicitar({
+      fechaInicio: this.formFechaInicio(),
+      fechaFin: this.formFechaFin(),
+      tipo: this.formTipo(),
+      motivo: this.formMotivo()
+    }).subscribe({
+      next: () => {
+        this.mensajeExito.set('¡Ausencia solicitada correctamente!');
+        this.enviando.set(false);
+        this.cargarAusencias();
+        setTimeout(() => this.cerrarModal(), 1800);
+      },
+      error: () => {
+        this.errorModal.set('Error al enviar la solicitud. Inténtalo de nuevo.');
+        this.enviando.set(false);
+      }
+    });
+  }
+
+  // ── Filtros ────────────────────────────────────────────────────────────────
   onTipoChange(event: Event): void {
-  const select = event.target as HTMLSelectElement;
-  this.filtroTipo.set(select.value);
-}
+    this.filtroTipo.set((event.target as HTMLSelectElement).value);
+  }
 
-onEstadoChange(event: Event): void {
-  const select = event.target as HTMLSelectElement;
-  this.filtroEstado.set(select.value);
-}
+  onEstadoChange(event: Event): void {
+    this.filtroEstado.set((event.target as HTMLSelectElement).value);
+  }
 
-justificar(id: number): void {
-  this.ausencias.update(lista =>
-    lista.map(a => a.id === id ? { ...a, estado: 'Justificada' } : a)
-  );
-}
+  // ── Acciones admin ─────────────────────────────────────────────────────────
+  justificar(id: string): void {
+    this.ausenciasService.justificar(id).subscribe({
+      next: () => this.cargarAusencias(),
+      error: () => this.error.set('Error al justificar la ausencia.')
+    });
+  }
 
-noJustificar(id: number): void {
-  this.ausencias.update(lista =>
-    lista.map(a => a.id === id ? { ...a, estado: 'No Justificada' } : a)
-  );
-}
-
-
+  noJustificar(id: string): void {
+    this.ausenciasService.noJustificar(id).subscribe({
+      next: () => this.cargarAusencias(),
+      error: () => this.error.set('Error al actualizar el estado.')
+    });
+  }
 }

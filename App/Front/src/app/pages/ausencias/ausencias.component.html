@@ -1,100 +1,129 @@
 <div class="page-container">
   <div class="page-header">
     <div class="header-content">
-      <h1>Ausencias</h1>
-      <div class="breadcrumbs">
-        <a routerLink="/dashboard">Dashboard</a> / Ausencias
+      <div class="header-top">
+        <div>
+          <h1>{{ isEmpleado ? 'Mis Ausencias' : 'Ausencias' }}</h1>
+          <div class="breadcrumbs">
+            <a routerLink="/dashboard">Dashboard</a> / Ausencias
+          </div>
+        </div>
+        <!-- Botón visible para todos: empleados y admins pueden solicitar -->
+        <button class="btn-nueva-ausencia" type="button" (click)="abrirModal()">
+          <i class="fa-solid fa-plus"></i> Solicitar Ausencia
+        </button>
       </div>
     </div>
   </div>
 
+  <!-- Error global -->
+  @if (error()) {
+    <div class="alert-error">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
+    </div>
+  }
+
+  <!-- Filtros (solo admins ven todos los empleados) -->
   <div class="filters-section">
     <div class="filters">
-<select class="filter-select" [value]="filtroTipo()" (change)="onTipoChange($event)">
-  <option value="Todos">Todos los tipos</option>
-  <option value="Enfermedad">Enfermedad</option>
-  <option value="Asunto Personal">Asunto Personal</option>
-  <option value="Médico">Médico</option>
-  <option value="Familiar">Familiar</option>
-</select>
+      <select class="filter-select" [value]="filtroTipo()" (change)="onTipoChange($event)">
+        <option value="Todos">Todos los tipos</option>
+        <option value="Enfermedad">Enfermedad</option>
+        <option value="Asunto Personal">Asunto Personal</option>
+        <option value="Médico">Médico</option>
+        <option value="Familiar">Familiar</option>
+      </select>
 
-<select class="filter-select" [value]="filtroEstado()" (change)="onEstadoChange($event)">
-  <option value="Todos">Todos los estados</option>
-  <option value="Justificada">Justificadas</option>
-  <option value="Pendiente">Pendientes</option>
-  <option value="No Justificada">No Justificadas</option>
-</select>
+      <select class="filter-select" [value]="filtroEstado()" (change)="onEstadoChange($event)">
+        <option value="Todos">Todos los estados</option>
+        <option value="Justificada">Justificadas</option>
+        <option value="Pendiente">Pendientes</option>
+        <option value="No Justificada">No Justificadas</option>
+      </select>
     </div>
   </div>
 
-<div class="kpi-grid">
-  <div class="kpi-card justificadas">
-    <div class="kpi-number">{{ totalJustificadas() }}</div>
-    <div class="kpi-label">Justificadas</div>
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card justificadas">
+      <div class="kpi-number">{{ totalJustificadas() }}</div>
+      <div class="kpi-label">Justificadas</div>
+    </div>
+    <div class="kpi-card pendientes">
+      <div class="kpi-number">{{ totalPendientes() }}</div>
+      <div class="kpi-label">Pendientes</div>
+    </div>
+    <div class="kpi-card no-justificadas">
+      <div class="kpi-number">{{ totalNoJustificadas() }}</div>
+      <div class="kpi-label">No Justificadas</div>
+    </div>
   </div>
-  <div class="kpi-card pendientes">
-    <div class="kpi-number">{{ totalPendientes() }}</div>
-    <div class="kpi-label">Pendientes</div>
-  </div>
-  <div class="kpi-card no-justificadas">
-    <div class="kpi-number">{{ totalNoJustificadas() }}</div>
-    <div class="kpi-label">No Justificadas</div>
-  </div>
-</div>
 
-
+  <!-- Tabla -->
   <div class="table-container">
-    @if (ausenciasFiltradas().length > 0) {
+    @if (loading()) {
+      <div class="empty-state">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <p>Cargando ausencias...</p>
+      </div>
+    } @else if (ausenciasFiltradas().length > 0) {
       <table class="ausencias-table">
         <thead>
           <tr>
-            <th>Empleado</th>
-            <th>Departamento</th>
+            @if (!isEmpleado) {
+              <th>Empleado</th>
+              <th>Departamento</th>
+            }
             <th>Fecha Inicio</th>
             <th>Fecha Fin</th>
             <th>Días</th>
             <th>Tipo</th>
+            <th>Motivo</th>
             <th>Estado</th>
-            <th>Acciones</th>
+            @if (!isEmpleado) {
+              <th>Acciones</th>
+            }
           </tr>
         </thead>
         <tbody>
           @for (ausencia of ausenciasFiltradas(); track ausencia.id) {
             <tr>
-  <td class="nombre-cell">
-    {{ ausencia.empleado }}
-  </td>
-  <td>{{ ausencia.departamento }}</td>
-  <td>{{ ausencia.fechaInicio }}</td>
-  <td>{{ ausencia.fechaFin }}</td>
-  <td class="dias-cell">{{ ausencia.dias }}</td>
-  <td><span class="tipo-badge">{{ ausencia.tipo }}</span></td>
-  <td>
-    <span class="estado-badge"
-          [class.justificada]="ausencia.estado === 'Justificada'"
-          [class.pendiente]="ausencia.estado === 'Pendiente'"
-          [class.no-justificada]="ausencia.estado === 'No Justificada'">
-      {{ ausencia.estado }}
-    </span>
-  </td>
-  <td class="acciones-cell">
-    @if (ausencia.estado === 'Pendiente') {
-      <button class="accion-btn justificar"
-              (click)="justificar(ausencia.id)"
-              title="Justificar ausencia">
-        <i class="fa-solid fa-check"></i>
-      </button>
-      <button class="accion-btn no-justificar"
-              (click)="noJustificar(ausencia.id)"
-              title="No justificar">
-        <i class="fa-solid fa-times"></i>
-      </button>
-    } @else {
-      <span class="sin-acciones">—</span>
-    }
-  </td>
-</tr>
-
+              @if (!isEmpleado) {
+                <td class="nombre-cell">{{ ausencia.empleado }}</td>
+                <td>{{ ausencia.departamento }}</td>
+              }
+              <td>{{ ausencia.fechaInicio }}</td>
+              <td>{{ ausencia.fechaFin }}</td>
+              <td class="dias-cell">{{ ausencia.dias }}</td>
+              <td><span class="tipo-badge">{{ ausencia.tipo }}</span></td>
+              <td class="motivo-cell">{{ ausencia.motivo || '—' }}</td>
+              <td>
+                <span class="estado-badge"
+                      [class.justificada]="ausencia.estado === 'Justificada'"
+                      [class.pendiente]="ausencia.estado === 'Pendiente'"
+                      [class.no-justificada]="ausencia.estado === 'No Justificada'">
+                  {{ ausencia.estado }}
+                </span>
+              </td>
+              @if (!isEmpleado) {
+                <td class="acciones-cell">
+                  @if (ausencia.estado === 'Pendiente') {
+                    <button class="accion-btn justificar"
+                            (click)="justificar(ausencia.id)"
+                            title="Justificar ausencia">
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                    <button class="accion-btn no-justificar"
+                            (click)="noJustificar(ausencia.id)"
+                            title="No justificar">
+                      <i class="fa-solid fa-times"></i>
+                    </button>
+                  } @else {
+                    <span class="sin-acciones">—</span>
+                  }
+                </td>
+              }
+            </tr>
           }
         </tbody>
       </table>
@@ -102,7 +131,128 @@
       <div class="empty-state">
         <i class="fa-solid fa-calendar-xmark"></i>
         <p>No hay ausencias para los filtros seleccionados</p>
+        @if (isEmpleado) {
+          <button class="btn-empty-solicitar" type="button" (click)="abrirModal()">
+            <i class="fa-solid fa-plus"></i> Solicitar mi primera ausencia
+          </button>
+        }
       </div>
     }
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     MODAL: Solicitar nueva ausencia
+     ═══════════════════════════════════════════════════════════════════════════ -->
+@if (modalAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon">
+          <i class="fa-solid fa-calendar-xmark"></i>
+        </div>
+        <div>
+          <h2>Solicitar Ausencia</h2>
+          <p>Rellena los datos y envía tu solicitud</p>
+        </div>
+        <button class="modal-close" type="button" (click)="cerrarModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- Éxito -->
+        @if (mensajeExito()) {
+          <div class="alert-success">
+            <i class="fa-solid fa-circle-check"></i> {{ mensajeExito() }}
+          </div>
+        }
+
+        <!-- Error -->
+        @if (errorModal()) {
+          <div class="alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ errorModal() }}
+          </div>
+        }
+
+        <!-- Tipo de ausencia -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa-solid fa-tag"></i> Tipo de ausencia
+          </label>
+          <select class="form-select"
+                  [value]="formTipo()"
+                  (change)="formTipo.set($any($event.target).value)">
+            <option value="Enfermedad">Enfermedad</option>
+            <option value="Asunto Personal">Asunto Personal</option>
+            <option value="Médico">Médico</option>
+            <option value="Familiar">Familiar</option>
+          </select>
+        </div>
+
+        <!-- Fechas -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fa-solid fa-calendar-day"></i> Fecha de inicio
+            </label>
+            <input type="date"
+                   class="form-input"
+                   [value]="formFechaInicio()"
+                   (change)="formFechaInicio.set($any($event.target).value)" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fa-solid fa-calendar-day"></i> Fecha de fin
+            </label>
+            <input type="date"
+                   class="form-input"
+                   [value]="formFechaFin()"
+                   [min]="formFechaInicio()"
+                   (change)="formFechaFin.set($any($event.target).value)" />
+          </div>
+        </div>
+
+        <!-- Validación de fechas -->
+        @if (formFechaInicio() && formFechaFin() && formFechaFin() < formFechaInicio()) {
+          <p class="form-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            La fecha de fin no puede ser anterior a la de inicio.
+          </p>
+        }
+
+        <!-- Motivo (opcional) -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa-solid fa-pen-to-square"></i> Motivo <span class="opcional">(opcional)</span>
+          </label>
+          <textarea class="form-textarea"
+                    placeholder="Describe brevemente el motivo de la ausencia..."
+                    rows="3"
+                    [value]="formMotivo()"
+                    (input)="formMotivo.set($any($event.target).value)"></textarea>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancelar" type="button" (click)="cerrarModal()" [disabled]="enviando()">
+          Cancelar
+        </button>
+        <button class="btn-enviar"
+                type="button"
+                [disabled]="!formValido() || enviando()"
+                (click)="enviarSolicitud()">
+          @if (enviando()) {
+            <i class="fa-solid fa-spinner fa-spin"></i> Enviando...
+          } @else {
+            <i class="fa-solid fa-paper-plane"></i> Enviar solicitud
+          }
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
