@@ -1,5 +1,4 @@
 <div class="notif-container" [class.abierto]="abierto()">
-  <!-- BOTÓN CAMPANA -->
   <button class="campana-btn" (click)="toggleNotifs()" title="Notificaciones ({{ noLeidas().length }})">
     <i class="fa-solid fa-bell"></i>
     @if (noLeidas().length > 0) {
@@ -7,7 +6,6 @@
     }
   </button>
 
-  <!-- PANEL NOTIFICACIONES -->
   @if (abierto()) {
     <div class="notif-panel">
       <div class="notif-header">
@@ -24,7 +22,6 @@
         </div>
       } @else {
         <div class="notif-list">
-          <!-- NO LEÍDAS (PRIORIDAD) -->
           @for (notif of noLeidas(); track notif.id) {
             <div class="notif-item no-leida" [class]="notif.tipo">
               <div class="notif-icon">
@@ -61,12 +58,10 @@
             </div>
           }
 
-          <!-- DIVISOR -->
           @if (leidas().length > 0 && noLeidas().length > 0) {
             <div class="divider"></div>
           }
 
-          <!-- LEÍDAS -->
           @for (notif of leidas(); track notif.id) {
             <div class="notif-item leida" [class]="notif.tipo">
               <div class="notif-icon">

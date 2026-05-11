@@ -1,8 +1,21 @@
-<<<<<<< HEAD
 <div class="modal-backdrop" (click)="onCerrar()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ esEdicion ? "Editar empleado" : "Nuevo empleado" }}</h2>
+      <div class="modal-header-icon">
+        <i class="fa-solid fa-user-tie"></i>
+      </div>
+
+      <div class="modal-header-copy">
+        <h2>{{ esEdicion ? "Editar empleado" : "Nuevo empleado" }}</h2>
+        <p>
+          {{
+            esEdicion
+              ? "Actualiza la información personal y laboral del empleado"
+              : "Completa los datos para dar de alta un nuevo empleado"
+          }}
+        </p>
+      </div>
+
       <button type="button" class="close-btn" (click)="onCerrar()" aria-label="Cerrar modal">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -10,12 +23,14 @@
 
     <form [formGroup]="formulario" (ngSubmit)="guardar()" class="modal-form">
       <div class="form-grid">
-
         <div class="form-field">
           <label for="nombre">Nombre</label>
           <input id="nombre" type="text" formControlName="nombre" />
           @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
-            <small class="error-text">Introduce un nombre válido.</small>
+            <small class="error-text">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Introduce un nombre válido.
+            </small>
           }
         </div>
 
@@ -23,7 +38,10 @@
           <label for="apellidos">Apellidos</label>
           <input id="apellidos" type="text" formControlName="apellidos" />
           @if (formulario.controls.apellidos.touched && formulario.controls.apellidos.invalid) {
-            <small class="error-text">Introduce los apellidos.</small>
+            <small class="error-text">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Introduce los apellidos.
+            </small>
           }
         </div>
 
@@ -31,7 +49,10 @@
           <label for="email">Email</label>
           <input id="email" type="email" formControlName="email" />
           @if (formulario.controls.email.touched && formulario.controls.email.invalid) {
-            <small class="error-text">Introduce un email válido.</small>
+            <small class="error-text">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Introduce un email válido.
+            </small>
           }
         </div>
 
@@ -39,7 +60,10 @@
           <label for="dni">DNI</label>
           <input id="dni" type="text" formControlName="dni" />
           @if (formulario.controls.dni.touched && formulario.controls.dni.invalid) {
-            <small class="error-text">Formato esperado: 12345678A.</small>
+            <small class="error-text">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Formato esperado: 12345678A.
+            </small>
           }
         </div>
 
@@ -57,7 +81,10 @@
           <label for="puesto">Puesto</label>
           <input id="puesto" type="text" formControlName="puesto" />
           @if (formulario.controls.puesto.touched && formulario.controls.puesto.invalid) {
-            <small class="error-text">Introduce un puesto válido.</small>
+            <small class="error-text">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Introduce un puesto válido.
+            </small>
           }
         </div>
 
@@ -82,11 +109,13 @@
             <span>Empleado activo</span>
           </label>
         </div>
-
       </div>
 
       @if (error) {
-        <div class="error-box">{{ error }}</div>
+        <div class="error-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>{{ error }}</span>
+        </div>
       }
 
       <div class="modal-actions">
@@ -100,106 +129,3 @@
     </form>
   </div>
 </div>
-=======
-<div class="modal-backdrop" (click)="onCerrar()">
-  <div class="modal-panel" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>{{ esEdicion ? "Editar empleado" : "Nuevo empleado" }}</h2>
-      <button type="button" class="close-btn" (click)="onCerrar()" aria-label="Cerrar modal">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="modal-form">
-      <div class="form-grid">
-
-        <div class="form-field">
-          <label for="nombre">Nombre</label>
-          <input id="nombre" type="text" formControlName="nombre" />
-          @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
-            <small class="error-text">Introduce un nombre válido.</small>
-          }
-        </div>
-
-        <div class="form-field">
-          <label for="apellidos">Apellidos</label>
-          <input id="apellidos" type="text" formControlName="apellidos" />
-          @if (formulario.controls.apellidos.touched && formulario.controls.apellidos.invalid) {
-            <small class="error-text">Introduce los apellidos.</small>
-          }
-        </div>
-
-        <div class="form-field">
-          <label for="email">Email</label>
-          <input id="email" type="email" formControlName="email" />
-          @if (formulario.controls.email.touched && formulario.controls.email.invalid) {
-            <small class="error-text">Introduce un email válido.</small>
-          }
-        </div>
-
-        <div class="form-field">
-          <label for="dni">DNI</label>
-          <input id="dni" type="text" formControlName="dni" />
-          @if (formulario.controls.dni.touched && formulario.controls.dni.invalid) {
-            <small class="error-text">Formato esperado: 12345678A.</small>
-          }
-        </div>
-
-        <div class="form-field">
-          <label for="departamento">Departamento</label>
-          <select id="departamento" formControlName="departamento">
-            <option value="">Selecciona departamento</option>
-            @for (depto of departamentos; track depto) {
-              <option [value]="depto">{{ depto }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="form-field">
-          <label for="puesto">Puesto</label>
-          <input id="puesto" type="text" formControlName="puesto" />
-          @if (formulario.controls.puesto.touched && formulario.controls.puesto.invalid) {
-            <small class="error-text">Introduce un puesto válido.</small>
-          }
-        </div>
-
-        <div class="form-field">
-          <label for="fechaAlta">Fecha de alta</label>
-          <input id="fechaAlta" type="date" formControlName="fechaAlta" />
-        </div>
-
-        <div class="form-field">
-          <label for="rolEmpresa">Rol</label>
-          <select id="rolEmpresa" formControlName="rolEmpresa">
-            <option value="">Selecciona rol</option>
-            <option value="EMPLEADO">Empleado</option>
-            <option value="MANDO">Mando intermedio</option>
-            <option value="RRHH">RRHH</option>
-          </select>
-        </div>
-
-        <div class="form-field checkbox-field full">
-          <label class="checkbox-label">
-            <input type="checkbox" formControlName="activo" />
-            <span>Empleado activo</span>
-          </label>
-        </div>
-
-      </div>
-
-      @if (error) {
-        <div class="error-box">{{ error }}</div>
-      }
-
-      <div class="modal-actions">
-        <button type="button" class="secondary-btn" (click)="onCerrar()" [disabled]="loading">
-          Cancelar
-        </button>
-        <button type="submit" class="primary-btn" [disabled]="loading">
-          {{ loading ? "Guardando..." : esEdicion ? "Guardar cambios" : "Crear empleado" }}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
->>>>>>> 18537ca3b30c22e21f03fbfa18e3a3c5afbd546c

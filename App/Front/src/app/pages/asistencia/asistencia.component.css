@@ -366,6 +366,97 @@
   margin: 0;
 }
 
+.fichaje-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.15s, opacity 0.2s;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.action-btn.entrada {
+  background: #10b981;
+}
+
+.action-btn.descanso {
+  background: #f59e0b;
+}
+
+.action-btn.salida {
+  background: #ef4444;
+}
+
+.estado-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.estado-titulo {
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.estado-valor {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-top: 0.25rem;
+}
+
+.estado-metricas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 0.5rem 1.5rem;
+  color: #334155;
+}
+
+.estado-metricas span {
+  font-weight: 700;
+  color: #64748b;
+}
+
+.mensaje-accion {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.estado-badge.no_fichado,
+.estado-badge.trabajando,
+.estado-badge.en_descanso,
+.estado-badge.finalizado {
+  text-transform: uppercase;
+}
+
 @media (max-width: 900px) {
   .filters {
     flex-direction: column;

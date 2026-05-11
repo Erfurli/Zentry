@@ -17,12 +17,12 @@
   justify-content: center;
   font-size: 1.1rem;
   transition: all 0.2s;
-  box-shadow: none;  /* Header ya tiene shadow */
+  box-shadow: none;
 }
 
 .campana-btn:hover {
-  background: rgba(255,255,255,0.25);  /* ← Estilo header */
-  transform: none;  /* ← Sin scale */
+  background: rgba(255,255,255,0.25);
+  transform: none;
 }
 
 .campana-btn:active {
@@ -220,10 +220,10 @@
   transition: all 0.2s;
   width: 34px;
   height: 34px;
-  display: flex !important;      /* ← FUERZA FLEX */
-  align-items: center !important; /* ← CENTRA VERTICAL */
-  justify-content: center !important; /* ← CENTRA HORIZONTAL */
-  padding: 0;                    /* ← SIN PADDING */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0;
 }
 
 .ver-btn {
@@ -268,7 +268,6 @@
   }
 }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
   .notif-panel {
     width: 340px;

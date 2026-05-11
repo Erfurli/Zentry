@@ -13,14 +13,27 @@
   </button>
 
   <nav class="sidebar-nav" aria-label="Menú principal">
-    <a
-      *ngFor="let item of visibleMenuItems"
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      class="nav-item"
-      [attr.title]="collapsed() ? item.label : null">
-      <i class="fa-solid" [class]="getIconClass(item.route)" aria-hidden="true"></i>
-      @if (!collapsed()) { <span>{{ item.label }}</span> }
-    </a>
+    @for (item of visibleMenuItems; track item.route) {
+      @if (collapsed()) {
+        <a [routerLink]="item.route" routerLinkActive="active" class="nav-item" [attr.title]="item.label">
+          <span class="nav-icon-wrapper">
+            <i class="fa-solid" [ngClass]="getIconClass(item.route)" aria-hidden="true"></i>
+            @if (item.route === '/chat' && chatNoLeidas() > 0) {
+              <span class="nav-badge">{{ chatNoLeidas() > 99 ? '99+' : chatNoLeidas() }}</span>
+            }
+          </span>
+        </a>
+      } @else {
+        <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+          <span class="nav-icon-wrapper">
+            <i class="fa-solid" [ngClass]="getIconClass(item.route)" aria-hidden="true"></i>
+            @if (item.route === '/chat' && chatNoLeidas() > 0) {
+              <span class="nav-badge">{{ chatNoLeidas() > 99 ? '99+' : chatNoLeidas() }}</span>
+            }
+          </span>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    }
   </nav>
 </aside>

@@ -1,21 +1,36 @@
-<<<<<<< HEAD
 <div class="modal-backdrop" (click)="onCerrar()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
     <div class="modal-header">
-      <h2>{{ esEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
-      <button type="button" class="close-btn" (click)="onCerrar()">
+      <div class="modal-header-icon">
+        <i class="fa-solid fa-user-shield"></i>
+      </div>
+
+      <div class="modal-header-copy">
+        <h2>{{ esEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+        <p>
+          {{
+            esEdicion
+              ? 'Actualiza el acceso y permisos del usuario'
+              : 'Crea una cuenta nueva asociada a un empleado'
+          }}
+        </p>
+      </div>
+
+      <button type="button" class="close-btn" (click)="onCerrar()" aria-label="Cerrar modal">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
 
     <form [formGroup]="formulario" (ngSubmit)="guardar()" class="modal-form">
       <div class="form-grid">
-
         <div class="form-field">
           <label for="username">Username</label>
           <input id="username" type="text" formControlName="username" />
           @if (formulario.controls.username.touched && formulario.controls.username.invalid) {
-            <small class="error-text">Mínimo 3 caracteres.</small>
+            <small class="error-text">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Mínimo 3 caracteres.
+            </small>
           }
         </div>
 
@@ -28,7 +43,10 @@
             }
           </select>
           @if (formulario.controls.empleadoId.touched && formulario.controls.empleadoId.invalid) {
-            <small class="error-text">Selecciona un empleado.</small>
+            <small class="error-text">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Selecciona un empleado.
+            </small>
           }
         </div>
 
@@ -45,7 +63,10 @@
             <label for="password">Contraseña</label>
             <input id="password" type="password" formControlName="password" />
             @if (formulario.controls.password.touched && formulario.controls.password.invalid) {
-              <small class="error-text">Mínimo 6 caracteres.</small>
+              <small class="error-text">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                Mínimo 6 caracteres.
+              </small>
             }
           </div>
         }
@@ -56,11 +77,13 @@
             <span>Usuario activo</span>
           </label>
         </div>
-
       </div>
 
       @if (error) {
-        <div class="error-box">{{ error }}</div>
+        <div class="error-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>{{ error }}</span>
+        </div>
       }
 
       <div class="modal-actions">
@@ -74,80 +97,3 @@
     </form>
   </div>
 </div>
-=======
-<div class="modal-backdrop" (click)="onCerrar()">
-  <div class="modal-panel" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>{{ esEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
-      <button type="button" class="close-btn" (click)="onCerrar()">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-
-    <form [formGroup]="formulario" (ngSubmit)="guardar()" class="modal-form">
-      <div class="form-grid">
-
-        <div class="form-field">
-          <label for="username">Username</label>
-          <input id="username" type="text" formControlName="username" />
-          @if (formulario.controls.username.touched && formulario.controls.username.invalid) {
-            <small class="error-text">Mínimo 3 caracteres.</small>
-          }
-        </div>
-
-        <div class="form-field">
-          <label for="empleadoId">Empleado</label>
-          <select id="empleadoId" formControlName="empleadoId" (change)="onEmpleadoChange($event)">
-            <option value="">Selecciona un empleado</option>
-            @for (emp of empleados; track emp.id) {
-              <option [value]="emp.id">{{ emp.nombre }} — {{ emp.departamento }}</option>
-            }
-          </select>
-          @if (formulario.controls.empleadoId.touched && formulario.controls.empleadoId.invalid) {
-            <small class="error-text">Selecciona un empleado.</small>
-          }
-        </div>
-
-        <div class="form-field">
-          <label for="rolSistema">Rol del sistema</label>
-          <select id="rolSistema" formControlName="rolSistema">
-            <option value="USER">Usuario</option>
-            <option value="ADMIN">Administrador</option>
-          </select>
-        </div>
-
-        @if (!esEdicion) {
-          <div class="form-field">
-            <label for="password">Contraseña</label>
-            <input id="password" type="password" formControlName="password" />
-            @if (formulario.controls.password.touched && formulario.controls.password.invalid) {
-              <small class="error-text">Mínimo 6 caracteres.</small>
-            }
-          </div>
-        }
-
-        <div class="form-field checkbox-field full">
-          <label class="checkbox-label">
-            <input type="checkbox" formControlName="activo" />
-            <span>Usuario activo</span>
-          </label>
-        </div>
-
-      </div>
-
-      @if (error) {
-        <div class="error-box">{{ error }}</div>
-      }
-
-      <div class="modal-actions">
-        <button type="button" class="secondary-btn" (click)="onCerrar()" [disabled]="loading">
-          Cancelar
-        </button>
-        <button type="submit" class="primary-btn" [disabled]="loading">
-          {{ loading ? 'Guardando...' : (esEdicion ? 'Guardar cambios' : 'Crear usuario') }}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
->>>>>>> 18537ca3b30c22e21f03fbfa18e3a3c5afbd546c

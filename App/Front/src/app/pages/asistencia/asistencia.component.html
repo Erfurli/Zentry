@@ -6,7 +6,25 @@
         <a routerLink="/dashboard">Dashboard</a> / Asistencia
       </div>
     </div>
+
     <div class="header-actions">
+      @if (esEmpleado()) {
+        <div class="fichaje-actions">
+          <button class="action-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()" (click)="ficharEntrada()">
+            Fichar entrada
+          </button>
+          <button class="action-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()" (click)="iniciarDescanso()">
+            Iniciar descanso
+          </button>
+          <button class="action-btn descanso" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()" (click)="finalizarDescanso()">
+            Volver de descanso
+          </button>
+          <button class="action-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()" (click)="ficharSalida()">
+            Fichar salida
+          </button>
+        </div>
+      }
+
       <div class="vista-toggle">
         <button
           class="toggle-btn-vista"
@@ -27,6 +45,33 @@
       </div>
     </div>
   </div>
+
+  @if (esEmpleado()) {
+    <div class="estado-card">
+      <div>
+        <div class="estado-titulo">Mi estado actual</div>
+        <div class="estado-valor">
+          @if (miAsistencia()) {
+            {{ miAsistencia()?.estado }}
+          } @else {
+            NO_FICHADO
+          }
+        </div>
+      </div>
+
+      <div class="estado-metricas">
+        <div><span>Entrada:</span> {{ miAsistencia()?.entrada || '-' }}</div>
+        <div><span>Descanso:</span> {{ miAsistencia()?.inicioDescanso || '-' }} - {{ miAsistencia()?.finDescanso || '-' }}</div>
+        <div><span>Salida:</span> {{ miAsistencia()?.salida || '-' }}</div>
+        <div><span>Horas:</span> {{ miAsistencia()?.horasTotales || 0 }} h</div>
+        <div><span>Extra:</span> {{ miAsistencia()?.horasExtra || 0 }} h</div>
+      </div>
+    </div>
+
+    @if (mensajeAccion()) {
+      <div class="mensaje-accion">{{ mensajeAccion() }}</div>
+    }
+  }
 
   <div class="filters-section">
     <div class="filters">
@@ -68,25 +113,25 @@
   </div>
 
   @if (!vistaGrafico()) {
-  <div class="kpi-grid">
-    <div class="kpi-card presente">
-      <div class="kpi-number">{{ totalPresentes() }}</div>
-      <div class="kpi-label">Presentes</div>
+    <div class="kpi-grid">
+      <div class="kpi-card presente">
+        <div class="kpi-number">{{ totalPresentes() }}</div>
+        <div class="kpi-label">Presentes</div>
+      </div>
+      <div class="kpi-card total">
+        <div class="kpi-number">{{ totalEmpleados() }}</div>
+        <div class="kpi-label">Total Empleados</div>
+      </div>
+      <div class="kpi-card retraso">
+        <div class="kpi-number">{{ totalRetrasos() }}</div>
+        <div class="kpi-label">Retrasos</div>
+      </div>
+      <div class="kpi-card ausente">
+        <div class="kpi-number">{{ totalAusentes() }}</div>
+        <div class="kpi-label">Ausentes</div>
+      </div>
     </div>
-    <div class="kpi-card total">
-      <div class="kpi-number">{{ totalEmpleados() }}</div>
-      <div class="kpi-label">Total Empleados</div>
-    </div>
-    <div class="kpi-card retraso">
-      <div class="kpi-number">{{ totalRetrasos() }}</div>
-      <div class="kpi-label">Retrasos</div>
-    </div>
-    <div class="kpi-card ausente">
-      <div class="kpi-number">{{ totalAusentes() }}</div>
-      <div class="kpi-label">Ausentes</div>
-    </div>
-  </div>
-}
+  }
 
   @if (!vistaGrafico()) {
     <div class="table-container">
@@ -98,7 +143,9 @@
               <th>Departamento</th>
               <th>Estado</th>
               <th>Entrada</th>
+              <th>Descanso</th>
               <th>Salida</th>
+              <th>Horas</th>
             </tr>
           </thead>
           <tbody>
@@ -112,7 +159,9 @@
                   </span>
                 </td>
                 <td>{{ empleado.entrada || '-' }}</td>
+                <td>{{ empleado.inicioDescanso || '-' }} / {{ empleado.finDescanso || '-' }}</td>
                 <td>{{ empleado.salida || '-' }}</td>
+                <td>{{ empleado.horasTotales ?? '-' }}</td>
               </tr>
             }
           </tbody>
@@ -128,7 +177,6 @@
 
   @if (vistaGrafico()) {
     <div class="grafico-container">
-
       @if (esFuturo()) {
         <div class="futuro-aviso">
           <i class="fa-solid fa-clock"></i>
@@ -136,7 +184,6 @@
           <p>Los datos de asistencia para el <strong>{{ fechaSeleccionada() }}</strong> aún no están disponibles.</p>
         </div>
       } @else {
-
         <div class="grafico-layout">
           <div class="donut-wrapper">
             <div class="donut-inner">
@@ -179,7 +226,6 @@
             </div>
           </div>
         </div>
-
       }
     </div>
   }

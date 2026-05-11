@@ -1,5 +1,4 @@
 <div class="chat-layout" (click)="cerrarMenus()">
-
   <aside class="chat-sidebar">
     <div class="sidebar-header">
       <h2>
@@ -9,51 +8,87 @@
         }
       </h2>
       <div class="sidebar-header-btns">
-        <button class="nuevo-grupo-btn" (click)="$event.stopPropagation(); abrirModalMensajeDirecto()" title="Mensaje directo">
+        <button
+          class="nuevo-grupo-btn"
+          (click)="$event.stopPropagation(); abrirModalMensajeDirecto()"
+          title="Mensaje directo"
+        >
           <i class="fa-solid fa-user-plus"></i>
         </button>
-        <button class="nuevo-grupo-btn" (click)="$event.stopPropagation(); abrirModalNuevoGrupo()" title="Nuevo grupo">
+        <button
+          class="nuevo-grupo-btn"
+          (click)="$event.stopPropagation(); abrirModalNuevoGrupo()"
+          title="Nuevo grupo"
+        >
           <i class="fa-solid fa-plus"></i>
         </button>
       </div>
     </div>
 
-    <div class="estado-container" (click)="$event.stopPropagation(); mostrarEstados.update(v => !v)">
-      <span class="estado-emoji">{{ estadoActualObj().emoji }}</span>
-      <span class="estado-label">{{ estadoActualObj().label }}</span>
-      <i class="fa-solid fa-chevron-down estado-chevron"></i>
-      @if (mostrarEstados()) {
-        <div class="estado-dropdown" (click)="$event.stopPropagation()">
-          @for (e of ESTADOS; track e.valor) {
-            <div class="estado-opcion" [class.activa]="estadoActual() === e.valor" (click)="setEstado(e.valor)">
-              <span>{{ e.emoji }}</span><span>{{ e.label }}</span>
-            </div>
-          }
+    <div class="estado-container" (click)="$event.stopPropagation(); toggleEstados()">
+  <i class="estado-icono {{ estadoActualObj().icon }}"
+     [style.color]="estadoActualObj().color"></i>
+  <span class="estado-label">{{ estadoActualObj().label }}</span>
+  <i class="fa-solid fa-chevron-down estado-chevron"></i>
+
+  @if (mostrarEstados()) {
+    <div class="estado-dropdown" (click)="$event.stopPropagation()">
+      @for (e of ESTADOS; track e.valor) {
+        <div class="estado-opcion" [class.activa]="estadoActual() === e.valor"
+             (click)="setEstado(e.valor)">
+          <i class="estado-icono {{ e.icon }}" [style.color]="e.color"></i>
+          <span>{{ e.label }}</span>
         </div>
       }
     </div>
+  }
+</div>
 
     <div class="sidebar-search">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" placeholder="Buscar conversación..."
+      <input
+        type="text"
+        placeholder="Buscar conversación..."
         [value]="filtroBusqueda()"
-        (input)="filtroBusqueda.set($any($event.target).value)" />
+        (input)="filtroBusqueda.set($any($event.target).value)"
+      />
     </div>
 
     <div class="sidebar-lista">
-
       @if (conversacionesPorTipo().jefes.length > 0) {
         <div class="sidebar-seccion-label">Jefes</div>
         @for (conv of conversacionesPorTipo().jefes; track conv.id) {
-          <div class="sidebar-item" [class.active]="conversacionActiva()?.id === conv.id"
-               (click)="seleccionarConversacion(conv)">
-            <div class="sidebar-avatar grupo"><i class="fa-solid fa-users"></i></div>
+          <div
+            class="sidebar-item"
+            [class.active]="conversacionActiva()?.id === conv.id"
+            [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
+            (click)="seleccionarConversacion(conv)"
+          >
+            <div class="sidebar-avatar grupo">
+              {{ getInicialesConversacion(conv) }}
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
-                <span class="sidebar-nombre">{{ getNombreConversacion(conv) }}</span>
-                @if ((conv.noLeidos ?? 0) > 0) { <span class="badge-conv">{{ conv.noLeidos }}</span> }
+                <span class="sidebar-nombre">{{
+                  getNombreConversacion(conv)
+                }}</span>
+                <span class="sidebar-hora">{{
+                  getHoraUltimoMensaje(conv)
+                }}</span>
               </div>
-              <span class="sidebar-ultimo">{{ conv.ultimoMensaje?.contenido | slice:0:35 }}{{ (conv.ultimoMensaje?.contenido?.length ?? 0) > 35 ? '...' : '' }}</span>
+              <div class="sidebar-ultimo-row">
+                <span class="sidebar-ultimo"
+                  >{{ conv.ultimoMensaje?.contenido | slice: 0 : 30
+                  }}{{
+                    (conv.ultimoMensaje?.contenido?.length ?? 0) > 30
+                      ? "..."
+                      : ""
+                  }}</span
+                >
+                @if ((conv.noLeidos ?? 0) > 0) {
+                  <span class="badge-conv">{{ conv.noLeidos }}</span>
+                }
+              </div>
             </div>
           </div>
         }
@@ -62,15 +97,37 @@
       @if (conversacionesPorTipo().departamento.length > 0) {
         <div class="sidebar-seccion-label">Departamento</div>
         @for (conv of conversacionesPorTipo().departamento; track conv.id) {
-          <div class="sidebar-item" [class.active]="conversacionActiva()?.id === conv.id"
-               (click)="seleccionarConversacion(conv)">
-            <div class="sidebar-avatar depto"><i class="fa-solid fa-building"></i></div>
+          <div
+            class="sidebar-item"
+            [class.active]="conversacionActiva()?.id === conv.id"
+            [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
+            (click)="seleccionarConversacion(conv)"
+          >
+            <div class="sidebar-avatar grupo">
+              {{ getInicialesConversacion(conv) }}
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
-                <span class="sidebar-nombre">{{ getNombreConversacion(conv) }}</span>
-                @if ((conv.noLeidos ?? 0) > 0) { <span class="badge-conv">{{ conv.noLeidos }}</span> }
+                <span class="sidebar-nombre">{{
+                  getNombreConversacion(conv)
+                }}</span>
+                <span class="sidebar-hora">{{
+                  getHoraUltimoMensaje(conv)
+                }}</span>
               </div>
-              <span class="sidebar-ultimo">{{ conv.ultimoMensaje?.contenido | slice:0:35 }}{{ (conv.ultimoMensaje?.contenido?.length ?? 0) > 35 ? '...' : '' }}</span>
+              <div class="sidebar-ultimo-row">
+                <span class="sidebar-ultimo"
+                  >{{ conv.ultimoMensaje?.contenido | slice: 0 : 30
+                  }}{{
+                    (conv.ultimoMensaje?.contenido?.length ?? 0) > 30
+                      ? "..."
+                      : ""
+                  }}</span
+                >
+                @if ((conv.noLeidos ?? 0) > 0) {
+                  <span class="badge-conv">{{ conv.noLeidos }}</span>
+                }
+              </div>
             </div>
           </div>
         }
@@ -79,15 +136,37 @@
       @if (conversacionesPorTipo().grupos.length > 0) {
         <div class="sidebar-seccion-label">Grupos</div>
         @for (conv of conversacionesPorTipo().grupos; track conv.id) {
-          <div class="sidebar-item" [class.active]="conversacionActiva()?.id === conv.id"
-               (click)="seleccionarConversacion(conv)">
-            <div class="sidebar-avatar grupo">{{ getInicialesConversacion(conv) }}</div>
+          <div
+            class="sidebar-item"
+            [class.active]="conversacionActiva()?.id === conv.id"
+            [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
+            (click)="seleccionarConversacion(conv)"
+          >
+            <div class="sidebar-avatar grupo">
+              {{ getInicialesConversacion(conv) }}
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
-                <span class="sidebar-nombre">{{ getNombreConversacion(conv) }}</span>
-                @if ((conv.noLeidos ?? 0) > 0) { <span class="badge-conv">{{ conv.noLeidos }}</span> }
+                <span class="sidebar-nombre">{{
+                  getNombreConversacion(conv)
+                }}</span>
+                <span class="sidebar-hora">{{
+                  getHoraUltimoMensaje(conv)
+                }}</span>
               </div>
-              <span class="sidebar-ultimo">{{ conv.ultimoMensaje?.contenido | slice:0:35 }}{{ (conv.ultimoMensaje?.contenido?.length ?? 0) > 35 ? '...' : '' }}</span>
+              <div class="sidebar-ultimo-row">
+                <span class="sidebar-ultimo"
+                  >{{ conv.ultimoMensaje?.contenido | slice: 0 : 30
+                  }}{{
+                    (conv.ultimoMensaje?.contenido?.length ?? 0) > 30
+                      ? "..."
+                      : ""
+                  }}</span
+                >
+                @if ((conv.noLeidos ?? 0) > 0) {
+                  <span class="badge-conv">{{ conv.noLeidos }}</span>
+                }
+              </div>
             </div>
           </div>
         }
@@ -96,20 +175,41 @@
       @if (conversacionesPorTipo().individuales.length > 0) {
         <div class="sidebar-seccion-label">Directos</div>
         @for (conv of conversacionesPorTipo().individuales; track conv.id) {
-          <div class="sidebar-item" [class.active]="conversacionActiva()?.id === conv.id"
-               (click)="seleccionarConversacion(conv)">
-            <div class="sidebar-avatar individual">{{ getInicialesConversacion(conv) }}</div>
+          <div
+            class="sidebar-item"
+            [class.active]="conversacionActiva()?.id === conv.id"
+            [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
+            (click)="seleccionarConversacion(conv)"
+          >
+            <div class="sidebar-avatar grupo">
+              {{ getInicialesConversacion(conv) }}
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
-                <span class="sidebar-nombre">{{ getNombreConversacion(conv) }}</span>
-                @if ((conv.noLeidos ?? 0) > 0) { <span class="badge-conv">{{ conv.noLeidos }}</span> }
+                <span class="sidebar-nombre">{{
+                  getNombreConversacion(conv)
+                }}</span>
+                <span class="sidebar-hora">{{
+                  getHoraUltimoMensaje(conv)
+                }}</span>
               </div>
-              <span class="sidebar-ultimo">{{ conv.ultimoMensaje?.contenido | slice:0:35 }}{{ (conv.ultimoMensaje?.contenido?.length ?? 0) > 35 ? '...' : '' }}</span>
+              <div class="sidebar-ultimo-row">
+                <span class="sidebar-ultimo"
+                  >{{ conv.ultimoMensaje?.contenido | slice: 0 : 30
+                  }}{{
+                    (conv.ultimoMensaje?.contenido?.length ?? 0) > 30
+                      ? "..."
+                      : ""
+                  }}</span
+                >
+                @if ((conv.noLeidos ?? 0) > 0) {
+                  <span class="badge-conv">{{ conv.noLeidos }}</span>
+                }
+              </div>
             </div>
           </div>
         }
       }
-
     </div>
   </aside>
 
@@ -123,16 +223,32 @@
     } @else {
       <div class="chat-header">
         <div class="chat-header-info">
-          <div class="chat-avatar-header">{{ getInicialesConversacion(conversacionActiva()!) }}</div>
+          <div class="chat-avatar-header">
+            {{ getInicialesConversacion(conversacionActiva()!) }}
+          </div>
           <div>
             <h3>{{ getNombreConversacion(conversacionActiva()!) }}</h3>
-            <span class="chat-participantes-count">{{ conversacionActiva()!.participantes.length }} participantes</span>
+            <span class="chat-participantes-count"
+              >{{
+                conversacionActiva()!.participantes.length
+              }}
+              participantes</span
+            >
           </div>
         </div>
         <div class="chat-header-acciones">
-          @for (p of conversacionActiva()!.participantes.slice(0, 4); track p.id) {
+          @for (
+            p of conversacionActiva()!.participantes.slice(0, 4);
+            track p.id
+          ) {
             @if (p.id !== usuarioActualId()) {
-              <div class="avatar-mini" (click)="verPerfil(p)" title="{{ p.nombre }}">{{ p.iniciales }}</div>
+              <div
+                class="avatar-mini"
+                (click)="verPerfil(p)"
+                title="{{ p.nombre }}"
+              >
+                {{ p.iniciales }}
+              </div>
             }
           }
         </div>
@@ -142,32 +258,83 @@
         @for (msg of mensajes(); track msg.id) {
           <div class="mensaje-fila" [class.mio]="esMio(msg)">
             @if (!esMio(msg)) {
-              <div class="msg-avatar" (click)="verPerfil({ id: msg.autorId, nombre: msg.autorNombre, iniciales: msg.autorNombre.substring(0,2), rolEmpresa: '' })">
-                {{ msg.autorNombre.substring(0,2).toUpperCase() }}
+              <div
+                class="msg-avatar"
+                (click)="
+                  verPerfil({
+                    id: msg.autorId,
+                    nombre: msg.autorNombre,
+                    iniciales: msg.autorNombre.substring(0, 2),
+                    rolEmpresa: '',
+                  })
+                "
+              >
+                {{ msg.autorNombre.substring(0, 2).toUpperCase() }}
               </div>
             }
             <div class="mensaje-bloque">
               @if (msg.respuestaAId) {
                 <div class="reply-preview">
                   <span class="reply-autor">{{ msg.respuestaAAutor }}</span>
-                  <span class="reply-texto">{{ msg.respuestaAContenido | slice:0:80 }}</span>
+                  <span class="reply-texto">{{
+                    msg.respuestaAContenido | slice: 0 : 80
+                  }}</span>
                 </div>
               }
-              <div class="mensaje-burbuja" [class.mio]="esMio(msg)" (click)="$event.stopPropagation()">
-                @if (!esMio(msg)) { <span class="msg-autor-nombre">{{ msg.autorNombre }}</span> }
+              <div
+                class="mensaje-burbuja"
+                [class.mio]="esMio(msg)"
+                (click)="$event.stopPropagation()"
+              >
+                @if (!esMio(msg)) {
+                  <span class="msg-autor-nombre">{{ msg.autorNombre }}</span>
+                }
                 <p class="msg-texto">{{ msg.contenido }}</p>
                 <span class="msg-hora">{{ formatHora(msg.enviadoEn) }}</span>
                 <div class="msg-acciones" (click)="$event.stopPropagation()">
-                  <button class="msg-accion-btn" (click)="toggleReaccionPicker(msg.id)" title="Reaccionar"><i class="fa-regular fa-face-smile"></i></button>
-                  <button class="msg-accion-btn" (click)="responder(msg)" title="Responder"><i class="fa-solid fa-reply"></i></button>
-                  @if (!esMio(msg) && conversacionActiva()!.tipo !== 'INDIVIDUAL') {
-                    <button class="msg-accion-btn" (click)="abrirIndividualDesdeGrupo({ id: msg.autorId, nombre: msg.autorNombre, iniciales: msg.autorNombre.substring(0,2), rolEmpresa: '' })" title="Mensaje privado"><i class="fa-solid fa-envelope"></i></button>
+                  <button
+                    class="msg-accion-btn"
+                    (click)="toggleReaccionPicker(msg.id)"
+                    title="Reaccionar"
+                  >
+                    <i class="fa-regular fa-face-smile"></i>
+                  </button>
+                  <button
+                    class="msg-accion-btn"
+                    (click)="responder(msg)"
+                    title="Responder"
+                  >
+                    <i class="fa-solid fa-reply"></i>
+                  </button>
+                  @if (
+                    !esMio(msg) && conversacionActiva()!.tipo !== "INDIVIDUAL"
+                  ) {
+                    <button
+                      class="msg-accion-btn"
+                      (click)="
+                        abrirIndividualDesdeGrupo({
+                          id: msg.autorId,
+                          nombre: msg.autorNombre,
+                          iniciales: msg.autorNombre.substring(0, 2),
+                          rolEmpresa: '',
+                        })
+                      "
+                      title="Mensaje privado"
+                    >
+                      <i class="fa-solid fa-envelope"></i>
+                    </button>
                   }
                 </div>
                 @if (mensajeConReaccionAbierto() === msg.id) {
                   <div class="emoji-picker" (click)="$event.stopPropagation()">
                     @for (emoji of EMOJIS; track emoji) {
-                      <button class="emoji-btn" [class.activo]="tieneReaccion(msg, emoji)" (click)="toggleReaccion(msg.id, emoji)">{{ emoji }}</button>
+                      <button
+                        class="emoji-btn"
+                        [class.activo]="tieneReaccion(msg, emoji)"
+                        (click)="toggleReaccion(msg.id, emoji)"
+                      >
+                        {{ emoji }}
+                      </button>
                     }
                   </div>
                 }
@@ -175,7 +342,12 @@
               @if (reaccionesResumidas(msg).length > 0) {
                 <div class="reacciones-lista">
                   @for (r of reaccionesResumidas(msg); track r.emoji) {
-                    <span class="reaccion-chip" [class.mia]="tieneReaccion(msg, r.emoji)" (click)="toggleReaccion(msg.id, r.emoji)">{{ r.emoji }} {{ r.count }}</span>
+                    <span
+                      class="reaccion-chip"
+                      [class.mia]="tieneReaccion(msg, r.emoji)"
+                      (click)="toggleReaccion(msg.id, r.emoji)"
+                      >{{ r.emoji }} {{ r.count }}</span
+                    >
                   }
                 </div>
               }
@@ -188,19 +360,37 @@
         <div class="reply-bar">
           <div class="reply-bar-info">
             <i class="fa-solid fa-reply"></i>
-            <span>Respondiendo a <strong>{{ mensajeRespondiendo()!.autorNombre }}</strong></span>
-            <span class="reply-bar-texto">{{ mensajeRespondiendo()!.contenido | slice:0:60 }}</span>
+            <span
+              >Respondiendo a
+              <strong>{{ mensajeRespondiendo()!.autorNombre }}</strong></span
+            >
+            <span class="reply-bar-texto">{{
+              mensajeRespondiendo()!.contenido | slice: 0 : 60
+            }}</span>
           </div>
-          <button class="reply-bar-cerrar" (click)="mensajeRespondiendo.set(null)"><i class="fa-solid fa-xmark"></i></button>
+          <button
+            class="reply-bar-cerrar"
+            (click)="mensajeRespondiendo.set(null)"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
       }
 
       <div class="chat-input-area">
-        <textarea class="chat-input" placeholder="Escribe un mensaje... (Enter para enviar)"
+        <textarea
+          class="chat-input"
+          placeholder="Escribe un mensaje... (Enter para enviar)"
           [value]="textoMensaje()"
           (input)="textoMensaje.set($any($event.target).value)"
-          (keydown)="onKeyDown($event)" rows="1"></textarea>
-        <button class="chat-send-btn" (click)="enviar()" [disabled]="!textoMensaje().trim()">
+          (keydown)="onKeyDown($event)"
+          rows="1"
+        ></textarea>
+        <button
+          class="chat-send-btn"
+          (click)="enviar()"
+          [disabled]="!textoMensaje().trim()"
+        >
           <i class="fa-solid fa-paper-plane"></i>
         </button>
       </div>
@@ -215,9 +405,14 @@
       <div class="toast-body">
         <span class="toast-conv">{{ toast.conv }}</span>
         <span class="toast-autor">{{ toast.autor }}</span>
-        <span class="toast-texto">{{ toast.texto | slice:0:60 }}{{ toast.texto.length > 60 ? '...' : '' }}</span>
+        <span class="toast-texto"
+          >{{ toast.texto | slice: 0 : 60
+          }}{{ toast.texto.length > 60 ? "..." : "" }}</span
+        >
       </div>
-      <button class="toast-close" (click)="cerrarToast(toast.id)"><i class="fa-solid fa-xmark"></i></button>
+      <button class="toast-close" (click)="cerrarToast(toast.id)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
     </div>
   }
 </div>
@@ -225,12 +420,24 @@
 @if (modalPerfil()) {
   <div class="modal-overlay" (click)="modalPerfil.set(null)">
     <div class="modal-perfil" (click)="$event.stopPropagation()">
-      <button class="modal-close-btn" (click)="modalPerfil.set(null)"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-close-btn" (click)="modalPerfil.set(null)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
       <div class="perfil-avatar">{{ modalPerfil()!.iniciales }}</div>
       <h2>{{ modalPerfil()!.nombre }}</h2>
       <span class="perfil-rol">{{ modalPerfil()!.rolEmpresa }}</span>
+
+      @if (modalPerfil()!.estado) {
+        <div class="perfil-estado">
+          <i class="{{ getEstadoObj(modalPerfil()!.estado!).icon }}"
+             [style.color]="getEstadoObj(modalPerfil()!.estado!).color"></i>
+          <span>{{ getEstadoObj(modalPerfil()!.estado!).label }}</span>
+        </div>
+      }
+
       @if (modalPerfil()!.id !== usuarioActualId()) {
-        <button class="primary-btn perfil-msg-btn" (click)="abrirIndividualDesdeGrupo(modalPerfil()!)">
+        <button class="primary-btn perfil-msg-btn"
+                (click)="abrirIndividualDesdeGrupo(modalPerfil()!)">
           <i class="fa-solid fa-envelope"></i> Enviar mensaje
         </button>
       }
@@ -242,32 +449,53 @@
   <div class="modal-overlay" (click)="modalNuevoGrupo.set(false)">
     <div class="modal-chat" (click)="$event.stopPropagation()">
       <div class="modal-chat-header">
-        <div class="modal-chat-icono grupo"><i class="fa-solid fa-users"></i></div>
+        <div class="modal-chat-icono grupo">
+          <i class="fa-solid fa-users"></i>
+        </div>
         <div>
           <h2>Nuevo grupo</h2>
           <p>Crea un chat grupal con tus compañeros</p>
         </div>
-        <button class="modal-close-btn" (click)="modalNuevoGrupo.set(false)"><i class="fa-solid fa-xmark"></i></button>
+        <button class="modal-close-btn" (click)="modalNuevoGrupo.set(false)" title="Cerrar">
+  <i class="fa-solid fa-xmark"></i>
+</button>
       </div>
       <div class="modal-chat-body">
         <div class="form-field">
           <label>Nombre del grupo</label>
-          <input type="text" [value]="nuevoGrupoNombre()"
-            (input)="nuevoGrupoNombre.set($any($event.target).value)"
-            placeholder="Ej: Proyecto Alpha" />
+          <input
+  class="grupo-nombre-input"
+  type="text"
+  [value]="nuevoGrupoNombre()"
+  (input)="nuevoGrupoNombre.set($any($event.target).value)"
+  placeholder="Ej: Proyecto Alpha"
+/>
         </div>
         <div class="form-field">
-          <label>Participantes <span class="badge-seleccionados">{{ nuevoGrupoParticipantes().length }} seleccionados</span></label>
+          <label
+            >Participantes
+            <span class="badge-seleccionados"
+              >{{ nuevoGrupoParticipantes().length }} seleccionados</span
+            ></label
+          >
           <div class="participantes-lista">
             @for (emp of empleadosDisponibles(); track emp.id) {
-              <div class="participante-check" [class.seleccionado]="nuevoGrupoParticipantes().includes(emp.id)"
-                   (click)="toggleParticipante(emp.id)">
+              <div
+                class="participante-check"
+                [class.seleccionado]="
+                  nuevoGrupoParticipantes().includes(emp.id)
+                "
+                (click)="toggleParticipante(emp.id)"
+              >
                 <div class="avatar-mini">{{ emp.iniciales }}</div>
                 <div class="participante-info">
                   <span class="participante-nombre">{{ emp.nombre }}</span>
                   <span class="participante-rol">{{ emp.rolEmpresa }}</span>
                 </div>
-                <div class="participante-check-icon" [class.visible]="nuevoGrupoParticipantes().includes(emp.id)">
+                <div
+                  class="participante-check-icon"
+                  [class.visible]="nuevoGrupoParticipantes().includes(emp.id)"
+                >
                   <i class="fa-solid fa-check"></i>
                 </div>
               </div>
@@ -276,8 +504,16 @@
         </div>
       </div>
       <div class="modal-chat-footer">
-        <button class="secondary-btn" (click)="modalNuevoGrupo.set(false)">Cancelar</button>
-        <button class="primary-btn" (click)="crearGrupo()" [disabled]="!nuevoGrupoNombre().trim() || nuevoGrupoParticipantes().length === 0">
+        <button class="secondary-btn" (click)="modalNuevoGrupo.set(false)">
+          Cancelar
+        </button>
+        <button
+          class="primary-btn"
+          (click)="crearGrupo()"
+          [disabled]="
+            !nuevoGrupoNombre().trim() || nuevoGrupoParticipantes().length === 0
+          "
+        >
           <i class="fa-solid fa-users"></i> Crear grupo
         </button>
       </div>
@@ -289,17 +525,24 @@
   <div class="modal-overlay" (click)="modalMensajeDirecto.set(false)">
     <div class="modal-chat" (click)="$event.stopPropagation()">
       <div class="modal-chat-header">
-        <div class="modal-chat-icono individual"><i class="fa-solid fa-user"></i></div>
+        <div class="modal-chat-icono individual">
+          <i class="fa-solid fa-user"></i>
+        </div>
         <div>
           <h2>Mensaje directo</h2>
           <p>Inicia una conversación privada</p>
         </div>
-        <button class="modal-close-btn" (click)="modalMensajeDirecto.set(false)"><i class="fa-solid fa-xmark"></i></button>
+        <button class="modal-close-btn" (click)="modalMensajeDirecto.set(false)" title="Cerrar">
+  <i class="fa-solid fa-xmark"></i>
+</button>
       </div>
       <div class="modal-chat-body">
         <div class="participantes-lista">
           @for (emp of empleadosDisponibles(); track emp.id) {
-            <div class="participante-check" (click)="abrirIndividualDesdeGrupo(emp)">
+            <div
+              class="participante-check"
+              (click)="abrirIndividualDesdeGrupo(emp)"
+            >
               <div class="avatar-mini">{{ emp.iniciales }}</div>
               <div class="participante-info">
                 <span class="participante-nombre">{{ emp.nombre }}</span>
@@ -311,7 +554,9 @@
         </div>
       </div>
       <div class="modal-chat-footer">
-        <button class="secondary-btn" (click)="modalMensajeDirecto.set(false)">Cancelar</button>
+        <button class="secondary-btn" (click)="modalMensajeDirecto.set(false)">
+          Cancelar
+        </button>
       </div>
     </div>
   </div>

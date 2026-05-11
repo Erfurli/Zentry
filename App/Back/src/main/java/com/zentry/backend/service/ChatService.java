@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 @Transactional
 public class ChatService {
 
+    private final SimpMessagingTemplate messagingTemplate;
     private final ConversacionRepository conversacionRepo;
     private final MensajeRepository mensajeRepo;
     private final ReaccionRepository reaccionRepo;
     private final UsuarioRepository usuarioRepo;
     private final EmpleadoRepository empleadoRepo;
-    private final SimpMessagingTemplate messagingTemplate;
 
     public List<ConversacionDTO> getConversacionesDeUsuario(String usuarioId) {
         return conversacionRepo.findByParticipantesContaining(usuarioId)
@@ -38,7 +38,7 @@ public class ChatService {
                 .stream().map(this::toMensajeDTO).toList();
     }
 
-    public MensajeDTO enviarMensaje(EnviarMensajeRequest req, String autorId) {
+    public void enviarMensaje(EnviarMensajeRequest req, String autorId) {
         Conversacion conv = conversacionRepo.findById(req.getConversacionId())
                 .orElseThrow(() -> new RuntimeException("Conversación no encontrada"));
 
@@ -61,7 +61,24 @@ public class ChatService {
         MensajeDTO dto = toMensajeDTO(guardado);
 
         messagingTemplate.convertAndSend("/topic/conversacion/" + conv.getId(), dto);
-        return dto;
+
+        conv.getParticipantes().stream()
+                .filter(uid -> !uid.equals(autorId))
+                .forEach(uid ->
+                        messagingTemplate.convertAndSendToUser(uid, "/queue/chat-notif", dto)
+
+
+                );
+
+        conv.getParticipantes().stream()
+                .filter(uid -> !uid.equals(autorId))
+                .forEach(uid ->
+                        messagingTemplate.convertAndSendToUser(
+                                uid,
+                                "/queue/chat-notif",
+                                dto
+                        )
+                );
     }
 
     public void toggleReaccion(ReaccionRequest req, String usuarioId) {
@@ -172,7 +189,6 @@ public class ChatService {
         dto.setNoLeidos(0);
         return dto;
     }
-
 
     private String resolverNombre(String usuarioId) {
         return usuarioRepo.findById(usuarioId)

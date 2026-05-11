@@ -25,6 +25,8 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
 
   @ViewChild('cal') calendar!: MatCalendar<Date>;
 
+  readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
+
   readonly solicitudes = signal<VacacionesVista[]>([]);
   readonly filtroEstado = signal<EstadoSolicitud | 'Todos'>('Todos');
   readonly filtroDepartamento = signal<string>('Todos');
@@ -106,7 +108,11 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   }
 
   cargarVacaciones(): void {
-    this.vacacionesService.getVacacionesVista().subscribe({
+    const peticion = this.isEmpleado
+      ? this.vacacionesService.getMisVacaciones()
+      : this.vacacionesService.getVacacionesVista();
+
+    peticion.subscribe({
       next: data => this.solicitudes.set(data),
       error: err => console.error('Error cargando vacaciones', err)
     });

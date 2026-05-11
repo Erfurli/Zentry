@@ -9,11 +9,11 @@ import { AuthService } from '../../services/auth.service';
 const EMOJIS = ['👍', '❤️', '😂', '😮', '😢', '🔥'];
 
 const ESTADOS = [
-  { valor: 'activo',    label: 'Activo',        emoji: '🟢' },
-  { valor: 'inactivo',  label: 'Inactivo',       emoji: '⚫' },
-  { valor: 'vacaciones',label: 'De vacaciones',  emoji: '🌴' },
-  { valor: 'reunion',   label: 'En una reunión', emoji: '📅' },
-  { valor: 'nodisturb', label: 'No molestar',    emoji: '🔴' },
+  { valor: 'activo',     label: 'Activo',          icon: 'fa-solid fa-circle-check',  color: '#10b981' },
+  { valor: 'inactivo',   label: 'Inactivo',         icon: 'fa-solid fa-circle',        color: '#94a3b8' },
+  { valor: 'vacaciones', label: 'De vacaciones',    icon: 'fa-solid fa-umbrella-beach', color: '#3b82f6' },
+  { valor: 'reunion',    label: 'En una reunión',   icon: 'fa-solid fa-briefcase',     color: '#f59e0b' },
+  { valor: 'nodisturb',  label: 'No molestar',      icon: 'fa-solid fa-ban',           color: '#ef4444' },
 ];
 
 interface Toast {
@@ -66,34 +66,75 @@ export class ChatComponent implements OnInit, OnDestroy {
   });
 
   readonly conversacionesPorTipo = computed(() => {
-    const convs = this.conversacionesFiltradas();
-    return {
-      jefes:        convs.filter(c => c.tipo === 'JEFES'),
-      departamento: convs.filter(c => c.tipo === 'DEPARTAMENTO'),
-      grupos:       convs.filter(c => c.tipo === 'GRUPO'),
-      individuales: convs.filter(c => c.tipo === 'INDIVIDUAL'),
-    };
+  const convs = this.conversacionesFiltradas().slice().sort((a, b) => {
+    const fa = a.ultimoMensaje?.enviadoEn ?? '';
+    const fb = b.ultimoMensaje?.enviadoEn ?? '';
+    return fb.localeCompare(fa);
   });
+  return {
+    jefes:        convs.filter(c => c.tipo === 'JEFES'),
+    departamento: convs.filter(c => c.tipo === 'DEPARTAMENTO'),
+    grupos:       convs.filter(c => c.tipo === 'GRUPO'),
+    individuales: convs.filter(c => c.tipo === 'INDIVIDUAL'),
+  };
+});
+
+getEstadoObj(valor: string) {
+  return ESTADOS.find(e => e.valor === valor) ?? ESTADOS[0];
+}
+
+getHoraUltimoMensaje(conv: ConversacionDTO): string {
+  if (!conv.ultimoMensaje?.enviadoEn) return '';
+  const fecha = new Date(conv.ultimoMensaje.enviadoEn);
+  const hoy = new Date();
+  const esHoy = fecha.toDateString() === hoy.toDateString();
+
+  if (esHoy) {
+    return fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  } else {
+    return fecha.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+  }
+}
 
   readonly estadoActualObj = computed(() =>
     ESTADOS.find(e => e.valor === this.estadoActual()) ?? ESTADOS[0]
   );
 
   ngOnInit(): void {
-    const me = this.authService.getUsuarioActual();
-    if (me) this.usuarioActualId.set(me.id);
+  const me = this.authService.getUsuarioActual();
+  if (me) {
+    this.usuarioActualId.set(me.id);
 
-    this.chatService.getConversaciones().subscribe({
-      next: convs => {
-        this.conversaciones.set(convs);
-        this.noLeidasTotal.set(convs.reduce((acc, c) => acc + (c.noLeidos ?? 0), 0));
+    this.chatService.conectarGlobal(me.id, (msg: MensajeDTO) => {
+      const convActiva = this.conversacionActiva();
+
+      if (!convActiva || convActiva.id !== msg.conversacionId) {
+        this.conversaciones.update(list =>
+          list.map(c => c.id === msg.conversacionId
+            ? { ...c, noLeidos: (c.noLeidos ?? 0) + 1, ultimoMensaje: msg }
+            : c
+          )
+        );
+        this.recalcularNoLeidas();
       }
     });
   }
 
+  this.chatService.getConversaciones().subscribe({
+    next: convs => {
+      this.conversaciones.set(convs);
+      this.noLeidasTotal.set(convs.reduce((acc, c) => acc + (c.noLeidos ?? 0), 0));
+    }
+  });
+}
+
   ngOnDestroy(): void {
     this.chatService.desconectar();
   }
+
+  toggleEstados(): void {
+  this.mostrarEstados.update(v => !v);
+}
 
   seleccionarConversacion(conv: ConversacionDTO): void {
     this.chatService.desconectar();
@@ -110,25 +151,31 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
 
     this.chatService.conectar(conv.id, (msg) => {
-      const esMio = msg.autorId === this.usuarioActualId();
+  const esMio = msg.autorId === this.usuarioActualId();
 
-      this.mensajes.update(list => {
-        const idx = list.findIndex(m => m.id === msg.id);
-        if (idx >= 0) { const c = [...list]; c[idx] = msg; return c; }
-        return [...list, msg];
-      });
+  this.mensajes.update(list => {
+    const idx = list.findIndex(m => m.id === msg.id);
+    if (idx >= 0) { const c = [...list]; c[idx] = msg; return c; }
+    return [...list, msg];
+  });
 
-      if (!esMio) {
-        this.mostrarToast(
-          this.getNombreConversacion(conv),
-          msg.autorNombre,
-          msg.contenido
-        );
-      }
+  this.conversaciones.update(list =>
+    list.map(c => c.id === conv.id ? { ...c, ultimoMensaje: msg } : c)
+  );
 
-      setTimeout(() => this.scrollAbajo(), 50);
-    });
+  if (!esMio) {
+    this.mostrarToast(
+      this.getNombreConversacion(conv),
+      msg.autorNombre,
+      msg.contenido
+    );
   }
+
+  setTimeout(() => this.scrollAbajo(), 50);
+});
+  }
+
+
 
   enviar(): void {
     const texto = this.textoMensaje().trim();

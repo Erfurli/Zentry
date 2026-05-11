@@ -41,9 +41,16 @@ export class VacacionesService {
     return this.http.get<VacacionesVista[]>(`${this.apiUrl}/vista`, { params });
   }
 
+  getMisVacaciones(estado?: string, year?: number): Observable<VacacionesVista[]> {
+    const params: Record<string, string> = {};
+    if (estado && estado !== 'Todos') params['estado'] = estado;
+    if (year) params['year'] = String(year);
+    return this.http.get<VacacionesVista[]>(`${this.apiUrl}/mis-vacaciones`, { params });
+  }
+
   solicitarVacaciones(fechaInicio: string, fechaFin: string): Observable<any> {
-  return this.http.post(`${this.apiUrl}/solicitar`, { fechaInicio, fechaFin });
-}
+    return this.http.post(`${this.apiUrl}/solicitar`, { fechaInicio, fechaFin });
+  }
 
   aprobar(id: string): Observable<VacacionesVista> {
     return this.http.patch<VacacionesVista>(`${this.apiUrl}/${id}/aprobar`, {});

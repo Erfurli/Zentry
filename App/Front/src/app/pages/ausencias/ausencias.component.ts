@@ -25,21 +25,15 @@ export class AusenciasComponent implements OnInit {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
 
-  // ── Rol del usuario ────────────────────────────────────────────────────────
-  // Booleano simple evaluado una vez al inicializar — no necesita ser un signal
-  // porque el rol no cambia durante la sesión.
   readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
 
-  // ── Datos ──────────────────────────────────────────────────────────────────
   readonly ausencias = signal<AusenciaVista[]>([]);
   readonly loading = signal(true);
   readonly error = signal('');
 
-  // ── Filtros ────────────────────────────────────────────────────────────────
   readonly filtroTipo = signal('Todos');
   readonly filtroEstado = signal('Todos');
 
-  // ── Modal de nueva solicitud ───────────────────────────────────────────────
   readonly modalAbierto = signal(false);
   readonly enviando = signal(false);
   readonly mensajeExito = signal('');
@@ -50,7 +44,6 @@ export class AusenciasComponent implements OnInit {
   readonly formFechaFin = signal('');
   readonly formMotivo = signal('');
 
-  // ── Derivados ──────────────────────────────────────────────────────────────
   readonly ausenciasFiltradas = computed(() => {
     const tipo = this.filtroTipo();
     const estado = this.filtroEstado();
@@ -76,11 +69,9 @@ export class AusenciasComponent implements OnInit {
     && this.formFechaFin() >= this.formFechaInicio()
   );
 
-  // ── Ciclo de vida ──────────────────────────────────────────────────────────
   ngOnInit(): void {
     this.cargarAusencias();
 
-    // Si viene del dashboard con ?nuevo=true, abrir el modal automáticamente
     this.route.queryParams.subscribe(params => {
       if (params['nuevo'] === 'true') {
         this.abrirModal();
@@ -88,7 +79,6 @@ export class AusenciasComponent implements OnInit {
     });
   }
 
-  // ── Carga de datos ─────────────────────────────────────────────────────────
   cargarAusencias(): void {
     this.loading.set(true);
     this.error.set('');
@@ -109,7 +99,6 @@ export class AusenciasComponent implements OnInit {
     });
   }
 
-  // ── Modal ──────────────────────────────────────────────────────────────────
   abrirModal(): void {
     this.formTipo.set('Enfermedad');
     this.formFechaInicio.set('');
@@ -149,7 +138,6 @@ export class AusenciasComponent implements OnInit {
     });
   }
 
-  // ── Filtros ────────────────────────────────────────────────────────────────
   onTipoChange(event: Event): void {
     this.filtroTipo.set((event.target as HTMLSelectElement).value);
   }
@@ -158,7 +146,6 @@ export class AusenciasComponent implements OnInit {
     this.filtroEstado.set((event.target as HTMLSelectElement).value);
   }
 
-  // ── Acciones admin ─────────────────────────────────────────────────────────
   justificar(id: string): void {
     this.ausenciasService.justificar(id).subscribe({
       next: () => this.cargarAusencias(),

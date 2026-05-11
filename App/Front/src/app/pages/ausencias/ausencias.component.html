@@ -8,7 +8,6 @@
             <a routerLink="/dashboard">Dashboard</a> / Ausencias
           </div>
         </div>
-        <!-- Botón visible para todos: empleados y admins pueden solicitar -->
         <button class="btn-nueva-ausencia" type="button" (click)="abrirModal()">
           <i class="fa-solid fa-plus"></i> Solicitar Ausencia
         </button>
@@ -16,14 +15,12 @@
     </div>
   </div>
 
-  <!-- Error global -->
   @if (error()) {
     <div class="alert-error">
       <i class="fa-solid fa-circle-exclamation"></i> {{ error() }}
     </div>
   }
 
-  <!-- Filtros (solo admins ven todos los empleados) -->
   <div class="filters-section">
     <div class="filters">
       <select class="filter-select" [value]="filtroTipo()" (change)="onTipoChange($event)">
@@ -43,7 +40,6 @@
     </div>
   </div>
 
-  <!-- KPIs -->
   <div class="kpi-grid">
     <div class="kpi-card justificadas">
       <div class="kpi-number">{{ totalJustificadas() }}</div>
@@ -59,7 +55,6 @@
     </div>
   </div>
 
-  <!-- Tabla -->
   <div class="table-container">
     @if (loading()) {
       <div class="empty-state">
@@ -131,19 +126,16 @@
       <div class="empty-state">
         <i class="fa-solid fa-calendar-xmark"></i>
         <p>No hay ausencias para los filtros seleccionados</p>
-        @if (isEmpleado) {
+        <!-- @if (isEmpleado) {
           <button class="btn-empty-solicitar" type="button" (click)="abrirModal()">
             <i class="fa-solid fa-plus"></i> Solicitar mi primera ausencia
           </button>
-        }
+        } -->
       </div>
     }
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════════════
-     MODAL: Solicitar nueva ausencia
-     ═══════════════════════════════════════════════════════════════════════════ -->
 @if (modalAbierto()) {
   <div class="modal-overlay" (click)="cerrarModal()">
     <div class="modal-card" (click)="$event.stopPropagation()">
@@ -163,21 +155,18 @@
 
       <div class="modal-body">
 
-        <!-- Éxito -->
         @if (mensajeExito()) {
           <div class="alert-success">
             <i class="fa-solid fa-circle-check"></i> {{ mensajeExito() }}
           </div>
         }
 
-        <!-- Error -->
         @if (errorModal()) {
           <div class="alert-error">
             <i class="fa-solid fa-circle-exclamation"></i> {{ errorModal() }}
           </div>
         }
 
-        <!-- Tipo de ausencia -->
         <div class="form-group">
           <label class="form-label">
             <i class="fa-solid fa-tag"></i> Tipo de ausencia
@@ -192,7 +181,6 @@
           </select>
         </div>
 
-        <!-- Fechas -->
         <div class="form-row">
           <div class="form-group">
             <label class="form-label">
@@ -214,8 +202,7 @@
                    (change)="formFechaFin.set($any($event.target).value)" />
           </div>
         </div>
-
-        <!-- Validación de fechas -->
+        
         @if (formFechaInicio() && formFechaFin() && formFechaFin() < formFechaInicio()) {
           <p class="form-error">
             <i class="fa-solid fa-triangle-exclamation"></i>
@@ -223,7 +210,6 @@
           </p>
         }
 
-        <!-- Motivo (opcional) -->
         <div class="form-group">
           <label class="form-label">
             <i class="fa-solid fa-pen-to-square"></i> Motivo <span class="opcional">(opcional)</span>

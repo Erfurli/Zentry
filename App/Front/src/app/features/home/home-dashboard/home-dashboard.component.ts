@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { DashboardService, DashboardSummary } from '../../../services/dashboard.service';
+import { AsistenciaService } from '../../../services/asistencia.service';
 
 @Component({
   selector: 'app-home-dashboard',
@@ -12,6 +13,8 @@ import { DashboardService, DashboardSummary } from '../../../services/dashboard.
 })
 export class HomeDashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
+  private asistenciaService = inject(AsistenciaService);
+  private router = inject(Router);
 
   summary: DashboardSummary = {
     vacationBalance: 0,
@@ -26,11 +29,10 @@ export class HomeDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.dashboardService.getHomeSummary().subscribe({
       next: (data) => {
-        console.log('Datos recibidos del backend:', data);
         this.summary = data;
         this.loading = false;
       },
-      error: (err) => {
+      error: (err: unknown) => {
         console.error('Error al cargar dashboard:', err);
         this.error = 'No se pudo cargar el resumen.';
         this.loading = false;
@@ -38,11 +40,15 @@ export class HomeDashboardComponent implements OnInit {
     });
   }
 
-  fichar(accion: 'entrada' | 'salida') {
-    alert(`Fichando ${accion}...`);
+  fichar(): void {
+    this.router.navigate(['/asistencia']);
   }
 
-  solicitar(tipo: 'vacaciones' | 'ausencia') {
-    alert(`Redirigiendo a ${tipo}...`);
+  solicitar(tipo: 'vacaciones' | 'ausencia'): void {
+    const routes: { [key: string]: string } = {
+      vacaciones: '/vacaciones',
+      ausencia: '/ausencias'
+    };
+    this.router.navigate([routes[tipo]]);
   }
 }
