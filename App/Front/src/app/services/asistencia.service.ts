@@ -9,6 +9,16 @@ export interface AsistenciaAccionResponse {
   asistencia: AsistenciaHoy;
 }
 
+export interface AsistenciaRaw {
+  id: string;
+  empleadoId: string;
+  fecha: string;
+  entrada?: string;
+  salida?: string;
+  horas?: number;
+  modo?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -30,6 +40,11 @@ export class AsistenciaService {
 
   getHoy(): Observable<AsistenciaHoy | null> {
     return this.http.get<AsistenciaHoy | null>(`${this.apiUrl}/hoy`);
+  }
+
+  /** Devuelve todos los registros de asistencia en bruto (para exportación) */
+  getAll(): Observable<AsistenciaRaw[]> {
+    return this.http.get<AsistenciaRaw[]>(this.apiUrl);
   }
 
   ficharEntrada(): Observable<AsistenciaAccionResponse> {
