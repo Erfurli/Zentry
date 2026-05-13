@@ -43,6 +43,12 @@ public class AusenciaController {
             @RequestParam(required = false) String estado) {
 
         return ausenciaRepository.findAll().stream()
+                .filter(a -> {
+                    // Excluir ausencias de empleados dados de baja
+                    return empleadoRepository.findById(a.getEmpleadoId())
+                            .map(emp -> Boolean.TRUE.equals(emp.getActivo()))
+                            .orElse(false);
+                })
                 .filter(a -> tipo == null || tipo.equalsIgnoreCase(a.getTipo()))
                 .filter(a -> estado == null || estado.equalsIgnoreCase(a.getEstado()))
                 .map(this::toDTO)

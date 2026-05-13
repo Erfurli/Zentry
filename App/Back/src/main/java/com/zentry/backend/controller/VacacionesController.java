@@ -47,6 +47,12 @@ public class VacacionesController {
     public List<VacacionesVistaDTO> getVista(@RequestParam(required = false) String estado,
                                              @RequestParam(required = false) Integer year) {
         return vacacionesRepository.findAll().stream()
+                .filter(v -> {
+                    // Excluir vacaciones de empleados dados de baja
+                    return empleadoRepository.findById(v.getEmpleadoId())
+                            .map(emp -> Boolean.TRUE.equals(emp.getActivo()))
+                            .orElse(false);
+                })
                 .filter(v -> estado == null || estado.equalsIgnoreCase(v.getEstado()))
                 .filter(v -> year == null || (v.getFechaInicio() != null
                         && v.getFechaInicio().startsWith(String.valueOf(year))))

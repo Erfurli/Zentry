@@ -1,6 +1,7 @@
 package com.zentry.backend.controller;
 
 import com.zentry.backend.model.Usuario;
+import com.zentry.backend.repository.EmpleadoRepository;
 import com.zentry.backend.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class UsuarioController {
 
     private final UsuarioRepository usuarioRepository;
+    private final EmpleadoRepository empleadoRepository;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping
@@ -61,8 +63,19 @@ public class UsuarioController {
     public ResponseEntity<Usuario> toggleActivo(@PathVariable String id) {
         return usuarioRepository.findById(id)
                 .map(usuario -> {
-                    usuario.setActivo(!Boolean.TRUE.equals(usuario.getActivo()));
-                    return ResponseEntity.ok(usuarioRepository.save(usuario));
+                    boolean nuevoEstado = !Boolean.TRUE.equals(usuario.getActivo());
+                    usuario.setActivo(nuevoEstado);
+                    usuarioRepository.save(usuario);
+
+                    // Sincronizar el estado activo del Empleado vinculado
+                    if (usuario.getEmpleadoId() != null) {
+                        empleadoRepository.findById(usuario.getEmpleadoId()).ifPresent(empleado -> {
+                            empleado.setActivo(nuevoEstado);
+                            empleadoRepository.save(empleado);
+                        });
+                    }
+
+                    return ResponseEntity.ok(usuario);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

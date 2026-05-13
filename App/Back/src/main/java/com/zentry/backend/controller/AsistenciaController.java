@@ -45,7 +45,7 @@ public class AsistenciaController {
 
     @GetMapping("/vista")
     public List<AsistenciaVistaDTO> getVista(@RequestParam(required = false) String fecha) {
-        List<Empleado> empleados = empleadoRepository.findAll();
+        List<Empleado> empleados = empleadoRepository.findByActivo(true);
         List<Asistencia> asistencias = fecha == null
                 ? asistenciaRepository.findAll()
                 : asistenciaRepository.findByFecha(fecha);
