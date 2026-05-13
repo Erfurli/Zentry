@@ -347,3 +347,175 @@
     min-width: 800px;
   }
 }
+
+/* ─── Botón exportar ──────────────────────────────────────────────────────── */
+
+.accion-btn.exportar {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.accion-btn.exportar:hover {
+  background: #10b981;
+  color: white;
+}
+
+/* ─── Modal exportar ──────────────────────────────────────────────────────── */
+
+.modal-exportar-card {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.modal-exportar-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  position: relative;
+}
+
+.modal-exportar-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.modal-exportar-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: white;
+}
+
+.modal-exportar-sub {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.modal-exportar-body {
+  padding: 1.75rem 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.exportar-descripcion {
+  margin: 0;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.exportar-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exportar-lista li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.exportar-lista li i {
+  color: #10b981;
+  font-size: 0.85rem;
+}
+
+.exportar-formato-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exportar-formato-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.exportar-formato-select {
+  padding: 0.7rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #374151;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  appearance: auto;
+}
+
+.exportar-formato-select:focus {
+  outline: none;
+  border-color: #10b981;
+}
+
+.modal-exportar-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 2rem 1.75rem;
+}
+
+.exportar-btn-cancelar {
+  padding: 0.65rem 1.4rem;
+  background: #f1f5f9;
+  color: #374151;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.exportar-btn-cancelar:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.exportar-btn-confirmar {
+  padding: 0.65rem 1.4rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+
+.exportar-btn-confirmar:hover:not(:disabled) {
+  background: #059669;
+}
+
+.exportar-btn-cancelar:disabled,
+.exportar-btn-confirmar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

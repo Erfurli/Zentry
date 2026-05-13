@@ -67,6 +67,9 @@
                 <button class="accion-btn editar" (click)="abrirModalEditar(empleado)" title="Editar">
                   <i class="fa-solid fa-edit"></i>
                 </button>
+                <button class="accion-btn exportar" (click)="abrirModalExportar(empleado)" title="Exportar datos">
+                  <i class="fa-solid fa-file-export"></i>
+                </button>
                 <button class="accion-btn eliminar" title="Eliminar">
                   <i class="fa-solid fa-trash"></i>
                 </button>
@@ -84,6 +87,7 @@
   </div>
 </div>
 
+<!-- ─── Modal editar / crear ─────────────────────────────────────────────── -->
 @if (modalAbierto()) {
   <app-empleado-modal
     [empleado]="empleadoEditando()"
@@ -92,6 +96,7 @@
   </app-empleado-modal>
 }
 
+<!-- ─── Modal info empleado ───────────────────────────────────────────────── -->
 @if (modalInfoAbierto()) {
   <div class="modal-overlay" (click)="cerrarModalInfo()">
     <div class="modal-info-card" (click)="$event.stopPropagation()">
@@ -145,6 +150,67 @@
           }
         </div>
       </div>
+    </div>
+  </div>
+}
+
+<!-- ─── Modal exportar datos ──────────────────────────────────────────────── -->
+@if (modalExportarAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModalExportar()">
+    <div class="modal-exportar-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-exportar-header">
+        <div class="modal-exportar-icon">
+          <i class="fa-solid fa-file-export"></i>
+        </div>
+        <div>
+          <h2>Exportar datos</h2>
+          <span class="modal-exportar-sub">{{ empleadoExportando()?.nombre }}</span>
+        </div>
+        <button class="modal-close-btn" (click)="cerrarModalExportar()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-exportar-body">
+        <p class="exportar-descripcion">
+          Se exportará la siguiente información del empleado:
+        </p>
+
+        <ul class="exportar-lista">
+          <li><i class="fa-solid fa-circle-check"></i> Datos personales y laborales</li>
+          <li><i class="fa-solid fa-circle-check"></i> Asistencia del último mes</li>
+          <li><i class="fa-solid fa-circle-check"></i> Ausencias (pasadas y futuras)</li>
+          <li><i class="fa-solid fa-circle-check"></i> Vacaciones (pasadas y futuras)</li>
+        </ul>
+
+        <div class="exportar-formato-group">
+          <label class="exportar-formato-label" for="formatoSelect">
+            <i class="fa-solid fa-file-arrow-down"></i> Formato de exportación
+          </label>
+          <select
+            id="formatoSelect"
+            class="exportar-formato-select"
+            (change)="onFormatoChange($event)">
+            <option value="csv"   [selected]="formatoExportar() === 'csv'">CSV (.csv)</option>
+            <option value="excel" [selected]="formatoExportar() === 'excel'">Excel (.xlsx)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-exportar-footer">
+        <button class="exportar-btn-cancelar" (click)="cerrarModalExportar()" [disabled]="exportando()">
+          Cancelar
+        </button>
+        <button class="exportar-btn-confirmar" (click)="confirmarExportar()" [disabled]="exportando()">
+          @if (exportando()) {
+            <i class="fa-solid fa-spinner fa-spin"></i> Exportando…
+          } @else {
+            <i class="fa-solid fa-download"></i> Exportar
+          }
+        </button>
+      </div>
+
     </div>
   </div>
 }
