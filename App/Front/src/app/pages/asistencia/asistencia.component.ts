@@ -6,6 +6,7 @@ import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { AsistenciaService } from '../../services/asistencia.service';
 import { AuthService } from '../../services/auth.service';
 import { AsistenciaHoy, AsistenciaVista, EstadoAsistencia } from '../../models/asistencia.model';
+import { ExportService } from '../../services/export.service';
 
 Chart.register(...registerables);
 
@@ -20,40 +21,76 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   private asistenciaService = inject(AsistenciaService);
   private authService = inject(AuthService);
   private chart: Chart | null = null;
+  private exportService = inject(ExportService);
 
-  readonly empleados = signal<AsistenciaVista[]>([]);
+  readonly empleados          = signal<AsistenciaVista[]>([]);
   readonly filtroDepartamento = signal('Todos');
-  readonly filtroEstado = signal('Todos');
-  readonly vistaGrafico = signal(false);
-  readonly fechaSeleccionada = signal(new Date().toISOString().split('T')[0]);
+  readonly filtroEstado       = signal('Todos');
+  readonly vistaGrafico       = signal(false);
+  readonly fechaSeleccionada  = signal(new Date().toISOString().split('T')[0]);
+  readonly miAsistencia       = signal<AsistenciaHoy | null>(null);
+  readonly cargandoAccion     = signal(false);
+  readonly mensajeAccion      = signal('');
 
-  readonly miAsistencia = signal<AsistenciaHoy | null>(null);
-  readonly cargandoAccion = signal(false);
-  readonly mensajeAccion = signal('');
+  readonly modalFichajeAbierto    = signal(false);
+  readonly modalIncidenciaAbierto = signal(false);
 
-  readonly esEmpleado = computed(() => this.authService.getCompanyRole() === 'EMPLEADO');
+  readonly modoTrabajo = signal<'PRESENCIAL' | 'REMOTO' | 'HIBRIDO'>('PRESENCIAL');
+
+  readonly incidenciaEmpleadoId   = signal('');
+  readonly incidenciaFecha        = signal(new Date().toISOString().split('T')[0]);
+  readonly incidenciaEntrada      = signal('');
+  readonly incidenciaSalida       = signal('');
+  readonly incidenciaInicioDesc   = signal('');
+  readonly incidenciaFinDesc      = signal('');
+  readonly incidenciaAsistenciaId = signal('');
+  readonly guardandoIncidencia    = signal(false);
+  readonly mensajeIncidencia      = signal('');
+
+  readonly esEmpleado = computed(() => {
+  const companyRole = this.authService.getCompanyRole();
+  const systemRole  = this.authService.getSystemRole();
+  return companyRole === 'EMPLEADO' && systemRole !== 'ADMIN';
+});
+  readonly esAdmin = computed(() => {
+  const rol = this.authService.getSystemRole();
+  return rol === 'ADMIN';
+});
 
   readonly esFuturo = computed(() => {
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    const seleccionada = new Date(this.fechaSeleccionada() + 'T00:00:00');
-    return seleccionada > hoy;
+    const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+    return new Date(this.fechaSeleccionada() + 'T00:00:00') > hoy;
   });
 
   readonly empleadosFiltrados = computed(() => {
-    const departamento = this.filtroDepartamento();
-    const estado = this.filtroEstado();
-    return this.empleados().filter((empleado) => {
-      const coincideDepartamento = departamento === 'Todos' || empleado.departamento === departamento;
-      const coincideEstado = estado === 'Todos' || empleado.estado === estado;
-      return coincideDepartamento && coincideEstado;
-    });
+    const dep = this.filtroDepartamento();
+    const est = this.filtroEstado();
+    return this.empleados().filter(e =>
+      (dep === 'Todos' || e.departamento === dep) &&
+      (est === 'Todos' || e.estado === est)
+    );
   });
 
-  readonly totalPresentes = computed(() => this.empleados().filter(e => e.estado === 'Presente').length);
-  readonly totalRetrasos = computed(() => this.empleados().filter(e => e.estado === 'Retraso').length);
-  readonly totalAusentes = computed(() => this.empleados().filter(e => e.estado === 'Ausente').length);
-  readonly totalEmpleados = computed(() => this.empleados().length);
+  readonly totalPresentes  = computed(() => this.empleados().filter(e => e.estado === 'Presente' || e.estado === 'TRABAJANDO').length);
+  readonly totalRetrasos   = computed(() => this.empleados().filter(e => e.estado === 'Retraso').length);
+  readonly totalAusentes   = computed(() => this.empleados().filter(e => e.estado === 'Ausente' || e.estado === 'NO_FICHADO').length);
+  readonly totalEmpleados  = computed(() => this.empleados().length);
+
+  get estadoActual(): EstadoAsistencia | null { return this.miAsistencia()?.estado ?? null; }
+  puedeFicharEntrada():    boolean { const e = this.estadoActual; return !e || e === 'NO_FICHADO' || e === 'FINALIZADO'; }
+  puedeIniciarDescanso():  boolean { return this.estadoActual === 'TRABAJANDO'; }
+  puedeFinalizarDescanso():boolean { return this.estadoActual === 'EN_DESCANSO'; }
+  puedeFicharSalida():     boolean { return this.estadoActual === 'TRABAJANDO' || this.estadoActual === 'EN_DESCANSO'; }
+
+  labelEstado(): string {
+    const mapa: Record<string, string> = {
+      NO_FICHADO: 'Sin fichar',
+      TRABAJANDO: 'Trabajando',
+      EN_DESCANSO: 'En descanso',
+      FINALIZADO: 'Jornada finalizada'
+    };
+    return mapa[this.estadoActual ?? 'NO_FICHADO'] ?? (this.estadoActual ?? 'Sin fichar');
+  }
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -61,10 +98,7 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {}
-
-  ngOnDestroy(): void {
-    this.chart?.destroy();
-  }
+  ngOnDestroy(): void { this.chart?.destroy(); }
 
   cargarDatos(): void {
     const peticion = this.esEmpleado()
@@ -80,10 +114,7 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   cargarMiAsistenciaHoy(): void {
     this.asistenciaService.getHoy().subscribe({
       next: data => this.miAsistencia.set(data),
-      error: (err: unknown) => {
-        console.error('Error cargando mi asistencia', err);
-        this.miAsistencia.set(null);
-      }
+      error: () => this.miAsistencia.set(null)
     });
   }
 
@@ -93,79 +124,110 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.vistaGrafico()) setTimeout(() => this.renderChart(), 0);
   }
 
-  onDeptoChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.filtroDepartamento.set(select.value);
-    if (this.vistaGrafico()) setTimeout(() => this.renderChart(), 0);
+
+  ficharEntrada(): void    { this.ejecutarAccion(() => this.asistenciaService.ficharEntrada()); }
+  iniciarDescanso(): void  { this.ejecutarAccion(() => this.asistenciaService.iniciarDescanso()); }
+  finalizarDescanso(): void{ this.ejecutarAccion(() => this.asistenciaService.finalizarDescanso()); }
+  ficharSalida(): void     { this.ejecutarAccion(() => this.asistenciaService.ficharSalida()); }
+
+  private ejecutarAccion(fn: () => any): void {
+    this.cargandoAccion.set(true);
+    this.mensajeAccion.set('');
+    fn().subscribe({
+      next: (res: any) => {
+        this.mensajeAccion.set(res?.mensaje ?? 'Acción realizada correctamente.');
+        this.cargandoAccion.set(false);
+        this.modalFichajeAbierto.set(false);
+        this.refrescarTodo();
+      },
+      error: (err: any) => {
+        this.mensajeAccion.set(err?.error?.mensaje ?? 'No se pudo realizar la acción.');
+        this.cargandoAccion.set(false);
+        this.refrescarTodo();
+      }
+    });
   }
 
-  onEstadoChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    this.filtroEstado.set(select.value);
+
+  abrirIncidencia(empleado: AsistenciaVista): void {
+    this.incidenciaEmpleadoId.set(empleado.empleadoId ?? '');
+    this.incidenciaAsistenciaId.set(empleado.id ?? '');
+    this.incidenciaFecha.set(empleado.fecha ?? this.fechaSeleccionada());
+    this.incidenciaEntrada.set(empleado.entrada ?? '');
+    this.incidenciaSalida.set(empleado.salida ?? '');
+    this.incidenciaInicioDesc.set(empleado.inicioDescanso ?? '');
+    this.incidenciaFinDesc.set(empleado.finDescanso ?? '');
+    this.mensajeIncidencia.set('');
+    this.modalIncidenciaAbierto.set(true);
   }
 
-  onFechaChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.fechaSeleccionada.set(input.value);
+  guardarIncidencia(): void {
+    const id = this.incidenciaAsistenciaId();
+    if (!id) { this.mensajeIncidencia.set('No hay registro de asistencia para este día.'); return; }
+
+    this.guardandoIncidencia.set(true);
+    this.asistenciaService.corregirAsistencia(id, {
+      entrada:       this.incidenciaEntrada()    || undefined,
+      salida:        this.incidenciaSalida()     || undefined,
+      inicioDescanso:this.incidenciaInicioDesc() || undefined,
+      finDescanso:   this.incidenciaFinDesc()    || undefined,
+    }).subscribe({
+      next: (res) => {
+        this.mensajeIncidencia.set(res.mensaje);
+        this.guardandoIncidencia.set(false);
+        this.refrescarTodo();
+        setTimeout(() => this.modalIncidenciaAbierto.set(false), 1200);
+      },
+      error: (err) => {
+        this.mensajeIncidencia.set(err?.error?.mensaje ?? 'Error al guardar.');
+        this.guardandoIncidencia.set(false);
+      }
+    });
+  }
+
+
+  onDeptoChange(e: Event): void  { this.filtroDepartamento.set((e.target as HTMLSelectElement).value); }
+  onEstadoChange(e: Event): void { this.filtroEstado.set((e.target as HTMLSelectElement).value); }
+  onFechaChange(e: Event): void  {
+    this.fechaSeleccionada.set((e.target as HTMLInputElement).value);
     this.cargarDatos();
     if (this.vistaGrafico()) setTimeout(() => this.renderChart(), 0);
   }
 
-  activarVistaGrafico(): void {
-    this.vistaGrafico.set(true);
-    setTimeout(() => this.renderChart(), 0);
-  }
-
-  activarVistaLista(): void {
-    this.vistaGrafico.set(false);
-    this.chart?.destroy();
-    this.chart = null;
-  }
+  activarVistaGrafico(): void { this.vistaGrafico.set(true);  setTimeout(() => this.renderChart(), 0); }
+  activarVistaLista():   void { this.vistaGrafico.set(false); this.chart?.destroy(); this.chart = null; }
 
   renderChart(): void {
     this.chart?.destroy();
     const canvas = document.getElementById('donutAsistencia') as HTMLCanvasElement;
     if (!canvas) return;
-
-    const deptoFiltro = this.filtroDepartamento();
-    const datos = this.empleados().filter(e => deptoFiltro === 'Todos' || e.departamento === deptoFiltro);
-
-    const presentes = datos.filter(e => e.estado === 'Presente').length;
-    const retrasos = datos.filter(e => e.estado === 'Retraso').length;
-    const ausentes = datos.filter(e => e.estado === 'Ausente').length;
+    const dep = this.filtroDepartamento();
+    const datos = this.empleados().filter(e => dep === 'Todos' || e.departamento === dep);
+    const presentes = datos.filter(e => e.estado === 'Presente' || e.estado === 'TRABAJANDO').length;
+    const retrasos  = datos.filter(e => e.estado === 'Retraso').length;
+    const ausentes  = datos.filter(e => e.estado === 'Ausente' || e.estado === 'NO_FICHADO').length;
     const total = datos.length;
 
     const config: ChartConfiguration<'doughnut'> = {
       type: 'doughnut',
       data: {
         labels: ['Presentes', 'Con retraso', 'Ausentes'],
-        datasets: [{
-          data: [presentes, retrasos, ausentes],
+        datasets: [{ data: [presentes, retrasos, ausentes],
           backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
           borderColor: ['#ffffff', '#ffffff', '#ffffff'],
-          borderWidth: 3,
-          hoverOffset: 8
-        }]
+          borderWidth: 3, hoverOffset: 8 }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        cutout: '65%',
+        responsive: true, maintainAspectRatio: false, cutout: '65%',
         plugins: {
           legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: (ctx) => {
-                const val = ctx.parsed;
-                const pct = total > 0 ? Math.round((val / total) * 100) : 0;
-                return ` ${ctx.label}: ${val} (${pct}%)`;
-              }
-            }
-          }
+          tooltip: { callbacks: { label: (ctx) => {
+            const pct = total > 0 ? Math.round((ctx.parsed / total) * 100) : 0;
+            return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+          }}}
         }
       }
     };
-
     this.chart = new Chart<'doughnut'>(canvas, config);
   }
 
@@ -174,58 +236,10 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
     return total > 0 ? Math.round((valor / total) * 100) : 0;
   }
 
-  ficharEntrada(): void {
-    this.ejecutarAccion(() => this.asistenciaService.ficharEntrada());
-  }
-
-  iniciarDescanso(): void {
-    this.ejecutarAccion(() => this.asistenciaService.iniciarDescanso());
-  }
-
-  finalizarDescanso(): void {
-    this.ejecutarAccion(() => this.asistenciaService.finalizarDescanso());
-  }
-
-  ficharSalida(): void {
-    this.ejecutarAccion(() => this.asistenciaService.ficharSalida());
-  }
-
-  private ejecutarAccion(fn: () => any): void {
-    this.cargandoAccion.set(true);
-    this.mensajeAccion.set('');
-
-    fn().subscribe({
-      next: (res: any) => {
-        this.mensajeAccion.set(res?.mensaje ?? 'Acción realizada correctamente.');
-        this.cargandoAccion.set(false);
-        this.refrescarTodo();
-      },
-      error: (err: unknown) => {
-        this.mensajeAccion.set('No se pudo realizar la acción.');
-        console.error(err);
-        this.cargandoAccion.set(false);
-      }
-    });
-  }
-
-  get estadoActual(): EstadoAsistencia | null {
-    return this.miAsistencia()?.estado ?? null;
-  }
-
-  puedeFicharEntrada(): boolean {
-    const estado = this.estadoActual;
-    return !estado || estado === 'NO_FICHADO' || estado === 'FINALIZADO';
-  }
-
-  puedeIniciarDescanso(): boolean {
-    return this.estadoActual === 'TRABAJANDO';
-  }
-
-  puedeFinalizarDescanso(): boolean {
-    return this.estadoActual === 'EN_DESCANSO';
-  }
-
-  puedeFicharSalida(): boolean {
-    return this.estadoActual === 'TRABAJANDO' || this.estadoActual === 'EN_DESCANSO';
-  }
+  exportar(): void {
+  this.exportService.exportarAsistenciaExcel(
+    this.empleadosFiltrados(),
+    this.esEmpleado() ? 'Mi asistencia' : `Asistencia ${this.fechaSeleccionada()}`
+  );
+}
 }

@@ -1,0 +1,130 @@
+[{
+  "_id": {
+    "$oid": "69f79cfe623834242837253f"
+  },
+  "usuarioId": "1",
+  "token": "f0e2836b-221f-45eb-b9fe-d338b50466f0",
+  "fechaExpiracion": "2026-05-03T23:07:42.291071900",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f79e296238342428372540"
+  },
+  "usuarioId": "1",
+  "token": "bec9eb9e-5822-444e-9bb3-95ab51048fec",
+  "fechaExpiracion": "2026-05-03T23:12:41.804169",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8d6ad09604802e6eb871c"
+  },
+  "usuarioId": "1",
+  "token": "b2d0934d-594e-4b01-81b4-cd9c7c7d2159",
+  "fechaExpiracion": "2026-05-04T21:26:05.976448200",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8d6c909604802e6eb871d"
+  },
+  "usuarioId": "2",
+  "token": "0ed47feb-7d31-450d-b5b2-01ed6e7c3964",
+  "fechaExpiracion": "2026-05-04T21:26:33.861433600",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8d717c3ef06b5b05c7b2a"
+  },
+  "usuarioId": "2",
+  "token": "46a2ae14-b010-4cd5-ac6c-491c8f8651f3",
+  "fechaExpiracion": "2026-05-04T21:27:51.466397200",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8d75b8aea930813093bc0"
+  },
+  "usuarioId": "2",
+  "token": "d73d6026-c206-4538-abd8-793deba6cdb5",
+  "fechaExpiracion": "2026-05-04T21:28:59.084412",
+  "usado": true,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8d8ae8aea930813093bc5"
+  },
+  "usuarioId": "2",
+  "token": "61be196a-692f-4767-9f25-799d6416d753",
+  "fechaExpiracion": "2026-05-04T21:34:38.087724100",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8d8bd48a3812702657289"
+  },
+  "usuarioId": "2",
+  "token": "c9ca935f-2e84-48e3-b810-d579f4d06657",
+  "fechaExpiracion": "2026-05-04T21:34:53.827295900",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8d99c68cf004feb962f95"
+  },
+  "usuarioId": "2",
+  "token": "45584790-e7a9-4ee6-b02b-b3dcdc927e0b",
+  "fechaExpiracion": "2026-05-04T21:38:36.199945800",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8da6f47decca0f244e849"
+  },
+  "usuarioId": "2",
+  "token": "b01b12e0-6ba0-46af-9251-13c88661db92",
+  "fechaExpiracion": "2026-05-04T21:42:07.597205500",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dabc2d33e33a61a72184"
+  },
+  "usuarioId": "2",
+  "token": "6426d7f7-de5a-4af3-894a-a855fc4fcb7b",
+  "fechaExpiracion": "2026-05-04T21:43:24.395754",
+  "usado": false,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8db7e2d33e33a61a72185"
+  },
+  "usuarioId": "1",
+  "token": "d396ac3e-b417-488a-8a0b-e9c4b90d0832",
+  "fechaExpiracion": "2026-05-04T21:46:38.645981700",
+  "usado": true,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e40c2d33e33a61a7219b"
+  },
+  "usuarioId": "2",
+  "token": "4bf164c8-f1e8-4ca3-bf98-bebbebc05804",
+  "fechaExpiracion": "2026-05-04T22:23:08.077820300",
+  "usado": true,
+  "_class": "com.zentry.backend.model.TokenRecuperacion"
+}]

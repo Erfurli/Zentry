@@ -12,6 +12,9 @@ import { FormsModule } from '@angular/forms';
 import { AusenciasService, AusenciaVista } from '../../services/ausencias.service';
 import { AuthService } from '../../services/auth.service';
 
+import * as XLSX from 'xlsx-js-style';
+import { ExportService } from '../../services/export.service';
+
 @Component({
   selector: 'app-ausencias',
   standalone: true,
@@ -24,6 +27,7 @@ export class AusenciasComponent implements OnInit {
   private ausenciasService = inject(AusenciasService);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
+  private exportService = inject(ExportService);
 
   readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
 
@@ -159,4 +163,11 @@ export class AusenciasComponent implements OnInit {
       error: () => this.error.set('Error al actualizar el estado.')
     });
   }
+
+  exportar(): void {
+  this.exportService.exportarAusenciasExcel(
+    this.ausenciasFiltradas(),
+    this.isEmpleado ? 'Mis ausencias' : 'Todos los empleados'
+  );
+}
 }

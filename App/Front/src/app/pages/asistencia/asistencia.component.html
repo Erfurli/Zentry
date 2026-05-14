@@ -1,4 +1,5 @@
 <div class="page-container">
+
   <div class="page-header">
     <div class="header-content">
       <h1>Asistencia Empleados</h1>
@@ -9,224 +10,335 @@
 
     <div class="header-actions">
       @if (esEmpleado()) {
-        <div class="fichaje-actions">
-          <button class="action-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()" (click)="ficharEntrada()">
-            Fichar entrada
+        <button class="action-btn entrada" (click)="modalFichajeAbierto.set(true)">
+          <i class="fa-solid fa-clock"></i> Fichar / Gestionar jornada
+        </button>
+      }
+
+      @if (!esEmpleado()) {
+        <div class="vista-toggle">
+          <button class="toggle-btn-vista" [class.active]="!vistaGrafico()" (click)="activarVistaLista()" title="Vista lista">
+            <i class="fa-solid fa-list"></i>
           </button>
-          <button class="action-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()" (click)="iniciarDescanso()">
-            Iniciar descanso
-          </button>
-          <button class="action-btn descanso" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()" (click)="finalizarDescanso()">
-            Volver de descanso
-          </button>
-          <button class="action-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()" (click)="ficharSalida()">
-            Fichar salida
+          <button class="toggle-btn-vista" [class.active]="vistaGrafico()" (click)="activarVistaGrafico()" title="Vista gráfico">
+            <i class="fa-solid fa-chart-pie"></i>
           </button>
         </div>
       }
-
-      <div class="vista-toggle">
-        <button
-          class="toggle-btn-vista"
-          [class.active]="!vistaGrafico()"
-          (click)="activarVistaLista()"
-          title="Vista lista"
-        >
-          <i class="fa-solid fa-list"></i>
-        </button>
-        <button
-          class="toggle-btn-vista"
-          [class.active]="vistaGrafico()"
-          (click)="activarVistaGrafico()"
-          title="Vista gráfico"
-        >
-          <i class="fa-solid fa-chart-pie"></i>
-        </button>
-      </div>
     </div>
   </div>
+
+  @if (esEmpleado() && mensajeAccion()) {
+    <div class="mensaje-accion">{{ mensajeAccion() }}</div>
+  }
 
   @if (esEmpleado()) {
     <div class="estado-card">
       <div>
         <div class="estado-titulo">Mi estado actual</div>
-        <div class="estado-valor">
-          @if (miAsistencia()) {
-            {{ miAsistencia()?.estado }}
-          } @else {
-            NO_FICHADO
-          }
-        </div>
+        <div class="estado-valor">{{ labelEstado() }}</div>
       </div>
-
       <div class="estado-metricas">
         <div><span>Entrada:</span> {{ miAsistencia()?.entrada || '-' }}</div>
-        <div><span>Descanso:</span> {{ miAsistencia()?.inicioDescanso || '-' }} - {{ miAsistencia()?.finDescanso || '-' }}</div>
+        <div><span>Descanso:</span> {{ miAsistencia()?.inicioDescanso || '-' }} – {{ miAsistencia()?.finDescanso || '-' }}</div>
         <div><span>Salida:</span> {{ miAsistencia()?.salida || '-' }}</div>
-        <div><span>Horas:</span> {{ miAsistencia()?.horasTotales || 0 }} h</div>
-        <div><span>Extra:</span> {{ miAsistencia()?.horasExtra || 0 }} h</div>
+        <div><span>Horas:</span> {{ miAsistencia()?.horasTotales ?? 0 }} h</div>
+        <div><span>Extra:</span> {{ miAsistencia()?.horasExtra ?? 0 }} h</div>
+      </div>
+    </div>
+  }
+
+  @if (!esEmpleado()) {
+    <div class="filters-section">
+      <div class="filters">
+        <input type="date" class="filter-date" [value]="fechaSeleccionada()" (change)="onFechaChange($event)" />
+        <select class="filter-select" [value]="filtroDepartamento()" (change)="onDeptoChange($event)">
+          <option value="Todos">Todos los departamentos</option>
+          <option value="RRHH">RRHH</option>
+          <option value="IT">IT</option>
+          <option value="Ventas">Ventas</option>
+        </select>
+        @if (!vistaGrafico()) {
+          <select class="filter-select" [value]="filtroEstado()" (change)="onEstadoChange($event)">
+            <option value="Todos">Todos los estados</option>
+            <option value="Presente">Presentes</option>
+            <option value="TRABAJANDO">Trabajando</option>
+            <option value="Retraso">Con retraso</option>
+            <option value="Ausente">Ausentes</option>
+          </select>
+        }
+        <button class="export-btn" type="button" (click)="exportar()">
+  <i class="fa-solid fa-download"></i> Exportar
+</button>
       </div>
     </div>
 
-    @if (mensajeAccion()) {
-      <div class="mensaje-accion">{{ mensajeAccion() }}</div>
+    @if (!vistaGrafico()) {
+      <div class="kpi-grid">
+        <div class="kpi-card presente">
+          <div class="kpi-number">{{ totalPresentes() }}</div>
+          <div class="kpi-label">Presentes</div>
+        </div>
+        <div class="kpi-card total">
+          <div class="kpi-number">{{ totalEmpleados() }}</div>
+          <div class="kpi-label">Total Empleados</div>
+        </div>
+        <div class="kpi-card retraso">
+          <div class="kpi-number">{{ totalRetrasos() }}</div>
+          <div class="kpi-label">Retrasos</div>
+        </div>
+        <div class="kpi-card ausente">
+          <div class="kpi-number">{{ totalAusentes() }}</div>
+          <div class="kpi-label">Ausentes</div>
+        </div>
+      </div>
+
+      <div class="table-container">
+        @if (empleadosFiltrados().length > 0) {
+          <table class="asistencia-table">
+            <thead>
+              <tr>
+                <th>Empleado</th>
+                <th>Departamento</th>
+                <th>Estado</th>
+                <th>Entrada</th>
+                <th>Descanso</th>
+                <th>Salida</th>
+                <th>Horas</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (emp of empleadosFiltrados(); track emp.nombre) {
+                <tr>
+                  <td>{{ emp.nombre }}</td>
+                  <td>{{ emp.departamento }}</td>
+                  <td>
+                    <span class="estado-badge" [ngClass]="emp.estado?.toLowerCase()">
+                      {{ emp.estado }}
+                    </span>
+                  </td>
+                  <td>{{ emp.entrada || '-' }}</td>
+                  <td>{{ emp.inicioDescanso || '-' }} / {{ emp.finDescanso || '-' }}</td>
+                  <td>{{ emp.salida || '-' }}</td>
+                  <td>{{ emp.horasTotales ?? '-' }}</td>
+                  <td>
+                    <button class="incidencia-btn" (click)="abrirIncidencia(emp)" title="Corregir incidencia">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <div class="empty-state">
+            <i class="fa-solid fa-calendar-check"></i>
+            <p>No hay registros de asistencia para los filtros seleccionados</p>
+          </div>
+        }
+      </div>
+    }
+
+    @if (vistaGrafico()) {
+      <div class="grafico-container">
+        @if (esFuturo()) {
+          <div class="futuro-aviso">
+            <i class="fa-solid fa-clock"></i>
+            <h3>Fecha futura</h3>
+            <p>Los datos del <strong>{{ fechaSeleccionada() }}</strong> aún no están disponibles.</p>
+          </div>
+        } @else {
+          <div class="grafico-layout">
+            <div class="donut-wrapper">
+              <div class="donut-inner">
+                <canvas id="donutAsistencia"></canvas>
+                <div class="donut-center-label">
+                  <span class="donut-total">{{ totalEmpleados() }}</span>
+                  <span class="donut-sublabel">empleados</span>
+                </div>
+              </div>
+            </div>
+            <div class="grafico-leyenda">
+              <h3 class="leyenda-titulo">Distribución del día</h3>
+              <div class="leyenda-item-grande presente">
+                <div class="leyenda-color-bar"></div>
+                <div class="leyenda-datos">
+                  <span class="leyenda-nombre">Presentes</span>
+                  <span class="leyenda-valor">{{ totalPresentes() }} empleados</span>
+                  <span class="leyenda-pct">{{ getPorcentaje(totalPresentes()) }}%</span>
+                </div>
+              </div>
+              <div class="leyenda-item-grande retraso">
+                <div class="leyenda-color-bar"></div>
+                <div class="leyenda-datos">
+                  <span class="leyenda-nombre">Con retraso</span>
+                  <span class="leyenda-valor">{{ totalRetrasos() }} empleados</span>
+                  <span class="leyenda-pct">{{ getPorcentaje(totalRetrasos()) }}%</span>
+                </div>
+              </div>
+              <div class="leyenda-item-grande ausente">
+                <div class="leyenda-color-bar"></div>
+                <div class="leyenda-datos">
+                  <span class="leyenda-nombre">Ausentes</span>
+                  <span class="leyenda-valor">{{ totalAusentes() }} empleados</span>
+                  <span class="leyenda-pct">{{ getPorcentaje(totalAusentes()) }}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
     }
   }
+</div>
 
-  <div class="filters-section">
-    <div class="filters">
-      <input
-        type="date"
-        class="filter-date"
-        [value]="fechaSeleccionada()"
-        (change)="onFechaChange($event)"
-      />
+@if (modalFichajeAbierto()) {
+  <div class="modal-backdrop" (click)="modalFichajeAbierto.set(false)">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
 
-      <select
-        class="filter-select"
-        [value]="filtroDepartamento()"
-        (change)="onDeptoChange($event)"
-      >
-        <option value="Todos">Todos los departamentos</option>
-        <option value="RRHH">RRHH</option>
-        <option value="IT">IT</option>
-        <option value="Ventas">Ventas</option>
-      </select>
+      <div class="modal-header">
+        <div class="modal-header-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="modal-header-copy">
+          <h2>Gestión de jornada</h2>
+          <p>{{ labelEstado() }}</p>
+        </div>
+        <button class="close-btn" (click)="modalFichajeAbierto.set(false)">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
 
-      @if (!vistaGrafico()) {
-        <select
-          class="filter-select"
-          [value]="filtroEstado()"
-          (change)="onEstadoChange($event)"
-        >
-          <option value="Todos">Todos los estados</option>
-          <option value="Presente">Presentes</option>
-          <option value="Retraso">Con retraso</option>
-          <option value="Ausente">Ausentes</option>
-        </select>
-      }
+      <div class="modal-body">
 
-      <button class="export-btn" type="button">
-        <i class="fa-solid fa-download"></i> Exportar
-      </button>
+        <div class="fichaje-estado-visual">
+          <div class="fichaje-estado-chip" [ngClass]="estadoActual?.toLowerCase() ?? 'no_fichado'">
+            @switch (estadoActual) {
+              @case ('TRABAJANDO')   { <i class="fa-solid fa-briefcase"></i> }
+              @case ('EN_DESCANSO') { <i class="fa-solid fa-mug-hot"></i> }
+              @case ('FINALIZADO')  { <i class="fa-solid fa-check-circle"></i> }
+              @default              { <i class="fa-solid fa-user-clock"></i> }
+            }
+            {{ labelEstado() }}
+          </div>
+        </div>
+
+        <div class="fichaje-metricas">
+          <div class="fichaje-metrica">
+            <span class="fm-label"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada</span>
+            <span class="fm-val">{{ miAsistencia()?.entrada || '–' }}</span>
+          </div>
+          <div class="fichaje-metrica">
+            <span class="fm-label"><i class="fa-solid fa-mug-hot"></i> Descanso</span>
+            <span class="fm-val">{{ miAsistencia()?.inicioDescanso || '–' }} / {{ miAsistencia()?.finDescanso || '–' }}</span>
+          </div>
+          <div class="fichaje-metrica">
+            <span class="fm-label"><i class="fa-solid fa-arrow-right-from-bracket"></i> Salida</span>
+            <span class="fm-val">{{ miAsistencia()?.salida || '–' }}</span>
+          </div>
+          <div class="fichaje-metrica">
+            <span class="fm-label"><i class="fa-regular fa-clock"></i> Horas</span>
+            <span class="fm-val">{{ miAsistencia()?.horasTotales ?? 0 }}h</span>
+          </div>
+        </div>
+
+        @if (puedeFicharEntrada()) {
+          <div class="form-field">
+            <label><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</label>
+            <select class="form-select" [value]="modoTrabajo()" (change)="modoTrabajo.set($any($event.target).value)">
+              <option value="PRESENCIAL">🏢 Presencial</option>
+              <option value="REMOTO">🏠 Remoto</option>
+              <option value="HIBRIDO">🔀 Híbrido</option>
+            </select>
+          </div>
+        }
+
+        @if (mensajeAccion()) {
+          <div class="alert-success"><i class="fa-solid fa-check"></i> {{ mensajeAccion() }}</div>
+        }
+
+        <div class="fichaje-botones">
+          <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()" (click)="ficharEntrada()">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
+          </button>
+          <button class="fichaje-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()" (click)="iniciarDescanso()">
+            <i class="fa-solid fa-mug-hot"></i> Iniciar descanso
+          </button>
+          <button class="fichaje-btn vuelta" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()" (click)="finalizarDescanso()">
+            <i class="fa-solid fa-rotate-left"></i> Volver del descanso
+          </button>
+          <button class="fichaje-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()" (click)="ficharSalida()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
+          </button>
+        </div>
+
+      </div>
     </div>
   </div>
+}
 
-  @if (!vistaGrafico()) {
-    <div class="kpi-grid">
-      <div class="kpi-card presente">
-        <div class="kpi-number">{{ totalPresentes() }}</div>
-        <div class="kpi-label">Presentes</div>
-      </div>
-      <div class="kpi-card total">
-        <div class="kpi-number">{{ totalEmpleados() }}</div>
-        <div class="kpi-label">Total Empleados</div>
-      </div>
-      <div class="kpi-card retraso">
-        <div class="kpi-number">{{ totalRetrasos() }}</div>
-        <div class="kpi-label">Retrasos</div>
-      </div>
-      <div class="kpi-card ausente">
-        <div class="kpi-number">{{ totalAusentes() }}</div>
-        <div class="kpi-label">Ausentes</div>
-      </div>
-    </div>
-  }
+@if (modalIncidenciaAbierto()) {
+  <div class="modal-backdrop" (click)="modalIncidenciaAbierto.set(false)">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
 
-  @if (!vistaGrafico()) {
-    <div class="table-container">
-      @if (empleadosFiltrados().length > 0) {
-        <table class="asistencia-table">
-          <thead>
-            <tr>
-              <th>Empleado</th>
-              <th>Departamento</th>
-              <th>Estado</th>
-              <th>Entrada</th>
-              <th>Descanso</th>
-              <th>Salida</th>
-              <th>Horas</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (empleado of empleadosFiltrados(); track empleado.nombre) {
-              <tr>
-                <td>{{ empleado.nombre }}</td>
-                <td>{{ empleado.departamento }}</td>
-                <td>
-                  <span class="estado-badge" [ngClass]="empleado.estado.toLowerCase()">
-                    {{ empleado.estado }}
-                  </span>
-                </td>
-                <td>{{ empleado.entrada || '-' }}</td>
-                <td>{{ empleado.inicioDescanso || '-' }} / {{ empleado.finDescanso || '-' }}</td>
-                <td>{{ empleado.salida || '-' }}</td>
-                <td>{{ empleado.horasTotales ?? '-' }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      } @else {
-        <div class="empty-state">
-          <i class="fa-solid fa-calendar-check"></i>
-          <p>No hay registros de asistencia para los filtros seleccionados</p>
+      <div class="modal-header">
+        <div class="modal-header-icon" style="background:#f59e0b"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div class="modal-header-copy">
+          <h2>Corregir incidencia</h2>
+          <p>Modifica los datos de asistencia del empleado</p>
         </div>
-      }
-    </div>
-  }
+        <button class="close-btn" (click)="modalIncidenciaAbierto.set(false)">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
 
-  @if (vistaGrafico()) {
-    <div class="grafico-container">
-      @if (esFuturo()) {
-        <div class="futuro-aviso">
-          <i class="fa-solid fa-clock"></i>
-          <h3>Fecha futura</h3>
-          <p>Los datos de asistencia para el <strong>{{ fechaSeleccionada() }}</strong> aún no están disponibles.</p>
-        </div>
-      } @else {
-        <div class="grafico-layout">
-          <div class="donut-wrapper">
-            <div class="donut-inner">
-              <canvas id="donutAsistencia"></canvas>
-              <div class="donut-center-label">
-                <span class="donut-total">{{ totalEmpleados() }}</span>
-                <span class="donut-sublabel">empleados</span>
-              </div>
-            </div>
+      <div class="modal-body">
+        @if (!incidenciaAsistenciaId()) {
+          <div class="alert-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Este empleado no tiene registro de asistencia para el día seleccionado.
           </div>
+        }
 
-          <div class="grafico-leyenda">
-            <h3 class="leyenda-titulo">Distribución del día</h3>
-
-            <div class="leyenda-item-grande presente">
-              <div class="leyenda-color-bar"></div>
-              <div class="leyenda-datos">
-                <span class="leyenda-nombre">Presentes</span>
-                <span class="leyenda-valor">{{ totalPresentes() }} empleados</span>
-                <span class="leyenda-pct">{{ getPorcentaje(totalPresentes()) }}%</span>
-              </div>
-            </div>
-
-            <div class="leyenda-item-grande retraso">
-              <div class="leyenda-color-bar"></div>
-              <div class="leyenda-datos">
-                <span class="leyenda-nombre">Con retraso</span>
-                <span class="leyenda-valor">{{ totalRetrasos() }} empleados</span>
-                <span class="leyenda-pct">{{ getPorcentaje(totalRetrasos()) }}%</span>
-              </div>
-            </div>
-
-            <div class="leyenda-item-grande ausente">
-              <div class="leyenda-color-bar"></div>
-              <div class="leyenda-datos">
-                <span class="leyenda-nombre">Ausentes</span>
-                <span class="leyenda-valor">{{ totalAusentes() }} empleados</span>
-                <span class="leyenda-pct">{{ getPorcentaje(totalAusentes()) }}%</span>
-              </div>
-            </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label><i class="fa-solid fa-calendar"></i> Fecha</label>
+            <input type="date" class="form-input" [value]="incidenciaFecha()" disabled />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada</label>
+            <input type="time" class="form-input" [value]="incidenciaEntrada()"
+              (change)="incidenciaEntrada.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-mug-hot"></i> Inicio descanso</label>
+            <input type="time" class="form-input" [value]="incidenciaInicioDesc()"
+              (change)="incidenciaInicioDesc.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-rotate-left"></i> Fin descanso</label>
+            <input type="time" class="form-input" [value]="incidenciaFinDesc()"
+              (change)="incidenciaFinDesc.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-arrow-right-from-bracket"></i> Salida</label>
+            <input type="time" class="form-input" [value]="incidenciaSalida()"
+              (change)="incidenciaSalida.set($any($event.target).value)" />
           </div>
         </div>
-      }
+
+        @if (mensajeIncidencia()) {
+          <div class="alert-success"><i class="fa-solid fa-check"></i> {{ mensajeIncidencia() }}</div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button class="secondary-btn" (click)="modalIncidenciaAbierto.set(false)">Cancelar</button>
+        <button class="primary-btn" [disabled]="guardandoIncidencia() || !incidenciaAsistenciaId()" (click)="guardarIncidencia()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ guardandoIncidencia() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+
     </div>
-  }
-</div>
+  </div>
+}

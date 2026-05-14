@@ -1,0 +1,810 @@
+[{
+  "_id": {
+    "$oid": "69f8dba92d33e33a61a72187"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:21.103Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dba92d33e33a61a72188"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
+  "tipo": "vacaciones",
+  "leida": true,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:21.169Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dba92d33e33a61a72189"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:21.170Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dba92d33e33a61a7218a"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:21.171Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dba92d33e33a61a7218b"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:21.172Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dba92d33e33a61a7218c"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:21.174Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dbcd2d33e33a61a7218d"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "Tu solicitud de vacaciones del 2026-06-11 al 2026-06-16 ha sido aprobada por paula",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:57.936Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dbcd2d33e33a61a7218e"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula ha aprobado las vacaciones de Ana López",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:57.939Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dbcd2d33e33a61a7218f"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula ha aprobado las vacaciones de Ana López",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:57.940Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dbcd2d33e33a61a72190"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula ha aprobado las vacaciones de Ana López",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:57.940Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dbcd2d33e33a61a72191"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula ha aprobado las vacaciones de Ana López",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:57.941Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dbcd2d33e33a61a72192"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula ha aprobado las vacaciones de Ana López",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:57.942Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8dbcd2d33e33a61a72193"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula ha aprobado las vacaciones de Ana López",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T17:47:57.942Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e3822d33e33a61a72194"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Vacaciones rechazadas",
+  "mensaje": "Tu solicitud de vacaciones del 2026-05-23 al 2026-05-30 ha sido rechazada por paula",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T18:20:50.359Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e3822d33e33a61a72195"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Vacaciones rechazadas",
+  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T18:20:50.361Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e3822d33e33a61a72196"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Vacaciones rechazadas",
+  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T18:20:50.362Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e3822d33e33a61a72197"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Vacaciones rechazadas",
+  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T18:20:50.363Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e3822d33e33a61a72198"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Vacaciones rechazadas",
+  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T18:20:50.363Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e3822d33e33a61a72199"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Vacaciones rechazadas",
+  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T18:20:50.364Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "69f8e3822d33e33a61a7219a"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Vacaciones rechazadas",
+  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-04T18:20:50.364Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a021fce457389d46f675e11"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-11T18:28:30.332Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a021fce457389d46f675e12"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-11T18:28:30.355Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a021fce457389d46f675e13"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-11T18:28:30.359Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a021fce457389d46f675e14"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-11T18:28:30.361Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a021fce457389d46f675e15"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-11T18:28:30.362Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a021fce457389d46f675e16"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-11T18:28:30.364Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a059faefe0845bd9fdf7b94"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:10:54.133Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a059faefe0845bd9fdf7b95"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:10:54.144Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a059faefe0845bd9fdf7b96"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:10:54.145Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a059faefe0845bd9fdf7b97"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:10:54.146Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a059faefe0845bd9fdf7b98"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:10:54.147Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a059faefe0845bd9fdf7b99"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:10:54.148Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3cb73a5bdf3808d6d7e"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:28:27.786Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3cb73a5bdf3808d6d7f"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:28:27.789Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3cb73a5bdf3808d6d80"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:28:27.790Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3cb73a5bdf3808d6d81"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:28:27.791Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3cb73a5bdf3808d6d82"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:28:27.791Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3cb73a5bdf3808d6d83"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:28:27.794Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3fe73a5bdf3808d6d84"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:29:18.652Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3fe73a5bdf3808d6d85"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:29:18.653Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3fe73a5bdf3808d6d86"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:29:18.653Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3fe73a5bdf3808d6d87"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:29:18.654Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3fe73a5bdf3808d6d88"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:29:18.654Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a3fe73a5bdf3808d6d89"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:29:18.655Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a43973a5bdf3808d6d8b"
+  },
+  "usuarioDestinatarioId": "1",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Ana López ha fichado entrada a las 12:30",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:30:17.514Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a43973a5bdf3808d6d8c"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Ana López ha fichado entrada a las 12:30",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:30:17.515Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a43973a5bdf3808d6d8d"
+  },
+  "usuarioDestinatarioId": "3",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Ana López ha fichado entrada a las 12:30",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:30:17.515Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a43973a5bdf3808d6d8e"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Ana López ha fichado entrada a las 12:30",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:30:17.516Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a43973a5bdf3808d6d8f"
+  },
+  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Ana López ha fichado entrada a las 12:30",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:30:17.516Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05a43973a5bdf3808d6d90"
+  },
+  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
+  "titulo": "Fichaje de entrada",
+  "mensaje": "Ana López ha fichado entrada a las 12:30",
+  "tipo": "entrada",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T10:30:17.517Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05aee86475c4b9e1bcdce5"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Nueva solicitud de ausencia",
+  "mensaje": "Ana López ha solicitado una ausencia por \"Asunto Personal\" del 2026-05-15 al 2026-05-15",
+  "tipo": "ausencia",
+  "leida": false,
+  "ruta": "/ausencias",
+  "fecha": {
+    "$date": "2026-05-14T11:15:52.740Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05aee86475c4b9e1bcdce6"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Nueva solicitud de ausencia",
+  "mensaje": "Ana López ha solicitado una ausencia por \"Asunto Personal\" del 2026-05-15 al 2026-05-15",
+  "tipo": "ausencia",
+  "leida": false,
+  "ruta": "/ausencias",
+  "fecha": {
+    "$date": "2026-05-14T11:15:52.745Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05b6673d54364805623176"
+  },
+  "usuarioDestinatarioId": "2",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Ana López ha fichado salida a las 13:47 (1.28h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T11:47:51.078Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a05b6673d54364805623177"
+  },
+  "usuarioDestinatarioId": "4",
+  "titulo": "Fichaje de salida",
+  "mensaje": "Ana López ha fichado salida a las 13:47 (1.28h trabajadas)",
+  "tipo": "salida",
+  "leida": false,
+  "ruta": "/asistencia",
+  "fecha": {
+    "$date": "2026-05-14T11:47:51.092Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+}]

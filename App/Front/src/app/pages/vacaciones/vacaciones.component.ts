@@ -8,6 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import { DragDropModule, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { VacacionesService, VacacionesVista } from '../../services/vacaciones.service';
 import { AuthService } from '../../services/auth.service';
+import { ExportService } from '../../services/export.service';
+import { FestivosService, Festivo } from '../../services/festivos.service';
 
 type EstadoSolicitud = 'Aprobada' | 'Pendiente' | 'Rechazada';
 
@@ -21,64 +23,69 @@ type EstadoSolicitud = 'Aprobada' | 'Pendiente' | 'Rechazada';
 })
 export class VacacionesComponent implements OnInit, AfterViewInit {
   private vacacionesService = inject(VacacionesService);
-  private authService = inject(AuthService);
+  private authService       = inject(AuthService);
+  private exportService     = inject(ExportService);
+  private festivosService   = inject(FestivosService);
+
+  readonly festivos = signal<Festivo[]>([]);
 
   @ViewChild('cal') calendar!: MatCalendar<Date>;
 
   readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
 
-  readonly solicitudes = signal<VacacionesVista[]>([]);
-  readonly filtroEstado = signal<EstadoSolicitud | 'Todos'>('Todos');
-  readonly filtroDepartamento = signal<string>('Todos');
-  readonly vistaCalendario = signal(false);
-  readonly mesActual = signal(new Date());
+  readonly solicitudes          = signal<VacacionesVista[]>([]);
+  readonly filtroEstado         = signal<EstadoSolicitud | 'Todos'>('Todos');
+  readonly filtroDepartamento   = signal<string>('Todos');
+  readonly vistaCalendario      = signal(false);
+  readonly mesActual            = signal(new Date());
 
   readonly modalSugerenciaAbierto = signal(false);
-  readonly solicitudArrastrada = signal<VacacionesVista | null>(null);
-  nuevaFechaInicio = '';
-  nuevaFechaFin = '';
+  readonly solicitudArrastrada    = signal<VacacionesVista | null>(null);
+  nuevaFechaInicio  = '';
+  nuevaFechaFin     = '';
   mensajeSugerencia = '';
   loadingSugerencia = false;
-  errorSugerencia = '';
+  errorSugerencia   = '';
 
   readonly modalSolicitarAbierto = signal(false);
   fechaSolicitudInicio = '';
-  fechaSolicitudFin = '';
-  errorSolicitud = '';
-  loadingSolicitud = false;
+  fechaSolicitudFin    = '';
+  errorSolicitud       = '';
+  loadingSolicitud     = false;
 
   readonly esAdmin = computed(() => this.authService.getSystemRole() === 'ADMIN');
 
   readonly solicitudesFiltradas = computed(() => {
     const estado = this.filtroEstado();
-    const depto = this.filtroDepartamento();
+    const depto  = this.filtroDepartamento();
     return this.solicitudes().filter(s => {
       const coincideEstado = estado === 'Todos' || s.estado === estado;
-      const coincideDepto = depto === 'Todos' || s.departamento === depto;
+      const coincideDepto  = depto  === 'Todos' || s.departamento === depto;
       return coincideEstado && coincideDepto;
     });
   });
 
   readonly solicitudesDelMes = computed(() => {
-    const mes = this.mesActual();
-    const anio = mes.getFullYear();
-    const m = mes.getMonth();
+    const mes      = this.mesActual();
+    const anio     = mes.getFullYear();
+    const m        = mes.getMonth();
     const primerDia = new Date(anio, m, 1);
     const ultimoDia = new Date(anio, m + 1, 0, 23, 59, 59);
     return this.solicitudesFiltradas().filter(s => {
       const inicio = new Date(s.fechaInicio);
-      const fin = new Date(s.fechaFin);
+      const fin    = new Date(s.fechaFin);
       return inicio <= ultimoDia && fin >= primerDia;
     });
   });
 
-  readonly totalAprobadas = computed(() => this.solicitudes().filter(s => s.estado === 'Aprobada').length);
-  readonly totalPendientes = computed(() => this.solicitudes().filter(s => s.estado === 'Pendiente').length);
-  readonly totalRechazadas = computed(() => this.solicitudes().filter(s => s.estado === 'Rechazada').length);
+  readonly totalAprobadas      = computed(() => this.solicitudes().filter(s => s.estado === 'Aprobada').length);
+  readonly totalPendientes     = computed(() => this.solicitudes().filter(s => s.estado === 'Pendiente').length);
+  readonly totalRechazadas     = computed(() => this.solicitudes().filter(s => s.estado === 'Rechazada').length);
   readonly totalDiasSolicitados = computed(() => this.solicitudes().reduce((acc, s) => acc + s.dias, 0));
 
   ngOnInit(): void {
     this.cargarVacaciones();
+    this.cargarFestivos(new Date().getFullYear());
   }
 
   ngAfterViewInit(): void {
@@ -88,6 +95,16 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
       if (active.getMonth() !== this.mesActual().getMonth() ||
           active.getFullYear() !== this.mesActual().getFullYear()) {
         this.mesActual.set(new Date(active.getFullYear(), active.getMonth(), 1));
+        this.cargarFestivos(active.getFullYear());
+      }
+    });
+  }
+
+  cargarFestivos(year: number): void {
+    this.festivosService.getFestivos(year).subscribe({
+      next: f => {
+        this.festivos.set(f);
+        if (this.calendar) this.calendar.updateTodaysDate();
       }
     });
   }
@@ -101,6 +118,7 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
           if (active.getMonth() !== this.mesActual().getMonth() ||
               active.getFullYear() !== this.mesActual().getFullYear()) {
             this.mesActual.set(new Date(active.getFullYear(), active.getMonth(), 1));
+            this.cargarFestivos(active.getFullYear());
           }
         });
       }
@@ -114,7 +132,7 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
 
     peticion.subscribe({
       next: data => this.solicitudes.set(data),
-      error: err => console.error('Error cargando vacaciones', err)
+      error: err  => console.error('Error cargando vacaciones', err)
     });
   }
 
@@ -138,25 +156,24 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   }
 
   aprobar(id: string): void {
-    this.vacacionesService.aprobar(id).subscribe({
-      next: () => this.cargarVacaciones()
-    });
+    this.vacacionesService.aprobar(id).subscribe({ next: () => this.cargarVacaciones() });
   }
 
   rechazar(id: string): void {
-    this.vacacionesService.rechazar(id).subscribe({
-      next: () => this.cargarVacaciones()
-    });
+    this.vacacionesService.rechazar(id).subscribe({ next: () => this.cargarVacaciones() });
   }
 
   exportar(): void {
-    alert('Exportación conectada al backend próximamente');
+    this.exportService.exportarVacacionesExcel(
+      this.solicitudesFiltradas(),
+      this.isEmpleado ? 'Mis vacaciones' : 'Todas las vacaciones'
+    );
   }
 
   abrirModalSolicitar(): void {
     this.fechaSolicitudInicio = '';
-    this.fechaSolicitudFin = '';
-    this.errorSolicitud = '';
+    this.fechaSolicitudFin    = '';
+    this.errorSolicitud       = '';
     this.modalSolicitarAbierto.set(true);
   }
 
@@ -191,19 +208,19 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
     const s = this.solicitudArrastrada();
     if (!s) return;
     this.nuevaFechaInicio = s.fechaInicio;
-    this.nuevaFechaFin = s.fechaFin;
+    this.nuevaFechaFin    = s.fechaFin;
     this.mensajeSugerencia = '';
-    this.errorSugerencia = '';
+    this.errorSugerencia   = '';
     this.modalSugerenciaAbierto.set(true);
   }
 
   cerrarModalSugerencia(): void {
     this.modalSugerenciaAbierto.set(false);
     this.solicitudArrastrada.set(null);
-    this.nuevaFechaInicio = '';
-    this.nuevaFechaFin = '';
+    this.nuevaFechaInicio  = '';
+    this.nuevaFechaFin     = '';
     this.mensajeSugerencia = '';
-    this.errorSugerencia = '';
+    this.errorSugerencia   = '';
   }
 
   confirmarSugerencia(): void {
@@ -238,13 +255,16 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   }
 
   dateClass: MatCalendarCellClassFunction<Date> = (date) => {
+    if (this.festivosService.esFestivo(date, this.festivos())) {
+      return 'dia-festivo';
+    }
     for (const s of this.solicitudesFiltradas()) {
       const inicio = new Date(s.fechaInicio);
-      const fin = new Date(s.fechaFin);
+      const fin    = new Date(s.fechaFin);
       inicio.setHours(0, 0, 0, 0);
       fin.setHours(23, 59, 59, 999);
       if (date >= inicio && date <= fin) {
-        if (s.estado === 'Aprobada') return 'dia-aprobada';
+        if (s.estado === 'Aprobada')  return 'dia-aprobada';
         if (s.estado === 'Pendiente') return 'dia-pendiente';
         if (s.estado === 'Rechazada') return 'dia-rechazada';
       }

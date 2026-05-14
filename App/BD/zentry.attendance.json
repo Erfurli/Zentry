@@ -1,0 +1,60 @@
+[{
+  "_id": "1",
+  "empleadoId": "1",
+  "fecha": "2026-04-21",
+  "entrada": "08:30",
+  "salida": "17:04",
+  "horas": 8.5,
+  "modo": "Presencial"
+},
+{
+  "_id": "2",
+  "empleadoId": "2",
+  "fecha": "2026-04-21",
+  "entrada": "09:00",
+  "salida": "18:15",
+  "horas": 9.25,
+  "modo": "Teletrabajo"
+},
+{
+  "_id": "3",
+  "empleadoId": "3",
+  "fecha": "2026-04-21",
+  "entrada": "09:15",
+  "salida": "17:40",
+  "horas": 8.25,
+  "modo": "Presencial"
+},
+{
+  "_id": "4",
+  "empleadoId": "4",
+  "fecha": "2026-04-21",
+  "entrada": "08:45",
+  "salida": "17:20",
+  "horas": 8.35,
+  "modo": "Presencial"
+},
+{
+  "_id": "5",
+  "empleadoId": "5",
+  "fecha": "2026-04-21",
+  "entrada": "08:58",
+  "salida": "17:10",
+  "horas": 8.2,
+  "modo": "Teletrabajo"
+},
+{
+  "_id": {
+    "$oid": "6a05a43973a5bdf3808d6d8a"
+  },
+  "empleadoId": "1",
+  "fecha": "2026-05-14",
+  "entrada": "12:30",
+  "salida": "13:47",
+  "inicioDescanso": "13:47",
+  "finDescanso": "13:47",
+  "estado": "FINALIZADO",
+  "horasTotales": 1.28,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+}]

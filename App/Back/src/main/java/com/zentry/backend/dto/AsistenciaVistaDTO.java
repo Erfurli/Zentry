@@ -2,27 +2,58 @@ package com.zentry.backend.dto;
 
 public class AsistenciaVistaDTO {
 
+    private String id;
     private String empleadoId;
     private String nombre;
     private String departamento;
     private String estado;
     private String entrada;
     private String salida;
+    private String inicioDescanso;
+    private String finDescanso;
+    private Double horasTotales;
+    private Double horasExtra;
     private String fecha;
 
-    public AsistenciaVistaDTO() {}
-
-    public AsistenciaVistaDTO(String empleadoId, String nombre, String departamento,
-                              String estado, String entrada, String salida, String fecha) {
-        this.empleadoId = empleadoId;
-        this.nombre = nombre;
-        this.departamento = departamento;
-        this.estado = estado;
-        this.entrada = entrada;
-        this.salida = salida;
-        this.fecha = fecha;
+    public String getId() {
+        return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getInicioDescanso() {
+        return inicioDescanso;
+    }
+
+    public void setInicioDescanso(String inicioDescanso) {
+        this.inicioDescanso = inicioDescanso;
+    }
+
+    public String getFinDescanso() {
+        return finDescanso;
+    }
+
+    public void setFinDescanso(String finDescanso) {
+        this.finDescanso = finDescanso;
+    }
+
+    public Double getHorasTotales() {
+        return horasTotales;
+    }
+
+    public void setHorasTotales(Double horasTotales) {
+        this.horasTotales = horasTotales;
+    }
+
+    public Double getHorasExtra() {
+        return horasExtra;
+    }
+
+    public void setHorasExtra(Double horasExtra) {
+        this.horasExtra = horasExtra;
+    }
     public String getEmpleadoId() { return empleadoId; }
     public void setEmpleadoId(String empleadoId) { this.empleadoId = empleadoId; }
     public String getNombre() { return nombre; }
@@ -37,4 +68,38 @@ public class AsistenciaVistaDTO {
     public void setSalida(String salida) { this.salida = salida; }
     public String getFecha() { return fecha; }
     public void setFecha(String fecha) { this.fecha = fecha; }
+
+
+    public AsistenciaVistaDTO() {}
+
+    public AsistenciaVistaDTO(String empleadoId, String nombre, String departamento,
+                              String estado, String entrada, String salida, String fecha) {
+        this.empleadoId = empleadoId;
+        this.nombre = nombre;
+        this.departamento = departamento;
+        this.estado = estado;
+        this.entrada = entrada;
+        this.salida = salida;
+        this.fecha = fecha;
+    }
+
+    public AsistenciaVistaDTO(String id, String empleadoId, String nombre, String departamento,
+                              String estado, String entrada, String salida,
+                              String inicioDescanso, String finDescanso,
+                              Double horasTotales, Double horasExtra, String fecha) {
+        this.id = id;
+        this.empleadoId = empleadoId;
+        this.nombre = nombre;
+        this.departamento = departamento;
+        this.estado = estado;
+        this.entrada = entrada;
+        this.salida = salida;
+        this.inicioDescanso = inicioDescanso;
+        this.finDescanso = finDescanso;
+        this.horasTotales = horasTotales;
+        this.horasExtra = horasExtra;
+        this.fecha = fecha;
+    }
+
+
 }

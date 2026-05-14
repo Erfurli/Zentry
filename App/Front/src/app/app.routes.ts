@@ -13,6 +13,7 @@ import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CambiarPasswordComponent } from './pages/cambiar-password/cambiar-password.component';
 import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
 import { ChatComponent } from './pages/chat-component/chat.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 
 export const routes: Routes = [
   {
@@ -83,6 +84,12 @@ export const routes: Routes = [
       {
         path: 'chat',
         component: ChatComponent,
+        canActivate: [authGuard],
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
+      },
+      {
+        path: 'perfil',
+        component: PerfilComponent,
         canActivate: [authGuard],
         data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },

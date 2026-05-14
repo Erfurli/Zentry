@@ -10,4 +10,5 @@ public interface AsistenciaRepository extends MongoRepository<Asistencia, String
     List<Asistencia> findByEmpleadoId(String empleadoId);
     List<Asistencia> findByFecha(String fecha);
     Optional<Asistencia> findByEmpleadoIdAndFecha(String empleadoId, String fecha);
+    List<Asistencia> findByEmpleadoIdOrderByFechaDesc(String empleadoId);
 }

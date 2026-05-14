@@ -37,7 +37,7 @@ public class NotificacionService {
 
     public void notificarAdmins(String titulo, String mensaje, String tipo, String ruta) {
         List<Usuario> admins = usuarioRepository.findAll().stream()
-                .filter(u -> !u.getRolSistema().name().equals("EMPLEADO"))
+                .filter(u -> !u.getRolSistema().name().equals("USER"))
                 .toList();
 
         for (Usuario admin : admins) {

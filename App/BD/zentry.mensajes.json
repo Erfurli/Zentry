@@ -1,0 +1,162 @@
+[{
+  "_id": {
+    "$oid": "69fa35762747a09f569c8887"
+  },
+  "conversacionId": "69fa34fee4aa5194c064a03d",
+  "autorId": "2",
+  "contenido": "meow",
+  "enviadoEn": {
+    "$date": "2026-05-05T18:22:46.417Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "69fa35822747a09f569c8888"
+  },
+  "conversacionId": "69fa34fee4aa5194c064a03d",
+  "autorId": "2",
+  "contenido": "meooow",
+  "respuestaAId": "69fa35762747a09f569c8887",
+  "respuestaAContenido": "meow",
+  "respuestaAAutorId": "2",
+  "enviadoEn": {
+    "$date": "2026-05-05T18:22:58.523Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "69fa35992747a09f569c888a"
+  },
+  "conversacionId": "69fa35942747a09f569c8889",
+  "autorId": "2",
+  "contenido": ":P",
+  "enviadoEn": {
+    "$date": "2026-05-05T18:23:21.386Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "69fa35ca2747a09f569c888f"
+  },
+  "conversacionId": "69fa34fee4aa5194c064a03d",
+  "autorId": "1",
+  "contenido": "wiwiwiwi",
+  "enviadoEn": {
+    "$date": "2026-05-05T18:24:10.385Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "69fa35df2747a09f569c8891"
+  },
+  "conversacionId": "69fa34fee4aa5194c064a03d",
+  "autorId": "2",
+  "contenido": "locura",
+  "respuestaAId": "69fa35ca2747a09f569c888f",
+  "respuestaAContenido": "wiwiwiwi",
+  "respuestaAAutorId": "1",
+  "enviadoEn": {
+    "$date": "2026-05-05T18:24:31.972Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a01ff84d30378479212f2ef"
+  },
+  "conversacionId": "69fa34fee4aa5194c064a03d",
+  "autorId": "1",
+  "contenido": "aaaaaaa",
+  "enviadoEn": {
+    "$date": "2026-05-11T16:10:44.209Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a01ffcbd30378479212f2f1"
+  },
+  "conversacionId": "6a01ffc4d30378479212f2f0",
+  "autorId": "1",
+  "contenido": "pruebaprueba",
+  "enviadoEn": {
+    "$date": "2026-05-11T16:11:55.656Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a0204ffd30378479212f2f5"
+  },
+  "conversacionId": "69fa34fee4aa5194c064a03d",
+  "autorId": "1",
+  "contenido": "a",
+  "enviadoEn": {
+    "$date": "2026-05-11T16:34:07.349Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a02050ed30378479212f2f6"
+  },
+  "conversacionId": "6a01ffc4d30378479212f2f0",
+  "autorId": "1",
+  "contenido": "aaa",
+  "enviadoEn": {
+    "$date": "2026-05-11T16:34:22.460Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a0209d7a1140cfdac9bdae9"
+  },
+  "conversacionId": "6a01ffc4d30378479212f2f0",
+  "autorId": "1",
+  "contenido": "holi!",
+  "enviadoEn": {
+    "$date": "2026-05-11T16:54:47.114Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a020b2fa1140cfdac9bdaec"
+  },
+  "conversacionId": "6a01ffc4d30378479212f2f0",
+  "autorId": "1",
+  "contenido": "meow",
+  "enviadoEn": {
+    "$date": "2026-05-11T17:00:31.525Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a020b76ad73b7ab7fa37841"
+  },
+  "conversacionId": "6a01ffc4d30378479212f2f0",
+  "autorId": "1",
+  "contenido": "AÑAÑA",
+  "enviadoEn": {
+    "$date": "2026-05-11T17:01:42.283Z"
+  },
+  "eliminado": false,
+  "_class": "com.zentry.backend.entity.Mensaje"
+}]

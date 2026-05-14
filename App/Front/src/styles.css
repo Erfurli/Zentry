@@ -355,6 +355,51 @@ body {
   transform: none;
 }
 
+
+
+
+/* TEMA OSCURO */
+body.tema-oscuro {
+  --bg-page:    #0f172a;
+  --bg-card:    #1e293b;
+  --bg-input:   #334155;
+  --text-main:  #f1f5f9;
+  --text-muted: #94a3b8;
+  --border:     #334155;
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+body.tema-oscuro .perfil-card,
+body.tema-oscuro .modal-panel,
+body.tema-oscuro .chat-sidebar,
+body.tema-oscuro .chat-main,
+body.tema-oscuro .notif-panel,
+body.tema-oscuro .config-dropdown {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .sidebar-item:hover,
+body.tema-oscuro .config-item:hover {
+  background: #334155 !important;
+}
+
+body.tema-oscuro .form-field input,
+body.tema-oscuro .form-field select,
+body.tema-oscuro .chat-input {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .dato-item { border-color: #334155; }
+body.tema-oscuro .dato-label,
+body.tema-oscuro .text-muted,
+body.tema-oscuro .sidebar-ultimo { color: #94a3b8 !important; }
+body.tema-oscuro h1, body.tema-oscuro h2, body.tema-oscuro h3 { color: #f1f5f9 !important; }
+
 @media (max-width: 600px) {
   .modal-panel {
     border-radius: 16px;

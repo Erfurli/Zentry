@@ -1,35 +1,25 @@
-export type EstadoAsistencia = 'NO_FICHADO' | 'TRABAJANDO' | 'EN_DESCANSO' | 'FINALIZADO';
-
-export interface AsistenciaVista {
-  empleadoId: string;
-  nombre: string;
-  departamento: string;
-  estado: 'Presente' | 'Ausente' | 'Retraso' | EstadoAsistencia;
-  entrada: string;
-  salida: string;
-  fecha: string;
-  inicioDescanso?: string | null;
-  finDescanso?: string | null;
-  horasTrabajo?: number | null;
-  horasDescanso?: number | null;
-  horasTotales?: number | null;
-  horasExtra?: number | null;
-  modo?: string | null;
-}
+export type EstadoAsistencia =
+  | 'NO_FICHADO'
+  | 'TRABAJANDO'
+  | 'EN_DESCANSO'
+  | 'FINALIZADO'
+  | 'Presente'
+  | 'Retraso'
+  | 'Ausente';
 
 export interface AsistenciaHoy {
   id?: string;
   empleadoId: string;
-  fecha: string;
+  nombre: string;
+  departamento: string;
   estado: EstadoAsistencia;
   entrada?: string | null;
+  salida?: string | null;
   inicioDescanso?: string | null;
   finDescanso?: string | null;
-  salida?: string | null;
-  horasTrabajo?: number | null;
-  horasDescanso?: number | null;
-  horasTotales?: number | null;
-  horasExtra?: number | null;
-  modo?: string | null;
-  observaciones?: string | null;
+  horasTotales?: number;
+  horasExtra?: number;
+  fecha: string;
 }
+
+export type AsistenciaVista = AsistenciaHoy;

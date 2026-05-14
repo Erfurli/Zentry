@@ -1,0 +1,294 @@
+.perfil-page {
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* HERO */
+.perfil-hero {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.perfil-avatar-wrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.perfil-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--zentry-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.perfil-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.perfil-iniciales {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+}
+
+.foto-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.foto-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  background: var(--zentry-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: opacity 0.2s;
+}
+
+.foto-btn:hover { opacity: 0.85; }
+
+.perfil-hero-info { display: flex; flex-direction: column; gap: 0.5rem; }
+.perfil-hero-info h1 { margin: 0; font-size: 1.8rem; font-weight: 700; color: #1e293b; }
+
+.perfil-rol-badge {
+  display: inline-block;
+  background: var(--zentry-primary);
+  color: white;
+  border-radius: 20px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.perfil-depto {
+  font-size: 0.9rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* GRID */
+.perfil-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.perfil-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.perfil-card-full { grid-column: 1 / -1; }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.card-header i {
+  color: var(--zentry-primary);
+  font-size: 1.1rem;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* DATOS */
+.datos-lista { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.dato-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dato-label { font-size: 0.85rem; color: #94a3b8; font-weight: 500; }
+.dato-valor { font-size: 0.9rem; color: #1e293b; font-weight: 600; }
+
+/* VACACIONES STATS */
+.vac-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.vac-stat {
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.vac-stat.aprobada  { background: #d1fae5; }
+.vac-stat.pendiente { background: #fef3c7; }
+.vac-stat.disponible { background: #eff6ff; }
+
+.vac-num  { font-size: 1.8rem; font-weight: 700; color: #1e293b; }
+.vac-label { font-size: 0.78rem; color: #64748b; font-weight: 500; }
+
+/* LISTA VAC */
+.vac-lista { display: flex; flex-direction: column; gap: 0.5rem; max-height: 200px; overflow-y: auto; }
+
+.vac-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: #f8fafc;
+  font-size: 0.85rem;
+}
+
+.vac-fechas { display: flex; align-items: center; gap: 0.5rem; color: #374151; }
+.vac-meta   { display: flex; align-items: center; gap: 0.5rem; }
+.vac-dias   { font-size: 0.8rem; color: #94a3b8; }
+
+.vac-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 0.2rem 0.6rem;
+}
+
+.vac-badge.aprobada  { background: #d1fae5; color: #065f46; }
+.vac-badge.pendiente { background: #fef3c7; color: #92400e; }
+.vac-badge.rechazada { background: #fee2e2; color: #991b1b; }
+
+.empty-msg { color: #94a3b8; font-size: 0.88rem; text-align: center; padding: 1rem; }
+
+/* CALENDARIO */
+.cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.cal-nav-btn {
+  width: 32px; height: 32px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: #64748b;
+  transition: background 0.15s;
+}
+
+.cal-nav-btn:hover { background: #e2e8f0; }
+.cal-mes-label { font-size: 0.95rem; font-weight: 600; color: #1e293b; min-width: 140px; text-align: center; }
+
+.cal-leyenda {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.leyenda-dot {
+  width: 12px; height: 12px; border-radius: 3px;
+}
+
+.leyenda-dot.aprobada  { background: #10b981; }
+.leyenda-dot.pendiente { background: #f59e0b; }
+.leyenda-dot.festivo   { background: #ef4444; }
+.leyenda-dot.hoy       { background: var(--zentry-primary); }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.cal-head {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  padding: 0.5rem 0;
+  text-transform: uppercase;
+}
+
+.cal-head.finde { color: #cbd5e1; }
+
+.cal-dia {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: #374151;
+  cursor: default;
+  position: relative;
+  transition: background 0.15s;
+}
+
+.cal-dia.vacio { background: transparent; }
+.cal-dia.dia-finde { color: #cbd5e1; }
+.cal-dia.dia-hoy { background: var(--zentry-primary) !important; color: white !important; font-weight: 700; }
+.cal-dia.dia-festivo { background: #fee2e2; color: #991b1b; font-weight: 600; }
+.cal-dia.dia-aprobada { background: #d1fae5; color: #065f46; font-weight: 600; }
+.cal-dia.dia-pendiente { background: #fef3c7; color: #92400e; font-weight: 600; }
+.cal-dia.dia-rechazada { background: #fee2e2; color: #991b1b; }
+
+.cal-dia:hover { filter: brightness(0.95); }
+
+@media (max-width: 768px) {
+  .perfil-grid { grid-template-columns: 1fr; }
+  .perfil-hero { flex-direction: column; text-align: center; }
+  .vac-stats { grid-template-columns: repeat(3, 1fr); }
+}

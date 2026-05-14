@@ -25,4 +25,6 @@ public class Empleado {
     private String fechaAlta;
     private Boolean activo;
     private RolEmpresa rolEmpresa;
+
+    private String foto;
 }

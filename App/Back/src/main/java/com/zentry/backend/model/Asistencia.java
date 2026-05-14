@@ -19,8 +19,17 @@ public class Asistencia {
 
     private String empleadoId;
     private String fecha;
+
     private String entrada;
     private String salida;
-    private Double horas;
-    private String modo;
+
+    private String inicioDescanso;
+    private String finDescanso;
+
+    private String estado; // <--- no fichado, trabajando, en descanso o finalizado
+
+    private Double horasTotales; // <--- descontando el descanso
+    private Double horasExtra; // <--- horas extra respecto a la jornada de 8h
+
+    private String modo; // <--- presencial o teletrabajo
 }

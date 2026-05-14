@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ExportService } from '../../services/export.service';
 
 type TipoReporte = 'Asistencia' | 'Vacaciones' | 'Ausencias' | 'Rendimiento';
 type EstadoReporte = 'Generado' | 'Pendiente' | 'Error';
@@ -25,6 +26,8 @@ interface Reporte {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportesComponent {
+  private exportService = inject(ExportService);
+
   readonly reportes = signal<Reporte[]>([
     { id: 1, nombre: 'Asistencia Marzo 2025', tipo: 'Asistencia', departamento: 'Todos', fechaGeneracion: '01/04/2025', periodo: 'Mar 2025', registros: 450, estado: 'Generado' },
     { id: 2, nombre: 'Vacaciones Q1 2025', tipo: 'Vacaciones', departamento: 'Todos', fechaGeneracion: '31/03/2025', periodo: 'Q1 2025', registros: 38, estado: 'Generado' },
@@ -70,9 +73,16 @@ export class ReportesComponent {
     this.filtroDepartamento.set(valor);
   }
 
-  descargar(reporte: Reporte): void {
-    alert(`Descargando reporte "${reporte.nombre}" del backend...`);
-  }
+  descargar(reporte: any): void {
+  this.exportService.exportarReportesExcel([reporte], reporte.nombre);
+}
+
+exportarTodos(): void {
+  this.exportService.exportarReportesExcel(
+    this.reportesFiltrados(),
+    'Panel de reportes'
+  );
+}
 
   regenerar(reporte: Reporte): void {
     alert(`Regenerando reporte "${reporte.nombre}" en el backend...`);

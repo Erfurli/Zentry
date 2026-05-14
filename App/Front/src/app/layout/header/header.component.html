@@ -9,13 +9,105 @@
   <div class="header-right">
     <app-notificaciones class="icon-btn"></app-notificaciones>
 
-    <button class="icon-btn" type="button" aria-label="Configuración">
-      <i class="fa-solid fa-gear" aria-hidden="true"></i>
-    </button>
+    <div class="config-wrapper">
+      <button class="icon-btn" type="button" (click)="toggleMenu()" aria-label="Configuración">
+        <i class="fa-solid fa-gear" [class.girando]="menuAbierto()"></i>
+      </button>
 
-    <button class="icon-btn" type="button" (click)="logout()" aria-label="Cerrar sesión">
-      <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-    </button>
+      @if (menuAbierto()) {
+        <div class="config-dropdown" (click)="$event.stopPropagation()">
+
+          <div class="config-seccion-label">Mi cuenta</div>
+
+          <div class="config-item-wrapper">
+            <button class="config-item" (click)="toggleSubmenuEstado($event)">
+              <i class="{{estadoActualObj().icon}}" [style.color]="estadoActualObj().color"></i>
+              <span>{{ estadoActualObj().label }}</span>
+              <i class="fa-solid fa-chevron-right config-arrow" [class.rotado]="submenuEstado()"></i>
+            </button>
+
+            @if (submenuEstado()) {
+              <div class="config-submenu">
+                @for (e of ESTADOS; track e.valor) {
+                  <button class="config-subitem" [class.activo]="estadoActual() === e.valor"
+                          (click)="setEstado(e.valor, $event)">
+                    <i class="{{e.icon}}" [style.color]="e.color"></i>
+                    <span>{{ e.label }}</span>
+                    @if (estadoActual() === e.valor) {
+                      <i class="fa-solid fa-check config-check"></i>
+                    }
+                  </button>
+                }
+              </div>
+            }
+          </div>
+
+          <button class="config-item" (click)="toggleTema($event)">
+            <i class="fa-solid" [class.fa-moon]="!temaOscuro()" [class.fa-sun]="temaOscuro()"></i>
+            <span>{{ temaOscuro() ? 'Tema claro' : 'Tema oscuro' }}</span>
+            <div class="toggle-switch" [class.on]="temaOscuro()">
+              <div class="toggle-thumb"></div>
+            </div>
+          </button>
+
+          <button class="config-item" (click)="navegar('/perfil')">
+            <i class="fa-solid fa-circle-user"></i>
+            <span>Mi perfil</span>
+            <i class="fa-solid fa-arrow-right config-arrow-right"></i>
+          </button>
+          
+          <button class="config-item" (click)="navegar('/preferencias-notificaciones')">
+            <i class="fa-solid fa-bell"></i>
+            <span>Notificaciones</span>
+            <i class="fa-solid fa-arrow-right config-arrow-right"></i>
+          </button>
+
+          @if (esAdmin || esRRHH) {
+            <div class="config-divider"></div>
+            <div class="config-seccion-label">Administración</div>
+
+            <button class="config-item" (click)="navegar('/empleados')">
+              <i class="fa-solid fa-users"></i>
+              <span>Gestión de empleados</span>
+              <i class="fa-solid fa-arrow-right config-arrow-right"></i>
+            </button>
+            <button class="config-item" (click)="navegar('/usuarios')">
+              <i class="fa-solid fa-user-shield"></i>
+              <span>Gestión de usuarios</span>
+              <i class="fa-solid fa-arrow-right config-arrow-right"></i>
+            </button>
+          }
+
+          @if (esAdmin) {
+            <div class="config-divider"></div>
+            <div class="config-seccion-label">Sistema</div>
+
+            <button class="config-item" (click)="navegar('/ausencias')">
+              <i class="fa-solid fa-calendar-xmark"></i>
+              <span>Tipos de ausencia</span>
+              <i class="fa-solid fa-arrow-right config-arrow-right"></i>
+            </button>
+            <button class="config-item" (click)="navegar('/reportes')">
+              <i class="fa-solid fa-calendar-days"></i>
+              <span>Calendario laboral</span>
+              <i class="fa-solid fa-arrow-right config-arrow-right"></i>
+            </button>
+          }
+
+          <div class="config-divider"></div>
+          <button class="config-item" (click)="navegar('/cambiar-password')">
+            <i class="fa-solid fa-lock"></i>
+            <span>Cambiar contraseña</span>
+            <i class="fa-solid fa-arrow-right config-arrow-right"></i>
+          </button>
+          <button class="config-item peligro" (click)="logout()">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Cerrar sesión</span>
+          </button>
+
+        </div>
+      }
+    </div>
 
     <div class="user-menu">
       <div class="user-info">

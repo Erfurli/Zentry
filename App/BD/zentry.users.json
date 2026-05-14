@@ -1,0 +1,60 @@
+[{
+  "_id": "1",
+  "empleadoId": "1",
+  "username": "ana",
+  "password": "$2a$10$0TnY4FdbIQoaZ0cVYx4VV.5jmKQqZsowvjfZ195ollz6IGSdNO2/i",
+  "rolSistema": "USER",
+  "activo": true,
+  "mustChangePassword": false,
+  "_class": "com.zentry.backend.model.Usuario"
+},
+{
+  "_id": "2",
+  "empleadoId": "2",
+  "username": "paula",
+  "password": "$2a$12$oEN32FGPeLDUGdQsa0Fq0Oq3QcEtrUTGhx/eD4.dlcb/qItR160Zy",
+  "rolSistema": "ADMIN",
+  "activo": true,
+  "mustChangePassword": false,
+  "_class": "com.zentry.backend.model.Usuario"
+},
+{
+  "_id": "3",
+  "empleadoId": "3",
+  "username": "carlos",
+  "password": "$2a$10$ARmPjR3i6y93hoMgCOkRjukWBWDVUahcwKjX9knL004Xc4gbJqbpa",
+  "rolSistema": "USER",
+  "activo": true,
+  "mustChangePassword": true,
+  "_class": "com.zentry.backend.model.Usuario"
+},
+{
+  "_id": "4",
+  "empleadoId": "4",
+  "username": "ivan",
+  "password": "$2a$12$yMJ2DAGLRiaKZri9vNTgE.Y8Ctrir9sZEMBjNR8zMej462cFPxMUS",
+  "rolSistema": "ADMIN",
+  "activo": true
+},
+{
+  "_id": {
+    "$oid": "69f5d9181f3e181574ac58dc"
+  },
+  "empleadoId": "69f5d8f21f3e181574ac58db",
+  "username": "empleado.prueba",
+  "password": "$2a$10$Y4jwaHxlr0Y6KT4FenZOI.wyhpZ6mdrdHtNbtqVMDHisOT0NbA8X6",
+  "rolSistema": "USER",
+  "activo": true,
+  "_class": "com.zentry.backend.model.Usuario"
+},
+{
+  "_id": {
+    "$oid": "69f61b4f23f95db0a18f7825"
+  },
+  "empleadoId": "69f61b3f23f95db0a18f7824",
+  "username": "empleado.email",
+  "password": "$2a$10$HLyD3WgdMwkTdL0eHtDU1.YcEND3JS13ZKFhCkOti4JDZkZZEkUTC",
+  "rolSistema": "USER",
+  "activo": true,
+  "_class": "com.zentry.backend.model.Usuario"
+}]

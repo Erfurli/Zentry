@@ -1,0 +1,102 @@
+[{
+  "_id": "1",
+  "empleadoId": "1",
+  "fechaInicio": "2026-04-01",
+  "fechaFin": "2026-04-05",
+  "dias": 5,
+  "estado": "Aprobada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": "2",
+  "empleadoId": "2",
+  "fechaInicio": "2026-07-15",
+  "fechaFin": "2026-07-19",
+  "dias": 5,
+  "estado": "Aprobada",
+  "fechaSolicitud": "2026-06-01"
+},
+{
+  "_id": "3",
+  "empleadoId": "3",
+  "fechaInicio": "2026-08-10",
+  "fechaFin": "2026-08-14",
+  "dias": 5,
+  "estado": "Rechazada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": "4",
+  "empleadoId": "4",
+  "fechaInicio": "2026-02-20",
+  "fechaFin": "2026-02-25",
+  "dias": 5,
+  "estado": "Aprobada",
+  "fechaSolicitud": "2026-01-11"
+},
+{
+  "_id": {
+    "$oid": "69f666ab1ddc8137145aaa52"
+  },
+  "empleadoId": "2",
+  "fechaInicio": "2026-05-03",
+  "fechaFin": "2026-05-10",
+  "dias": 8,
+  "estado": "Aprobada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": {
+    "$oid": "69f79060541971d8de390dac"
+  },
+  "empleadoId": "4",
+  "fechaInicio": "2026-10-10",
+  "fechaFin": "2026-10-15",
+  "dias": 6,
+  "estado": "Pendiente",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": {
+    "$oid": "69f793a088aa4931b30f8c02"
+  },
+  "empleadoId": "2",
+  "fechaInicio": "2026-05-05",
+  "fechaFin": "2026-05-10",
+  "dias": 6,
+  "estado": "Rechazada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": {
+    "$oid": "69f79a2503ec9a008d541082"
+  },
+  "empleadoId": "2",
+  "fechaInicio": "2026-06-14",
+  "fechaFin": "2026-06-18",
+  "dias": 5,
+  "estado": "Rechazada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": {
+    "$oid": "69f79e8f6238342428372541"
+  },
+  "empleadoId": "2",
+  "fechaInicio": "2026-05-23",
+  "fechaFin": "2026-05-30",
+  "dias": 8,
+  "estado": "Rechazada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": {
+    "$oid": "69f8dba92d33e33a61a72186"
+  },
+  "empleadoId": "1",
+  "fechaInicio": "2026-06-11",
+  "fechaFin": "2026-06-16",
+  "dias": 6,
+  "estado": "Aprobada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+}]

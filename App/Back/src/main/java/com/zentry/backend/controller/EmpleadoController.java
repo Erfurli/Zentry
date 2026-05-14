@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.zentry.backend.model.Usuario;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/empleados")
@@ -70,6 +71,17 @@ public class EmpleadoController {
                 .map(empleado -> {
                     empleado.setActivo(!Boolean.TRUE.equals(empleado.getActivo()));
                     return ResponseEntity.ok(empleadoRepository.save(empleado));
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}/foto")
+    public ResponseEntity<Void> actualizarFoto(@PathVariable String id, @RequestBody Map<String, String> body) {
+        return empleadoRepository.findById(id)
+                .map(emp -> {
+                    emp.setFoto(body.get("foto"));
+                    empleadoRepository.save(emp);
+                    return ResponseEntity.ok().<Void>build();
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

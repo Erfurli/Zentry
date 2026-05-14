@@ -1,0 +1,101 @@
+[{
+  "_id": {
+    "$oid": "69fa345af2674390079d886c"
+  },
+  "nombre": "General",
+  "tipo": "GRUPO",
+  "participantes": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "69f5d9181f3e181574ac58dc",
+    "69f61b4f23f95db0a18f7825"
+  ],
+  "creadorId": "1",
+  "creadaEn": {
+    "$date": "2026-05-05T18:18:02.795Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
+},
+{
+  "_id": {
+    "$oid": "69fa345af2674390079d886d"
+  },
+  "nombre": "Jefes",
+  "tipo": "JEFES",
+  "participantes": [
+    "3",
+    "4"
+  ],
+  "creadorId": "3",
+  "creadaEn": {
+    "$date": "2026-05-05T18:18:02.978Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
+},
+{
+  "_id": {
+    "$oid": "69fa345bf2674390079d886e"
+  },
+  "nombre": "Depto: IT",
+  "tipo": "DEPARTAMENTO",
+  "participantes": [
+    "2",
+    "3",
+    "4",
+    "69f61b4f23f95db0a18f7825"
+  ],
+  "creadorId": "2",
+  "creadaEn": {
+    "$date": "2026-05-05T18:18:03.014Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
+},
+{
+  "_id": {
+    "$oid": "69fa34fee4aa5194c064a03d"
+  },
+  "nombre": "prueba",
+  "tipo": "GRUPO",
+  "participantes": [
+    "1",
+    "4",
+    "2"
+  ],
+  "creadorId": "2",
+  "creadaEn": {
+    "$date": "2026-05-05T18:20:46.319Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
+},
+{
+  "_id": {
+    "$oid": "69fa35942747a09f569c8889"
+  },
+  "tipo": "INDIVIDUAL",
+  "participantes": [
+    "2",
+    "4"
+  ],
+  "creadorId": "2",
+  "creadaEn": {
+    "$date": "2026-05-05T18:23:16.167Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
+},
+{
+  "_id": {
+    "$oid": "6a01ffc4d30378479212f2f0"
+  },
+  "tipo": "INDIVIDUAL",
+  "participantes": [
+    "1",
+    "2"
+  ],
+  "creadorId": "1",
+  "creadaEn": {
+    "$date": "2026-05-11T16:11:48.139Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
+}]

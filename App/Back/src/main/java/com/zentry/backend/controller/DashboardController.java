@@ -42,7 +42,7 @@ public class DashboardController {
         String hoy = LocalDate.now().toString();
 
         Double todayHours = asistenciaRepository.findByEmpleadoIdAndFecha(usuario.getEmpleadoId(), hoy)
-                .map(Asistencia::getHoras)
+                .map(Asistencia::getHorasTotales)
                 .orElse(0.0);
 
         LocalDate ahora = LocalDate.now();

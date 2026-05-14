@@ -457,6 +457,98 @@
   text-transform: uppercase;
 }
 
+.incidencia-btn {
+  background: #fef3c7;
+  color: #92400e;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0.65rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.incidencia-btn:hover { background: #fde68a; }
+
+.fichaje-estado-visual {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.fichaje-estado-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.fichaje-estado-chip.trabajando   { background: #d1fae5; color: #065f46; }
+.fichaje-estado-chip.en_descanso  { background: #fef3c7; color: #92400e; }
+.fichaje-estado-chip.finalizado   { background: #e0e7ff; color: #3730a3; }
+.fichaje-estado-chip.no_fichado   { background: #f1f5f9; color: #475569; }
+
+.fichaje-metricas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.fichaje-metrica {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.fm-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.fm-val {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.fichaje-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.fichaje-btn {
+  padding: 0.85rem 1rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.fichaje-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.fichaje-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.fichaje-btn.entrada  { background: #10b981; }
+.fichaje-btn.descanso { background: #f59e0b; }
+.fichaje-btn.vuelta   { background: #6366f1; }
+.fichaje-btn.salida   { background: #ef4444; }
+
 @media (max-width: 900px) {
   .filters {
     flex-direction: column;

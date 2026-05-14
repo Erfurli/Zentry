@@ -38,6 +38,10 @@
         <option value="No Justificada">No Justificadas</option>
       </select>
     </div>
+
+    <button class="export-btn" (click)="exportar()">
+  <i class="fa-solid fa-download"></i> Exportar
+</button>
   </div>
 
   <div class="kpi-grid">
@@ -202,7 +206,7 @@
                    (change)="formFechaFin.set($any($event.target).value)" />
           </div>
         </div>
-        
+
         @if (formFechaInicio() && formFechaFin() && formFechaFin() < formFechaInicio()) {
           <p class="form-error">
             <i class="fa-solid fa-triangle-exclamation"></i>
