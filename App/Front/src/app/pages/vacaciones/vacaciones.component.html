@@ -182,77 +182,123 @@
 </div>
 
 @if (modalSugerenciaAbierto()) {
-  <div class="modal-overlay" (click)="cerrarModalSugerencia()">
-    <div class="modal-sugerencia" (click)="$event.stopPropagation()">
-      <div class="modal-sugerencia-header">
-        <div>
+  <div class="modal-backdrop" (click)="cerrarModalSugerencia()">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon">
+          <i class="fa-solid fa-calendar-pen"></i>
+        </div>
+        <div class="modal-header-copy">
           <h2>Sugerir nuevas fechas</h2>
           <p>{{ solicitudArrastrada()?.empleado }} — {{ solicitudArrastrada()?.fechaInicio }} → {{ solicitudArrastrada()?.fechaFin }}</p>
         </div>
-        <button class="modal-close-btn" (click)="cerrarModalSugerencia()">
+        <button class="close-btn" type="button" (click)="cerrarModalSugerencia()">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div class="modal-sugerencia-body">
-        <div class="form-field">
-          <label>Nueva fecha inicio</label>
-          <input type="date" [(ngModel)]="nuevaFechaInicio" />
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-calendar-day"></i> Nueva fecha inicio
+            </label>
+            <input type="date" class="form-input" [(ngModel)]="nuevaFechaInicio" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-calendar-day"></i> Nueva fecha fin
+            </label>
+            <input type="date" class="form-input" [(ngModel)]="nuevaFechaFin" />
+          </div>
         </div>
         <div class="form-field">
-          <label>Nueva fecha fin</label>
-          <input type="date" [(ngModel)]="nuevaFechaFin" />
-        </div>
-        <div class="form-field">
-          <label>Mensaje (opcional)</label>
-          <textarea [(ngModel)]="mensajeSugerencia" rows="3" placeholder="Explica el motivo del cambio..."></textarea>
+          <label class="form-label">
+            <i class="fa-solid fa-pen-to-square"></i> Mensaje <span class="opcional">(opcional)</span>
+          </label>
+          <textarea class="form-textarea" [(ngModel)]="mensajeSugerencia" rows="3"
+            placeholder="Explica el motivo del cambio..."></textarea>
         </div>
         @if (errorSugerencia) {
-          <div class="error-box">{{ errorSugerencia }}</div>
+          <div class="error-box"><i class="fa-solid fa-circle-exclamation"></i> {{ errorSugerencia }}</div>
         }
       </div>
-      <div class="modal-sugerencia-footer">
-        <button class="secondary-btn" (click)="cerrarModalSugerencia()" [disabled]="loadingSugerencia">Cancelar</button>
-        <button class="primary-btn" (click)="confirmarSugerencia()" [disabled]="loadingSugerencia">
-          {{ loadingSugerencia ? 'Enviando...' : 'Enviar sugerencia' }}
+
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button" (click)="cerrarModalSugerencia()" [disabled]="loadingSugerencia">
+          Cancelar
+        </button>
+        <button class="primary-btn" type="button" (click)="confirmarSugerencia()" [disabled]="loadingSugerencia">
+          @if (loadingSugerencia) {
+            <i class="fa-solid fa-spinner fa-spin"></i> Enviando...
+          } @else {
+            <i class="fa-solid fa-paper-plane"></i> Enviar sugerencia
+          }
         </button>
       </div>
+
     </div>
   </div>
 }
 
-  @if (modalSolicitarAbierto()) {
-  <div class="modal-overlay" (click)="modalSolicitarAbierto.set(false)">
-    <div class="modal-sugerencia" (click)="$event.stopPropagation()">
-      <div class="modal-sugerencia-header">
-        <div>
+@if (modalSolicitarAbierto()) {
+  <div class="modal-backdrop" (click)="modalSolicitarAbierto.set(false)">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon">
+          <i class="fa-solid fa-umbrella-beach"></i>
+        </div>
+        <div class="modal-header-copy">
           <h2>Solicitar vacaciones</h2>
           <p>Introduce las fechas que deseas solicitar</p>
         </div>
-        <button class="modal-close-btn" (click)="modalSolicitarAbierto.set(false)">
+        <button class="close-btn" type="button" (click)="modalSolicitarAbierto.set(false)">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div class="modal-sugerencia-body">
-        <div class="form-field">
-          <label>Fecha inicio</label>
-          <input type="date" [(ngModel)]="fechaSolicitudInicio" />
-        </div>
-        <div class="form-field">
-          <label>Fecha fin</label>
-          <input type="date" [(ngModel)]="fechaSolicitudFin" />
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-calendar-day"></i> Fecha de inicio
+            </label>
+            <input type="date" class="form-input"
+                   [(ngModel)]="fechaSolicitudInicio" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-calendar-day"></i> Fecha de fin
+            </label>
+            <input type="date" class="form-input"
+                   [(ngModel)]="fechaSolicitudFin"
+                   [min]="fechaSolicitudInicio" />
+          </div>
         </div>
         @if (errorSolicitud) {
-          <div class="error-box">{{ errorSolicitud }}</div>
+          <div class="error-box"><i class="fa-solid fa-circle-exclamation"></i> {{ errorSolicitud }}</div>
         }
       </div>
-      <div class="modal-sugerencia-footer">
-        <button class="secondary-btn" (click)="modalSolicitarAbierto.set(false)" [disabled]="loadingSolicitud">
+
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button"
+                (click)="modalSolicitarAbierto.set(false)"
+                [disabled]="loadingSolicitud">
           Cancelar
         </button>
-        <button class="primary-btn" (click)="confirmarSolicitud()" [disabled]="loadingSolicitud">
-          {{ loadingSolicitud ? 'Enviando...' : 'Solicitar' }}
+        <button class="primary-btn" type="button"
+                (click)="confirmarSolicitud()"
+                [disabled]="loadingSolicitud">
+          @if (loadingSolicitud) {
+            <i class="fa-solid fa-spinner fa-spin"></i> Enviando...
+          } @else {
+            <i class="fa-solid fa-paper-plane"></i> Solicitar
+          }
         </button>
       </div>
+
     </div>
   </div>
 }
