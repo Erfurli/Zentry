@@ -34,10 +34,21 @@
 
   @if (esEmpleado()) {
     <div class="estado-card">
-      <div>
+      <div class="estado-card-left">
         <div class="estado-titulo">Mi estado actual</div>
         <div class="estado-valor">{{ labelEstado() }}</div>
       </div>
+
+      @if (estadoActual === 'FINALIZADO') {
+        <div class="estado-card-center">
+          <button class="incidencia-empleado-btn" type="button" (click)="abrirIncidenciaEmpleado()">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Crear incidencia
+          </button>
+          <span class="incidencia-hint">¿Olvidaste fichar algo?</span>
+        </div>
+      }
+
       <div class="estado-metricas">
         <div><span>Entrada:</span> {{ miAsistencia()?.entrada || '-' }}</div>
         <div><span>Descanso:</span> {{ miAsistencia()?.inicioDescanso || '-' }} – {{ miAsistencia()?.finDescanso || '-' }}</div>
@@ -336,6 +347,122 @@
         <button class="primary-btn" [disabled]="guardandoIncidencia() || !incidenciaAsistenciaId()" (click)="guardarIncidencia()">
           <i class="fa-solid fa-floppy-disk"></i>
           {{ guardandoIncidencia() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+@if (modalIncidenciaEmpleadoAbierto()) {
+  <div class="modal-backdrop" (click)="modalIncidenciaEmpleadoAbierto.set(false)">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon" style="background: #f59e0b">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="modal-header-copy">
+          <h2>Crear incidencia</h2>
+          <p>Informa de un error u olvido en tu jornada de hoy</p>
+        </div>
+        <button class="close-btn" type="button" (click)="modalIncidenciaEmpleadoAbierto.set(false)">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="form-field">
+          <label class="form-label">
+            <i class="fa-solid fa-tag"></i> Tipo de incidencia
+          </label>
+          <select class="form-select"
+                  [value]="incTipo()"
+                  (change)="incTipo.set($any($event.target).value)">
+            <option value="descanso_olvidado">Olvidé fichar el descanso</option>
+            <option value="descanso_incorrecto">Horario de descanso incorrecto</option>
+            <option value="entrada_incorrecta">Hora de entrada incorrecta</option>
+            <option value="salida_incorrecta">Hora de salida incorrecta</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-mug-hot"></i> Inicio descanso
+            </label>
+            <input type="time" class="form-input"
+                   [value]="incInicioDesc()"
+                   (change)="incInicioDesc.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-rotate-left"></i> Fin descanso
+            </label>
+            <input type="time" class="form-input"
+                   [value]="incFinDesc()"
+                   (change)="incFinDesc.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada
+            </label>
+            <input type="time" class="form-input"
+                   [value]="incEntrada()"
+                   (change)="incEntrada.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> Salida
+            </label>
+            <input type="time" class="form-input"
+                   [value]="incSalida()"
+                   (change)="incSalida.set($any($event.target).value)" />
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label">
+            <i class="fa-solid fa-pen-to-square"></i> Descripción
+            <span class="opcional">(opcional)</span>
+          </label>
+          <textarea class="form-textarea"
+                    rows="3"
+                    placeholder="Ej: Me olvidé de fichar el descanso de 13:00 a 13:30..."
+                    [value]="incDescripcion()"
+                    (input)="incDescripcion.set($any($event.target).value)"></textarea>
+        </div>
+
+        @if (mensajeIncEmpleado()) {
+          <div class="alert-success">
+            <i class="fa-solid fa-circle-check"></i> {{ mensajeIncEmpleado() }}
+          </div>
+        }
+
+        @if (errorIncEmpleado()) {
+          <div class="error-box">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ errorIncEmpleado() }}
+          </div>
+        }
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="secondary-btn" type="button"
+                (click)="modalIncidenciaEmpleadoAbierto.set(false)"
+                [disabled]="enviandoIncEmpleado()">
+          Cancelar
+        </button>
+        <button class="primary-btn" type="button"
+                (click)="enviarIncidenciaEmpleado()"
+                [disabled]="enviandoIncEmpleado()">
+          @if (enviandoIncEmpleado()) {
+            <i class="fa-solid fa-spinner fa-spin"></i> Enviando...
+          } @else {
+            <i class="fa-solid fa-paper-plane"></i> Enviar incidencia
+          }
         </button>
       </div>
 

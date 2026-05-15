@@ -47,6 +47,18 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly guardandoIncidencia    = signal(false);
   readonly mensajeIncidencia      = signal('');
 
+  // Incidencia empleado (auto-reporte)
+  readonly modalIncidenciaEmpleadoAbierto = signal(false);
+  readonly incTipo        = signal('descanso_olvidado');
+  readonly incInicioDesc  = signal('');
+  readonly incFinDesc     = signal('');
+  readonly incEntrada     = signal('');
+  readonly incSalida      = signal('');
+  readonly incDescripcion = signal('');
+  readonly enviandoIncEmpleado = signal(false);
+  readonly mensajeIncEmpleado  = signal('');
+  readonly errorIncEmpleado    = signal('');
+
   readonly esEmpleado = computed(() => {
   const companyRole = this.authService.getCompanyRole();
   const systemRole  = this.authService.getSystemRole();
@@ -234,6 +246,48 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   getPorcentaje(valor: number): number {
     const total = this.totalEmpleados();
     return total > 0 ? Math.round((valor / total) * 100) : 0;
+  }
+
+  abrirIncidenciaEmpleado(): void {
+    const a = this.miAsistencia();
+    this.incTipo.set('descanso_olvidado');
+    this.incInicioDesc.set(a?.inicioDescanso ?? '');
+    this.incFinDesc.set(a?.finDescanso ?? '');
+    this.incEntrada.set(a?.entrada ?? '');
+    this.incSalida.set(a?.salida ?? '');
+    this.incDescripcion.set('');
+    this.mensajeIncEmpleado.set('');
+    this.errorIncEmpleado.set('');
+    this.modalIncidenciaEmpleadoAbierto.set(true);
+  }
+
+  enviarIncidenciaEmpleado(): void {
+    const id = this.miAsistencia()?.id;
+    if (!id) { this.errorIncEmpleado.set('No hay registro de asistencia para hoy.'); return; }
+
+    this.enviandoIncEmpleado.set(true);
+    this.mensajeIncEmpleado.set('');
+    this.errorIncEmpleado.set('');
+
+    this.asistenciaService.reportarIncidencia(id, {
+      tipo:          this.incTipo(),
+      descripcion:   this.incDescripcion(),
+      inicioDescanso:this.incInicioDesc() || undefined,
+      finDescanso:   this.incFinDesc()    || undefined,
+      entrada:       this.incEntrada()    || undefined,
+      salida:        this.incSalida()     || undefined,
+    }).subscribe({
+      next: (res) => {
+        this.mensajeIncEmpleado.set(res.mensaje);
+        this.enviandoIncEmpleado.set(false);
+        this.cargarMiAsistenciaHoy();
+        setTimeout(() => this.modalIncidenciaEmpleadoAbierto.set(false), 1800);
+      },
+      error: (err) => {
+        this.errorIncEmpleado.set(err?.error?.mensaje ?? 'No se pudo enviar la incidencia.');
+        this.enviandoIncEmpleado.set(false);
+      }
+    });
   }
 
   exportar(): void {

@@ -411,9 +411,50 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 2rem;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
+}
+
+.estado-card-left {
+  min-width: 160px;
+}
+
+.estado-card-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.incidencia-empleado-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background: #fff7ed;
+  color: #c2410c;
+  border: 2px solid #fed7aa;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.incidencia-empleado-btn:hover {
+  background: #ffedd5;
+  border-color: #f97316;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+
+.incidencia-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-style: italic;
 }
 
 .estado-titulo {
