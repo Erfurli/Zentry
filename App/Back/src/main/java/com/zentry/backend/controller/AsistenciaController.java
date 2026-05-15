@@ -294,4 +294,72 @@ public class AsistenciaController {
 
         return ResponseEntity.ok(Map.of("mensaje", "Registro corregido correctamente"));
     }
+
+    @PostMapping("/{id}/incidencia")
+    public ResponseEntity<Map<String, Object>> reportarIncidencia(
+            Authentication auth,
+            @PathVariable String id,
+            @RequestBody Map<String, String> datos) {
+
+        Empleado empleado = resolverEmpleado(auth);
+
+        Asistencia asistencia = asistenciaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
+
+        // Aplicar las correcciones sugeridas
+        if (datos.containsKey("entrada")        && datos.get("entrada")        != null && !datos.get("entrada").isBlank())
+            asistencia.setEntrada(datos.get("entrada"));
+        if (datos.containsKey("salida")         && datos.get("salida")         != null && !datos.get("salida").isBlank())
+            asistencia.setSalida(datos.get("salida"));
+        if (datos.containsKey("inicioDescanso") && datos.get("inicioDescanso") != null && !datos.get("inicioDescanso").isBlank())
+            asistencia.setInicioDescanso(datos.get("inicioDescanso"));
+        if (datos.containsKey("finDescanso")    && datos.get("finDescanso")    != null && !datos.get("finDescanso").isBlank())
+            asistencia.setFinDescanso(datos.get("finDescanso"));
+
+        // Recalcular horas con los datos corregidos
+        if (asistencia.getEntrada() != null && asistencia.getSalida() != null) {
+            double horas = calcularHorasTotales(
+                    asistencia.getEntrada(), asistencia.getSalida(),
+                    asistencia.getInicioDescanso(), asistencia.getFinDescanso()
+            );
+            asistencia.setHorasTotales(horas);
+            asistencia.setHorasExtra(Math.max(0, Math.round((horas - JORNADA_HORAS) * 100.0) / 100.0));
+        }
+
+        asistenciaRepository.save(asistencia);
+
+        // Construir descripción de la incidencia para notificar a admins
+        String tipo        = datos.getOrDefault("tipo", "otro");
+        String descripcion = datos.getOrDefault("descripcion", "Sin descripción adicional");
+
+        String tiposMap;
+        switch (tipo) {
+            case "descanso_olvidado"   -> tiposMap = "Descanso olvidado";
+            case "descanso_incorrecto" -> tiposMap = "Horario de descanso incorrecto";
+            case "entrada_incorrecta"  -> tiposMap = "Hora de entrada incorrecta";
+            case "salida_incorrecta"   -> tiposMap = "Hora de salida incorrecta";
+            default                    -> tiposMap = "Otro";
+        }
+
+        String resumenCambios = String.format(
+                "Tipo: %s | Entrada: %s | Descanso: %s–%s | Salida: %s | Nota: %s",
+                tiposMap,
+                asistencia.getEntrada()        != null ? asistencia.getEntrada()        : "–",
+                asistencia.getInicioDescanso() != null ? asistencia.getInicioDescanso() : "–",
+                asistencia.getFinDescanso()    != null ? asistencia.getFinDescanso()    : "–",
+                asistencia.getSalida()         != null ? asistencia.getSalida()         : "–",
+                descripcion
+        );
+
+        notificacionService.notificarAdmins(
+                "Incidencia de asistencia",
+                empleado.getNombre() + " ha reportado una incidencia. " + resumenCambios,
+                "incidencia",
+                "/asistencia"
+        );
+
+        return ResponseEntity.ok(Map.of(
+                "mensaje", "Incidencia registrada. El equipo de RRHH ha sido notificado."
+        ));
+    }
 }
