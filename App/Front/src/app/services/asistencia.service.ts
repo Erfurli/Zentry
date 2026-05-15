@@ -90,4 +90,21 @@ export class AsistenciaService {
       cambios,
     );
   }
+
+  reportarIncidencia(
+    id: string,
+    datos: {
+      tipo: string;
+      descripcion?: string;
+      entrada?: string;
+      salida?: string;
+      inicioDescanso?: string;
+      finDescanso?: string;
+    },
+  ): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(
+      `${this.apiUrl}/${id}/incidencia`,
+      datos,
+    );
+  }
 }
