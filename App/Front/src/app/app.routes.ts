@@ -12,7 +12,7 @@ import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CambiarPasswordComponent } from './pages/cambiar-password/cambiar-password.component';
 import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
-import { ChatComponent } from './pages/chat-component/chat.component';
+import { ChatComponent } from './pages/chat/chat.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 
 export const routes: Routes = [

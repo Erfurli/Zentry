@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 
 import * as XLSX from 'xlsx-js-style';
 import { ExportService } from '../../services/export.service';
+import { BadgesService } from '../../services/badges.service';
 
 @Component({
   selector: 'app-ausencias',
@@ -28,6 +29,7 @@ export class AusenciasComponent implements OnInit {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private exportService = inject(ExportService);
+  private badgesService = inject(BadgesService);
 
   readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
 
@@ -74,6 +76,7 @@ export class AusenciasComponent implements OnInit {
   );
 
   ngOnInit(): void {
+    this.badgesService.recargarAusencias();
     this.cargarAusencias();
 
     this.route.queryParams.subscribe(params => {

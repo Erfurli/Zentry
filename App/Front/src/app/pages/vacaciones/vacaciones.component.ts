@@ -10,6 +10,7 @@ import { VacacionesService, VacacionesVista } from '../../services/vacaciones.se
 import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
 import { FestivosService, Festivo } from '../../services/festivos.service';
+import { BadgesService } from '../../services/badges.service';
 
 type EstadoSolicitud = 'Aprobada' | 'Pendiente' | 'Rechazada';
 
@@ -26,6 +27,8 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   private authService       = inject(AuthService);
   private exportService     = inject(ExportService);
   private festivosService   = inject(FestivosService);
+  private badgesService = inject(BadgesService);
+
 
   readonly festivos = signal<Festivo[]>([]);
 
@@ -84,6 +87,7 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   readonly totalDiasSolicitados = computed(() => this.solicitudes().reduce((acc, s) => acc + s.dias, 0));
 
   ngOnInit(): void {
+    this.badgesService.recargarVacaciones();
     this.cargarVacaciones();
     this.cargarFestivos(new Date().getFullYear());
   }

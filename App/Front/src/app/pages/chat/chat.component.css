@@ -540,12 +540,17 @@
 }
 
 .badge-conv {
-  background: #B5242B;
+  background: #ef4444;
   color: white;
-  border-radius: 10px;
-  font-size: 0.7rem;
+  border-radius: 12px;
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 1px 6px;
+  padding: 2px 8px;
+  min-width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -1055,6 +1060,20 @@
   top: 1rem;
   right: 1rem;
   margin-left: 0;
+}
+
+.avatar-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.perfil-foto-modal {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 @media (max-width: 600px) {

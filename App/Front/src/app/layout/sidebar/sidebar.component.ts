@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService, CompanyRole, SystemRole } from '../../services/auth.service';
 import { ChatService } from '../../services/chat.service';
+import { BadgesService } from '../../services/badges.service';
 
 interface MenuItem {
   label: string;
@@ -36,8 +37,11 @@ export class SidebarComponent {
 
   private authService = inject(AuthService);
   private chatService = inject(ChatService);
-
+  private badgesService = inject(BadgesService);
   readonly chatNoLeidas = this.chatService.noLeidasGlobal;
+  readonly ausenciasPendientes = this.badgesService.ausenciasPendientes;
+  readonly vacacionesPendientes = this.badgesService.vacacionesPendientes;
+  readonly incidenciasPendientes = this.badgesService.incidenciasPendientes;
 
   menuItems: MenuItem[] = [
     { label: 'Inicio',      route: '/dashboard',       icon: 'fa-chart-bar',      systemRoles: ['ADMIN', 'USER'] },

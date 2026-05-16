@@ -10,4 +10,6 @@ public class UsuarioResumenDTO {
     private String nombre;
     private String iniciales;
     private String rolEmpresa;
+    private String foto;
+
 }

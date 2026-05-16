@@ -1,39 +1,50 @@
 <aside class="sidebar">
-  <button
-    class="toggle-btn"
-    (click)="toggle()"
+  <button class="toggle-btn" (click)="toggle()"
     [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'"
     [attr.aria-expanded]="!collapsed()">
-    <i
-      class="fa-solid"
-      [class.fa-chevron-left]="!collapsed()"
-      [class.fa-chevron-right]="collapsed()"
-      aria-hidden="true">
-    </i>
+    <i class="fa-solid"
+       [class.fa-chevron-left]="!collapsed()"
+       [class.fa-chevron-right]="collapsed()"
+       aria-hidden="true"></i>
   </button>
 
   <nav class="sidebar-nav" aria-label="Menú principal">
     @for (item of visibleMenuItems; track item.route) {
-      @if (collapsed()) {
-        <a [routerLink]="item.route" routerLinkActive="active" class="nav-item" [attr.title]="item.label">
-          <span class="nav-icon-wrapper">
-            <i class="fa-solid" [ngClass]="getIconClass(item.route)" aria-hidden="true"></i>
-            @if (item.route === '/chat' && chatNoLeidas() > 0) {
-              <span class="nav-badge">{{ chatNoLeidas() > 99 ? '99+' : chatNoLeidas() }}</span>
-            }
-          </span>
-        </a>
-      } @else {
-        <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
-          <span class="nav-icon-wrapper">
-            <i class="fa-solid" [ngClass]="getIconClass(item.route)" aria-hidden="true"></i>
-            @if (item.route === '/chat' && chatNoLeidas() > 0) {
-              <span class="nav-badge">{{ chatNoLeidas() > 99 ? '99+' : chatNoLeidas() }}</span>
-            }
-          </span>
+      <a [routerLink]="item.route"
+         routerLinkActive="active"
+         class="nav-item"
+         [class.tiene-noLeidos]="item.route === '/chat' && chatNoLeidas() > 0"
+         [attr.title]="collapsed() ? item.label : null">
+
+        <span class="nav-icon-wrapper">
+          <i class="fa-solid {{ item.icon }}" aria-hidden="true"></i>
+
+          @if (item.route === '/chat' && chatNoLeidas() > 0) {
+            <span class="nav-badge">
+              {{ chatNoLeidas() > 99 ? '99+' : chatNoLeidas() }}
+            </span>
+          }
+          @if (item.route === '/ausencias' && ausenciasPendientes() > 0) {
+            <span class="nav-badge nav-badge-warning">
+              {{ ausenciasPendientes() > 99 ? '99+' : ausenciasPendientes() }}
+            </span>
+          }
+          @if (item.route === '/vacaciones' && vacacionesPendientes() > 0) {
+            <span class="nav-badge nav-badge-warning">
+              {{ vacacionesPendientes() > 99 ? '99+' : vacacionesPendientes() }}
+            </span>
+          }
+          @if (item.route === '/asistencia' && incidenciasPendientes() > 0) {
+  <span class="nav-badge nav-badge-warning">
+    {{ incidenciasPendientes() > 99 ? '99+' : incidenciasPendientes() }}
+  </span>
+}
+        </span>
+
+        @if (!collapsed()) {
           <span>{{ item.label }}</span>
-        </a>
-      }
+        }
+      </a>
     }
   </nav>
 </aside>

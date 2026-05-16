@@ -56,4 +56,13 @@ public class NotificacionService {
             notificacionRepository.save(n);
         });
     }
+
+    public void marcarTodasLeidas(String usuarioId) {
+        List<Notificacion> notifs = notificacionRepository
+                .findByUsuarioDestinatarioIdOrderByFechaDesc(usuarioId);
+        notifs.forEach(n -> n.setLeida(true));
+        notificacionRepository.saveAll(notifs);
+    }
+
+
 }

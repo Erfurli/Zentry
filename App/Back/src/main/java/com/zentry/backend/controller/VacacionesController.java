@@ -179,4 +179,13 @@ public class VacacionesController {
 
         return guardada;
     }
+
+    @GetMapping("/pendientes/count")
+    public ResponseEntity<Map<String, Long>> countPendientes() {
+        long count = vacacionesRepository.findAll().stream()
+                .filter(v -> "Pendiente".equalsIgnoreCase(v.getEstado()))
+                .count();
+        return ResponseEntity.ok(Map.of("count", count));
+    }
+
 }

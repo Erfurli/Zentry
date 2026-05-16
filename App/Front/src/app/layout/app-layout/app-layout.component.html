@@ -4,10 +4,27 @@
   <div class="layout-body">
     <app-sidebar (collapsedChange)="onSidebarToggle($event)"></app-sidebar>
 
-    <main
-      class="main-content"
-      [class.sidebar-collapsed]="sidebarCollapsed()">
+    <main class="main-content" [class.sidebar-collapsed]="sidebarCollapsed()">
       <router-outlet></router-outlet>
     </main>
   </div>
+</div>
+
+<div class="toast-global-container">
+  @for (toast of toasts(); track toast.id) {
+    <div class="toast-global" (click)="irAlChat(toast.conversacionId, toast.id)">
+      <div class="toast-global-icon">
+        <i class="fa-solid fa-message"></i>
+      </div>
+      <div class="toast-global-body">
+        <span class="toast-global-autor">{{ toast.autor }}</span>
+        <span class="toast-global-texto">
+          {{ toast.texto | slice:0:60 }}{{ toast.texto.length > 60 ? '...' : '' }}
+        </span>
+      </div>
+      <button class="toast-global-close" (click)="$event.stopPropagation(); cerrarToast(toast.id)">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  }
 </div>

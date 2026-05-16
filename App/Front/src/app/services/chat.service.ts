@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Client, IMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { environment } from '../../enviroments/enviroment';
+import { Subject } from 'rxjs';
+
 
 export interface UsuarioResumen {
   id: string;
@@ -10,6 +12,7 @@ export interface UsuarioResumen {
   iniciales: string;
   rolEmpresa: string;
   estado?: string;
+  foto?: string;
 }
 
 export interface MensajeDTO {
@@ -23,6 +26,7 @@ export interface MensajeDTO {
   respuestaAAutor?: string;
   reacciones: Record<string, string[]>;
   enviadoEn: string;
+  autorFoto?: string;
 }
 
 export interface ConversacionDTO {
@@ -31,7 +35,7 @@ export interface ConversacionDTO {
   tipo: 'INDIVIDUAL' | 'DEPARTAMENTO' | 'JEFES' | 'GRUPO';
   participantes: UsuarioResumen[];
   ultimoMensaje?: MensajeDTO;
-  noLeidos: number;
+  noLeidos: number | undefined;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -45,6 +49,7 @@ export class ChatService {
   readonly conversaciones = signal<ConversacionDTO[]>([]);
 
   readonly noLeidasGlobal = signal<number>(0);
+  readonly mensajeGlobalRecibido$ = new Subject<MensajeDTO>();
 
   getConversaciones() {
     return this.http.get<ConversacionDTO[]>(`${this.API}/chat/conversaciones`);
@@ -98,8 +103,18 @@ export class ChatService {
       destination: '/app/chat.enviar',
       body: JSON.stringify({ conversacionId, contenido, respuestaAId }),
     });
-    
+
   }
+
+  incrementarNoLeidos(conversacionId: string): void {
+  this.conversaciones.update(list =>
+    list.map(c => c.id === conversacionId
+      ? { ...c, noLeidos: (c.noLeidos ?? 0) + 1 }
+      : c
+    )
+  );
+  this.noLeidasGlobal.update(n => n + 1);
+}
 
   toggleReaccion(mensajeId: string, emoji: string): void {
     this.stompClient?.publish({
@@ -113,29 +128,33 @@ export class ChatService {
     this.stompClient = null;
   }
 
-  conectarGlobal(
-    usuarioId: string,
-    onNuevoMensaje: (m: MensajeDTO) => void,
-  ): void {
-    if (this.globalStompClient?.active) return;
+  conectarGlobal(username: string, onNuevoMensaje: (m: MensajeDTO) => void): void {
+  if (this.globalStompClient?.active) return;
 
-    const token = localStorage.getItem('token');
-    this.globalStompClient = new Client({
-      webSocketFactory: () => new SockJS(`${this.API.replace('/api', '')}/ws`),
-      connectHeaders: { Authorization: `Bearer ${token}` },
-      onConnect: () => {
-        this.globalStompClient!.subscribe(
-          `/user/${usuarioId}/queue/chat-notif`,
-          (msg: IMessage) => {
-            const mensaje: MensajeDTO = JSON.parse(msg.body);
-            this.noLeidasGlobal.update((n) => n + 1);
-            onNuevoMensaje(mensaje);
-          },
-        );
-      },
-    });
-    this.globalStompClient.activate();
-  }
+  this.getConversaciones().subscribe({
+    next: convs => {
+      const total = convs.reduce((acc, c) => acc + (c.noLeidos ?? 0), 0);
+      this.noLeidasGlobal.set(total);
+    }
+  });
+
+  const token = localStorage.getItem('token');
+  this.globalStompClient = new Client({
+    webSocketFactory: () => new SockJS(`${this.API.replace('/api', '')}/ws`),
+    connectHeaders: { Authorization: `Bearer ${token}` },
+    onConnect: () => {
+  this.globalStompClient!.subscribe(
+    `/user/queue/chat-notif`,
+    (msg: IMessage) => {
+      const mensaje: MensajeDTO = JSON.parse(msg.body);
+      this.mensajeGlobalRecibido$.next(mensaje);
+      onNuevoMensaje(mensaje);
+    }
+  );
+}
+  });
+  this.globalStompClient.activate();
+}
 
   desconectarGlobal(): void {
     this.globalStompClient?.deactivate();

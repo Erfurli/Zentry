@@ -1,44 +1,60 @@
 <div class="notif-container" [class.abierto]="abierto()">
-  <button class="campana-btn" (click)="toggleNotifs()" title="Notificaciones ({{ noLeidas().length }})">
+  <button class="campana-btn" (click)="toggleNotifs()"
+          title="Notificaciones ({{ totalNoLeidas() }})">
     <i class="fa-solid fa-bell"></i>
-    @if (noLeidas().length > 0) {
-      <span class="badge">{{ noLeidas().length }}</span>
+    @if (totalNoLeidas() > 0) {
+      <span class="badge">{{ totalNoLeidas() }}</span>
     }
   </button>
 
   @if (abierto()) {
     <div class="notif-panel">
+
+      <!-- HEADER -->
       <div class="notif-header">
         <h3>Notificaciones</h3>
-        <button class="close-btn" (click)="cerrarNotifs()" title="Cerrar">
-          <i class="fa-solid fa-times"></i>
-        </button>
+        <div class="notif-header-actions">
+          @if (totalNoLeidas() > 0) {
+            <button class="leer-todo-btn"
+                    (click)="marcarTodasLeidas()"
+                    [disabled]="marcandoTodas()"
+                    title="Marcar todas como leídas">
+              <i class="fa-solid fa-check-double"></i>
+              Leer todo
+            </button>
+          }
+          <button class="close-btn" (click)="cerrarNotifs()">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
       </div>
 
-      @if (notificaciones().length === 0) {
+      <!-- FILTROS -->
+      <div class="notif-filtros">
+        @for (f of FILTROS; track f.valor) {
+          <button class="filtro-btn"
+                  [class.activo]="filtroActivo() === f.valor"
+                  (click)="setFiltro(f.valor)"
+                  [title]="f.label">
+            <i class="fa-solid {{ f.icon }}"></i>
+            <span>{{ f.label }}</span>
+          </button>
+        }
+      </div>
+
+      <!-- LISTA -->
+      @if (notificacionesFiltradas().length === 0) {
         <div class="empty-state">
           <i class="fa-solid fa-bell-slash"></i>
           <p>No hay notificaciones</p>
         </div>
       } @else {
         <div class="notif-list">
+
           @for (notif of noLeidas(); track notif.id) {
-            <div class="notif-item no-leida" [class]="notif.tipo">
+            <div class="notif-item no-leida {{ notif.tipo }}">
               <div class="notif-icon">
-                @switch (notif.tipo) {
-                  @case ('entrada') {
-                    <i class="fa-solid fa-clock"></i>
-                  }
-                  @case ('salida') {
-                    <i class="fa-solid fa-sign-out-alt"></i>
-                  }
-                  @case ('vacaciones') {
-                    <i class="fa-solid fa-plane"></i>
-                  }
-                  @case ('ausencia') {
-                    <i class="fa-solid fa-user-slash"></i>
-                  }
-                }
+                <i class="fa-solid {{ getIcono(notif.tipo) }}"></i>
               </div>
               <div class="notif-content">
                 <h4>{{ notif.titulo }}</h4>
@@ -47,11 +63,14 @@
               </div>
               <div class="notif-actions">
                 @if (notif.ruta) {
-                  <button class="ver-btn" (click)="irARuta(notif.ruta); marcarLeida(notif.id)">
+                  <button class="ver-btn"
+                          (click)="irARuta(notif.ruta); marcarLeida(notif.id)">
                     <i class="fa-solid fa-eye"></i>
                   </button>
                 }
-                <button class="leer-btn" (click)="marcarLeida(notif.id)" title="Marcar como leída">
+                <button class="leer-btn"
+                        (click)="marcarLeida(notif.id)"
+                        title="Marcar como leída">
                   <i class="fa-solid fa-check"></i>
                 </button>
               </div>
@@ -63,22 +82,9 @@
           }
 
           @for (notif of leidas(); track notif.id) {
-            <div class="notif-item leida" [class]="notif.tipo">
+            <div class="notif-item leida {{ notif.tipo }}">
               <div class="notif-icon">
-                @switch (notif.tipo) {
-                  @case ('entrada') {
-                    <i class="fa-solid fa-clock"></i>
-                  }
-                  @case ('salida') {
-                    <i class="fa-solid fa-sign-out-alt"></i>
-                  }
-                  @case ('vacaciones') {
-                    <i class="fa-solid fa-plane"></i>
-                  }
-                  @case ('ausencia') {
-                    <i class="fa-solid fa-user-slash"></i>
-                  }
-                }
+                <i class="fa-solid {{ getIcono(notif.tipo) }}"></i>
               </div>
               <div class="notif-content">
                 <h4>{{ notif.titulo }}</h4>

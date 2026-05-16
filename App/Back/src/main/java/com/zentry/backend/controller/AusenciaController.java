@@ -36,7 +36,6 @@ public class AusenciaController {
         this.notificacionService = notificacionService;
     }
 
-    // ─── Vista admin: todas las ausencias con filtros opcionales ──────────────
     @GetMapping("/vista")
     public List<AusenciaVistaDTO> getVista(
             @RequestParam(required = false) String tipo,
@@ -55,7 +54,6 @@ public class AusenciaController {
                 .toList();
     }
 
-    // ─── Vista empleado: solo sus propias ausencias ───────────────────────────
     @GetMapping("/mis-ausencias")
     public ResponseEntity<List<AusenciaVistaDTO>> getMisAusencias(Authentication authentication) {
         String username = authentication.getName();
@@ -72,7 +70,6 @@ public class AusenciaController {
         return ResponseEntity.ok(misAusencias);
     }
 
-    // ─── Empleado solicita una nueva ausencia ─────────────────────────────────
     @PostMapping("/solicitar")
     public ResponseEntity<Ausencia> solicitar(@RequestBody Map<String, String> body,
                                               Authentication authentication) {
@@ -107,7 +104,6 @@ public class AusenciaController {
 
         ausenciaRepository.save(ausencia);
 
-        // Notificar a RRHH / mandos
         notificacionService.notificarAdmins(
                 "Nueva solicitud de ausencia",
                 empleado.getNombre() + " ha solicitado una ausencia por \"" + tipo
@@ -119,7 +115,6 @@ public class AusenciaController {
         return ResponseEntity.ok(ausencia);
     }
 
-    // ─── RRHH / Mando justifica la ausencia ──────────────────────────────────
     @PatchMapping("/{id}/justificar")
     public ResponseEntity<Ausencia> justificar(@PathVariable String id,
                                                Authentication authentication) {
@@ -129,7 +124,6 @@ public class AusenciaController {
         ausencia.setEstado("Justificada");
         Ausencia guardada = ausenciaRepository.save(ausencia);
 
-        // Notificar al empleado
         notificarEmpleado(ausencia.getEmpleadoId(),
                 "Ausencia justificada",
                 "Tu ausencia del " + ausencia.getFechaInicio()
@@ -139,7 +133,6 @@ public class AusenciaController {
         return ResponseEntity.ok(guardada);
     }
 
-    // ─── RRHH / Mando no justifica la ausencia ───────────────────────────────
     @PatchMapping("/{id}/no-justificar")
     public ResponseEntity<Ausencia> noJustificar(@PathVariable String id,
                                                  Authentication authentication) {
@@ -159,7 +152,6 @@ public class AusenciaController {
         return ResponseEntity.ok(guardada);
     }
 
-    // ─── Helper: construir DTO enriquecido con datos del empleado ─────────────
     private AusenciaVistaDTO toDTO(Ausencia a) {
         Empleado emp = empleadoRepository.findById(a.getEmpleadoId()).orElse(null);
         return new AusenciaVistaDTO(
@@ -177,7 +169,6 @@ public class AusenciaController {
         );
     }
 
-    // ─── Helper: enviar notificación in-app al empleado ───────────────────────
     private void notificarEmpleado(String empleadoId, String titulo, String mensaje) {
         usuarioRepository.findAll().stream()
                 .filter(u -> empleadoId.equals(u.getEmpleadoId()))
@@ -185,5 +176,13 @@ public class AusenciaController {
                 .ifPresent(u -> notificacionService.crear(
                         u.getId(), titulo, mensaje, "ausencia", "/ausencias"
                 ));
+    }
+
+    @GetMapping("/pendientes/count")
+    public ResponseEntity<Map<String, Long>> countPendientes() {
+        long count = ausenciaRepository.findAll().stream()
+                .filter(a -> "Pendiente".equalsIgnoreCase(a.getEstado()))
+                .count();
+        return ResponseEntity.ok(Map.of("count", count));
     }
 }

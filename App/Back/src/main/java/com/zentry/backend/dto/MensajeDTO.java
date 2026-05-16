@@ -22,4 +22,8 @@ public class MensajeDTO {
     private String respuestaAAutor;
     private Map<String, List<String>> reacciones;
     private LocalDateTime enviadoEn;
+    private String foto;
+
+    public void setAutorFoto(String s) {
+    }
 }

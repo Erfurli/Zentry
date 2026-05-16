@@ -38,4 +38,12 @@ public class NotificacionController {
         notificacionService.marcarLeida(id);
         return ResponseEntity.ok(Map.of("ok", true));
     }
+
+    @PatchMapping("/leer-todas")
+    public ResponseEntity<?> marcarTodasLeidas(Authentication authentication) {
+        Usuario usuario = usuarioRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        notificacionService.marcarTodasLeidas(usuario.getId());
+        return ResponseEntity.ok(Map.of("ok", true));
+    }
 }

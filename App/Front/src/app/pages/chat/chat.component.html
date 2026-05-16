@@ -3,9 +3,6 @@
     <div class="sidebar-header">
       <h2>
         Mensajes
-        @if (noLeidasTotal() > 0) {
-          <span class="badge-total">{{ noLeidasTotal() }}</span>
-        }
       </h2>
       <div class="sidebar-header-btns">
         <button
@@ -25,24 +22,32 @@
       </div>
     </div>
 
-    <div class="estado-container" (click)="$event.stopPropagation(); toggleEstados()">
-  <i class="estado-icono {{ estadoActualObj().icon }}"
-     [style.color]="estadoActualObj().color"></i>
-  <span class="estado-label">{{ estadoActualObj().label }}</span>
-  <i class="fa-solid fa-chevron-down estado-chevron"></i>
+    <div
+      class="estado-container"
+      (click)="$event.stopPropagation(); toggleEstados()"
+    >
+      <i
+        class="estado-icono {{ estadoActualObj().icon }}"
+        [style.color]="estadoActualObj().color"
+      ></i>
+      <span class="estado-label">{{ estadoActualObj().label }}</span>
+      <i class="fa-solid fa-chevron-down estado-chevron"></i>
 
-  @if (mostrarEstados()) {
-    <div class="estado-dropdown" (click)="$event.stopPropagation()">
-      @for (e of ESTADOS; track e.valor) {
-        <div class="estado-opcion" [class.activa]="estadoActual() === e.valor"
-             (click)="setEstado(e.valor)">
-          <i class="estado-icono {{ e.icon }}" [style.color]="e.color"></i>
-          <span>{{ e.label }}</span>
+      @if (mostrarEstados()) {
+        <div class="estado-dropdown" (click)="$event.stopPropagation()">
+          @for (e of ESTADOS; track e.valor) {
+            <div
+              class="estado-opcion"
+              [class.activa]="estadoActual() === e.valor"
+              (click)="setEstado(e.valor)"
+            >
+              <i class="estado-icono {{ e.icon }}" [style.color]="e.color"></i>
+              <span>{{ e.label }}</span>
+            </div>
+          }
         </div>
       }
     </div>
-  }
-</div>
 
     <div class="sidebar-search">
       <i class="fa-solid fa-magnifying-glass"></i>
@@ -64,9 +69,13 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar grupo">
-              {{ getInicialesConversacion(conv) }}
-            </div>
+            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
+  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
+    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
+  } @else {
+    {{ getInicialesConversacion(conv) }}
+  }
+</div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -103,9 +112,13 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar grupo">
-              {{ getInicialesConversacion(conv) }}
-            </div>
+            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
+  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
+    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
+  } @else {
+    {{ getInicialesConversacion(conv) }}
+  }
+</div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -142,9 +155,13 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar grupo">
-              {{ getInicialesConversacion(conv) }}
-            </div>
+            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
+  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
+    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
+  } @else {
+    {{ getInicialesConversacion(conv) }}
+  }
+</div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -181,9 +198,13 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar grupo">
-              {{ getInicialesConversacion(conv) }}
-            </div>
+            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
+  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
+    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
+  } @else {
+    {{ getInicialesConversacion(conv) }}
+  }
+</div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -222,37 +243,43 @@
       </div>
     } @else {
       <div class="chat-header">
-        <div class="chat-header-info">
-          <div class="chat-avatar-header">
-            {{ getInicialesConversacion(conversacionActiva()!) }}
-          </div>
-          <div>
-            <h3>{{ getNombreConversacion(conversacionActiva()!) }}</h3>
-            <span class="chat-participantes-count"
-              >{{
-                conversacionActiva()!.participantes.length
-              }}
-              participantes</span
-            >
-          </div>
-        </div>
-        <div class="chat-header-acciones">
-          @for (
-            p of conversacionActiva()!.participantes.slice(0, 4);
-            track p.id
-          ) {
-            @if (p.id !== usuarioActualId()) {
-              <div
-                class="avatar-mini"
-                (click)="verPerfil(p)"
-                title="{{ p.nombre }}"
-              >
-                {{ p.iniciales }}
-              </div>
+  <div class="chat-header-info">
+    <div class="chat-avatar-header">
+      @if (conversacionActiva()!.tipo === 'INDIVIDUAL' && getFotoConversacion(conversacionActiva()!)) {
+        <img [src]="getFotoConversacion(conversacionActiva()!)!" class="avatar-foto" alt="" />
+      } @else {
+        {{ getInicialesConversacion(conversacionActiva()!) }}
+      }
+    </div>
+    <div>
+      <h3>{{ getNombreConversacion(conversacionActiva()!) }}</h3>
+      @if (conversacionActiva()!.tipo !== 'INDIVIDUAL') {
+        <span class="chat-participantes-count">
+          {{ conversacionActiva()!.participantes.length }} participantes
+        </span>
+      } @else {
+        <span class="chat-participantes-count">
+          {{ getOtroParticipante(conversacionActiva()!)?.rolEmpresa ?? '' }}
+        </span>
+      }
+    </div>
+  </div>
+  <div class="chat-header-acciones">
+    @if (conversacionActiva()!.tipo !== 'INDIVIDUAL') {
+      @for (p of conversacionActiva()!.participantes.slice(0, 4); track p.id) {
+        @if (p.id !== usuarioActualId()) {
+          <div class="avatar-mini" (click)="verPerfil(p)" title="{{ p.nombre }}">
+            @if (p.foto) {
+              <img [src]="p.foto" class="avatar-foto" alt="" />
+            } @else {
+              {{ p.iniciales }}
             }
-          }
-        </div>
-      </div>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>
 
       <div class="chat-mensajes" #mensajesContainer>
         @for (msg of mensajes(); track msg.id) {
@@ -266,10 +293,19 @@
                     nombre: msg.autorNombre,
                     iniciales: msg.autorNombre.substring(0, 2),
                     rolEmpresa: '',
+                    foto: getFotoAutor(msg.autorId) ?? undefined,
                   })
                 "
               >
-                {{ msg.autorNombre.substring(0, 2).toUpperCase() }}
+                @if (getFotoAutor(msg.autorId)) {
+                  <img
+                    [src]="getFotoAutor(msg.autorId)!"
+                    class="avatar-foto"
+                    alt=""
+                  />
+                } @else {
+                  {{ msg.autorNombre.substring(0, 2).toUpperCase() }}
+                }
               </div>
             }
             <div class="mensaje-bloque">
@@ -398,7 +434,7 @@
   </main>
 </div>
 
-<div class="toast-container">
+<!-- <div class="toast-container">
   @for (toast of toasts(); track toast.id) {
     <div class="toast-msg" (click)="cerrarToast(toast.id)">
       <div class="toast-icon"><i class="fa-solid fa-message"></i></div>
@@ -415,7 +451,7 @@
       </button>
     </div>
   }
-</div>
+</div> -->
 
 @if (modalPerfil()) {
   <div class="modal-overlay" (click)="modalPerfil.set(null)">
@@ -423,21 +459,31 @@
       <button class="modal-close-btn" (click)="modalPerfil.set(null)">
         <i class="fa-solid fa-xmark"></i>
       </button>
-      <div class="perfil-avatar">{{ modalPerfil()!.iniciales }}</div>
+      <div class="perfil-avatar">
+        @if (modalPerfil()!.foto) {
+          <img [src]="modalPerfil()!.foto!" class="perfil-foto-modal" alt="" />
+        } @else {
+          {{ modalPerfil()!.iniciales }}
+        }
+      </div>
       <h2>{{ modalPerfil()!.nombre }}</h2>
       <span class="perfil-rol">{{ modalPerfil()!.rolEmpresa }}</span>
 
       @if (modalPerfil()!.estado) {
         <div class="perfil-estado">
-          <i class="{{ getEstadoObj(modalPerfil()!.estado!).icon }}"
-             [style.color]="getEstadoObj(modalPerfil()!.estado!).color"></i>
+          <i
+            class="{{ getEstadoObj(modalPerfil()!.estado!).icon }}"
+            [style.color]="getEstadoObj(modalPerfil()!.estado!).color"
+          ></i>
           <span>{{ getEstadoObj(modalPerfil()!.estado!).label }}</span>
         </div>
       }
 
       @if (modalPerfil()!.id !== usuarioActualId()) {
-        <button class="primary-btn perfil-msg-btn"
-                (click)="abrirIndividualDesdeGrupo(modalPerfil()!)">
+        <button
+          class="primary-btn perfil-msg-btn"
+          (click)="abrirIndividualDesdeGrupo(modalPerfil()!)"
+        >
           <i class="fa-solid fa-envelope"></i> Enviar mensaje
         </button>
       }
@@ -456,20 +502,24 @@
           <h2>Nuevo grupo</h2>
           <p>Crea un chat grupal con tus compañeros</p>
         </div>
-        <button class="modal-close-btn" (click)="modalNuevoGrupo.set(false)" title="Cerrar">
-  <i class="fa-solid fa-xmark"></i>
-</button>
+        <button
+          class="modal-close-btn"
+          (click)="modalNuevoGrupo.set(false)"
+          title="Cerrar"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
       <div class="modal-chat-body">
         <div class="form-field">
           <label>Nombre del grupo</label>
           <input
-  class="grupo-nombre-input"
-  type="text"
-  [value]="nuevoGrupoNombre()"
-  (input)="nuevoGrupoNombre.set($any($event.target).value)"
-  placeholder="Ej: Proyecto Alpha"
-/>
+            class="grupo-nombre-input"
+            type="text"
+            [value]="nuevoGrupoNombre()"
+            (input)="nuevoGrupoNombre.set($any($event.target).value)"
+            placeholder="Ej: Proyecto Alpha"
+          />
         </div>
         <div class="form-field">
           <label
@@ -487,7 +537,13 @@
                 "
                 (click)="toggleParticipante(emp.id)"
               >
-                <div class="avatar-mini">{{ emp.iniciales }}</div>
+                <div class="avatar-mini">
+                  @if (emp.foto) {
+                    <img [src]="emp.foto" class="avatar-foto" alt="" />
+                  } @else {
+                    {{ emp.iniciales }}
+                  }
+                </div>
                 <div class="participante-info">
                   <span class="participante-nombre">{{ emp.nombre }}</span>
                   <span class="participante-rol">{{ emp.rolEmpresa }}</span>
@@ -532,9 +588,13 @@
           <h2>Mensaje directo</h2>
           <p>Inicia una conversación privada</p>
         </div>
-        <button class="modal-close-btn" (click)="modalMensajeDirecto.set(false)" title="Cerrar">
-  <i class="fa-solid fa-xmark"></i>
-</button>
+        <button
+          class="modal-close-btn"
+          (click)="modalMensajeDirecto.set(false)"
+          title="Cerrar"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
       <div class="modal-chat-body">
         <div class="participantes-lista">
@@ -543,7 +603,13 @@
               class="participante-check"
               (click)="abrirIndividualDesdeGrupo(emp)"
             >
-              <div class="avatar-mini">{{ emp.iniciales }}</div>
+              <div class="avatar-mini">
+                @if (emp.foto) {
+                  <img [src]="emp.foto" class="avatar-foto" alt="" />
+                } @else {
+                  {{ emp.iniciales }}
+                }
+              </div>
               <div class="participante-info">
                 <span class="participante-nombre">{{ emp.nombre }}</span>
                 <span class="participante-rol">{{ emp.rolEmpresa }}</span>

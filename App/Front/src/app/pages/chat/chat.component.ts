@@ -39,7 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   readonly EMOJIS = EMOJIS;
   readonly ESTADOS = ESTADOS;
 
-  readonly conversaciones        = signal<ConversacionDTO[]>([]);
+  readonly conversaciones = this.chatService.conversaciones;
   readonly conversacionActiva    = signal<ConversacionDTO | null>(null);
   readonly mensajes              = signal<MensajeDTO[]>([]);
   readonly textoMensaje          = signal('');
@@ -100,37 +100,43 @@ getHoraUltimoMensaje(conv: ConversacionDTO): string {
     ESTADOS.find(e => e.valor === this.estadoActual()) ?? ESTADOS[0]
   );
 
-  ngOnInit(): void {
+  private globalSub: any;
+
+ngOnInit(): void {
+  this.chatService.resetNoLeidasGlobal();
   const me = this.authService.getUsuarioActual();
-  if (me) {
-    this.usuarioActualId.set(me.id);
-
-    this.chatService.conectarGlobal(me.id, (msg: MensajeDTO) => {
-      const convActiva = this.conversacionActiva();
-
-      if (!convActiva || convActiva.id !== msg.conversacionId) {
-        this.conversaciones.update(list =>
-          list.map(c => c.id === msg.conversacionId
-            ? { ...c, noLeidos: (c.noLeidos ?? 0) + 1, ultimoMensaje: msg }
-            : c
-          )
-        );
-        this.recalcularNoLeidas();
-      }
-    });
-  }
+  if (me) this.usuarioActualId.set(me.id);
 
   this.chatService.getConversaciones().subscribe({
     next: convs => {
-      this.conversaciones.set(convs);
-      this.noLeidasTotal.set(convs.reduce((acc, c) => acc + (c.noLeidos ?? 0), 0));
+      const actuales = this.conversaciones();
+      const merged = convs.map(c => {
+        const existente = actuales.find(a => a.id === c.id);
+        return { ...c, noLeidos: existente ? existente.noLeidos : c.noLeidos };
+      });
+      this.conversaciones.set(merged);
+      this.noLeidasTotal.set(merged.reduce((acc, c) => acc + (c.noLeidos ?? 0), 0));
     }
   });
+
+  this.globalSub = this.chatService.mensajeGlobalRecibido$.subscribe(msg => {
+  const convActiva = this.conversacionActiva();
+  this.conversaciones.update(list =>
+    list.map(c => c.id === msg.conversacionId ? {
+      ...c,
+      ultimoMensaje: msg,
+      noLeidos: (!convActiva || convActiva.id !== msg.conversacionId)
+        ? (c.noLeidos ?? 0) + 1
+        : c.noLeidos
+    } : c)
+  );
+});
 }
 
-  ngOnDestroy(): void {
-    this.chatService.desconectar();
-  }
+ngOnDestroy(): void {
+  this.chatService.desconectar();
+  this.globalSub?.unsubscribe();
+}
 
   toggleEstados(): void {
   this.mostrarEstados.update(v => !v);
@@ -141,10 +147,11 @@ getHoraUltimoMensaje(conv: ConversacionDTO): string {
     this.conversacionActiva.set(conv);
     this.mensajeRespondiendo.set(null);
 
-    this.conversaciones.update(list =>
-      list.map(c => c.id === conv.id ? { ...c, noLeidos: 0 } : c)
-    );
-    this.recalcularNoLeidas();
+    this.chatService.conversaciones.update(list =>
+    list.map(c => c.id === conv.id ? { ...c, noLeidos: 0 } : c)
+  );
+  this.chatService.noLeidasGlobal.update(n => Math.max(0, n - (conv.noLeidos ?? 0)));
+
 
     this.chatService.getMensajes(conv.id).subscribe({
       next: msgs => { this.mensajes.set(msgs); setTimeout(() => this.scrollAbajo(), 50); }
@@ -309,4 +316,20 @@ getHoraUltimoMensaje(conv: ConversacionDTO): string {
     const partes = nombre.split(' ');
     return partes.length >= 2 ? partes[0][0] + partes[1][0] : nombre.substring(0, 2);
   }
+
+getFotoAutor(autorId: string): string | null {
+  const conv = this.conversacionActiva();
+  if (!conv) return null;
+  return conv.participantes.find(p => p.id === autorId)?.foto ?? null;
+}
+
+getFotoConversacion(conv: ConversacionDTO): string | null {
+  if (conv.tipo !== 'INDIVIDUAL') return null;
+  const otro = conv.participantes.find(p => p.id !== this.usuarioActualId());
+  return otro?.foto ?? null;
+}
+
+getOtroParticipante(conv: ConversacionDTO): UsuarioResumen | null {
+  return conv.participantes.find(p => p.id !== this.usuarioActualId()) ?? null;
+}
 }

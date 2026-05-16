@@ -38,7 +38,7 @@ public class ChatService {
                 .stream().map(this::toMensajeDTO).toList();
     }
 
-    public void enviarMensaje(EnviarMensajeRequest req, String autorId) {
+    public MensajeDTO enviarMensaje(EnviarMensajeRequest req, String autorId) {
         Conversacion conv = conversacionRepo.findById(req.getConversacionId())
                 .orElseThrow(() -> new RuntimeException("Conversación no encontrada"));
 
@@ -64,21 +64,17 @@ public class ChatService {
 
         conv.getParticipantes().stream()
                 .filter(uid -> !uid.equals(autorId))
-                .forEach(uid ->
-                        messagingTemplate.convertAndSendToUser(uid, "/queue/chat-notif", dto)
+                .forEach(uid -> {
+                    usuarioRepo.findById(uid).ifPresent(u ->
+                            messagingTemplate.convertAndSendToUser(
+                                    u.getUsername(),
+                                    "/queue/chat-notif",
+                                    dto
+                            )
+                    );
+                });
 
-
-                );
-
-        conv.getParticipantes().stream()
-                .filter(uid -> !uid.equals(autorId))
-                .forEach(uid ->
-                        messagingTemplate.convertAndSendToUser(
-                                uid,
-                                "/queue/chat-notif",
-                                dto
-                        )
-                );
+        return dto;
     }
 
     public void toggleReaccion(ReaccionRequest req, String usuarioId) {
@@ -155,6 +151,7 @@ public class ChatService {
         dto.setRespuestaAId(m.getRespuestaAId());
         dto.setRespuestaAContenido(m.getRespuestaAContenido());
         dto.setRespuestaAAutor(respuestaAAutor);
+        dto.setAutorFoto(resolverFoto(m.getAutorId()));
         return dto;
     }
 
@@ -164,7 +161,8 @@ public class ChatService {
                     String nombre = resolverNombre(uid);
                     String iniciales = generarIniciales(nombre);
                     String rol = resolverRol(uid);
-                    return new UsuarioResumenDTO(uid, nombre, iniciales, rol);
+                    String foto = resolverFoto(uid);
+                    return new UsuarioResumenDTO(uid, nombre, iniciales, rol, foto);
                 })
                 .collect(Collectors.toList());
 
@@ -215,6 +213,19 @@ public class ChatService {
                 })
                 .orElse("");
     }
+    private String resolverFoto(String usuarioId) {
+        return usuarioRepo.findById(usuarioId)
+                .map(u -> {
+                    if (u.getEmpleadoId() != null) {
+                        return empleadoRepo.findById(u.getEmpleadoId())
+                                .map(e -> e.getFoto())
+                                .orElse(null);
+                    }
+                    return null;
+                })
+                .orElse(null);
+    }
+
 
     private String generarIniciales(String nombre) {
         if (nombre == null || nombre.isBlank()) return "?";

@@ -41,7 +41,8 @@ public class ChatController {
                         emp.getId(),
                         emp.getNombre(),
                         iniciales(emp.getNombre()),
-                        emp.getRolEmpresa().name()
+                        emp.getRolEmpresa().name(),
+                        emp.getFoto()
                 ))
                 .toList();
     }

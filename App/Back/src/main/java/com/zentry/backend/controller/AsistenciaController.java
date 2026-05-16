@@ -306,7 +306,6 @@ public class AsistenciaController {
         Asistencia asistencia = asistenciaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
 
-        // Aplicar las correcciones sugeridas
         if (datos.containsKey("entrada")        && datos.get("entrada")        != null && !datos.get("entrada").isBlank())
             asistencia.setEntrada(datos.get("entrada"));
         if (datos.containsKey("salida")         && datos.get("salida")         != null && !datos.get("salida").isBlank())
@@ -316,7 +315,6 @@ public class AsistenciaController {
         if (datos.containsKey("finDescanso")    && datos.get("finDescanso")    != null && !datos.get("finDescanso").isBlank())
             asistencia.setFinDescanso(datos.get("finDescanso"));
 
-        // Recalcular horas con los datos corregidos
         if (asistencia.getEntrada() != null && asistencia.getSalida() != null) {
             double horas = calcularHorasTotales(
                     asistencia.getEntrada(), asistencia.getSalida(),
@@ -328,7 +326,6 @@ public class AsistenciaController {
 
         asistenciaRepository.save(asistencia);
 
-        // Construir descripción de la incidencia para notificar a admins
         String tipo        = datos.getOrDefault("tipo", "otro");
         String descripcion = datos.getOrDefault("descripcion", "Sin descripción adicional");
 
@@ -361,5 +358,13 @@ public class AsistenciaController {
         return ResponseEntity.ok(Map.of(
                 "mensaje", "Incidencia registrada. El equipo de RRHH ha sido notificado."
         ));
+    }
+
+    @GetMapping("/incidencias/count")
+    public ResponseEntity<Map<String, Long>> countIncidencias() {
+        long count = asistenciaRepository.findAll().stream()
+                .filter(a -> "INCIDENCIA".equalsIgnoreCase(a.getEstado()))
+                .count();
+        return ResponseEntity.ok(Map.of("count", count));
     }
 }
