@@ -15,6 +15,45 @@ public class AsistenciaVistaDTO {
     private Double horasExtra;
     private String fecha;
 
+    private String incidenciaTipo;
+    private String incidenciaDescripcion;
+    private String incidenciaEstado;
+
+    public String getIncidenciaTipo() {
+        return incidenciaTipo;
+    }
+
+    public void setIncidenciaTipo(String incidenciaTipo) {
+        this.incidenciaTipo = incidenciaTipo;
+    }
+
+    public String getIncidenciaDescripcion() {
+        return incidenciaDescripcion;
+    }
+
+    public void setIncidenciaDescripcion(String incidenciaDescripcion) {
+        this.incidenciaDescripcion = incidenciaDescripcion;
+    }
+
+    public String getIncidenciaEstado() {
+        return incidenciaEstado;
+    }
+
+    public void setIncidenciaEstado(String incidenciaEstado) {
+        this.incidenciaEstado = incidenciaEstado;
+    }
+
+    public String getIncidenciaFechaReporte() {
+        return incidenciaFechaReporte;
+    }
+
+    public void setIncidenciaFechaReporte(String incidenciaFechaReporte) {
+        this.incidenciaFechaReporte = incidenciaFechaReporte;
+    }
+
+    private String incidenciaFechaReporte;
+
+
     public String getId() {
         return id;
     }

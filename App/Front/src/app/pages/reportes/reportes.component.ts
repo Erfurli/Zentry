@@ -1,94 +1,155 @@
+import {
+  Component, ChangeDetectionStrategy, signal, computed, inject, OnInit
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { ReportesService, ReporteResumen, ResumenGeneral } from '../../services/reportes.service';
 import { ExportService } from '../../services/export.service';
-
-type TipoReporte = 'Asistencia' | 'Vacaciones' | 'Ausencias' | 'Rendimiento';
-type EstadoReporte = 'Generado' | 'Pendiente' | 'Error';
-
-interface Reporte {
-  id: number;
-  nombre: string;
-  tipo: TipoReporte;
-  departamento: string;
-  fechaGeneracion: string;
-  periodo: string;
-  registros: number;
-  estado: EstadoReporte;
-}
 
 @Component({
   selector: 'app-reportes',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './reportes.component.html',
   styleUrl: './reportes.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReportesComponent {
-  private exportService = inject(ExportService);
+export class ReportesComponent implements OnInit {
+  private reportesService = inject(ReportesService);
+  private exportService   = inject(ExportService);
 
-  readonly reportes = signal<Reporte[]>([
-    { id: 1, nombre: 'Asistencia Marzo 2025', tipo: 'Asistencia', departamento: 'Todos', fechaGeneracion: '01/04/2025', periodo: 'Mar 2025', registros: 450, estado: 'Generado' },
-    { id: 2, nombre: 'Vacaciones Q1 2025', tipo: 'Vacaciones', departamento: 'Todos', fechaGeneracion: '31/03/2025', periodo: 'Q1 2025', registros: 38, estado: 'Generado' },
-    { id: 3, nombre: 'Ausencias IT Febrero', tipo: 'Ausencias', departamento: 'IT', fechaGeneracion: '05/03/2025', periodo: 'Feb 2025', registros: 12, estado: 'Generado' },
-    { id: 4, nombre: 'Rendimiento RRHH Marzo', tipo: 'Rendimiento', departamento: 'RRHH', fechaGeneracion: '02/04/2025', periodo: 'Mar 2025', registros: 24, estado: 'Pendiente' },
-    { id: 5, nombre: 'Asistencia Febrero 2025', tipo: 'Asistencia', departamento: 'Ventas', fechaGeneracion: '03/03/2025', periodo: 'Feb 2025', registros: 310, estado: 'Generado' },
-    { id: 6, nombre: 'Ausencias Globales Q1', tipo: 'Ausencias', departamento: 'Todos', fechaGeneracion: '01/04/2025', periodo: 'Q1 2025', registros: 57, estado: 'Error' },
-    { id: 7, nombre: 'Vacaciones Verano Previsión', tipo: 'Vacaciones', departamento: 'Todos', fechaGeneracion: '15/03/2025', periodo: 'Jun-Sep', registros: 89, estado: 'Generado' },
-    { id: 8, nombre: 'Rendimiento Global Q1', tipo: 'Rendimiento', departamento: 'Todos', fechaGeneracion: '02/04/2025', periodo: 'Q1 2025', registros: 150, estado: 'Pendiente' },
-  ]);
+  readonly reportes       = signal<ReporteResumen[]>([]);
+  readonly resumen        = signal<ResumenGeneral | null>(null);
+  readonly cargando       = signal(false);
+  readonly cargandoExport = signal(false);
+  readonly mensajeExport  = signal('');
 
-  readonly filtroTipo = signal<TipoReporte | 'Todos'>('Todos');
-  readonly filtroDepartamento = signal<string>('Todos');
+  readonly filtroTipo         = signal('Todos');
+  readonly filtroDepartamento = signal('Todos');
+  readonly filtroYear         = signal<number>(new Date().getFullYear());
+  readonly filtroMonth        = signal<number | null>(null);
+  readonly filtroEstado       = signal('Todos');
+
+  readonly anios = Array.from({ length: 4 }, (_, i) => new Date().getFullYear() - i);
+  readonly meses = [
+    { v: null,  l: 'Todos los meses' },
+    { v: 1,  l: 'Enero' },   { v: 2,  l: 'Febrero' },
+    { v: 3,  l: 'Marzo' },   { v: 4,  l: 'Abril' },
+    { v: 5,  l: 'Mayo' },    { v: 6,  l: 'Junio' },
+    { v: 7,  l: 'Julio' },   { v: 8,  l: 'Agosto' },
+    { v: 9,  l: 'Septiembre' }, { v: 10, l: 'Octubre' },
+    { v: 11, l: 'Noviembre' },  { v: 12, l: 'Diciembre' },
+  ];
 
   readonly reportesFiltrados = computed(() => {
-    const tipo = this.filtroTipo();
+    const tipo  = this.filtroTipo();
     const depto = this.filtroDepartamento();
-    return this.reportes().filter(r => {
-      const coincideTipo = tipo === 'Todos' || r.tipo === tipo;
-      const coincideDepto = depto === 'Todos' || r.departamento === depto;
-      return coincideTipo && coincideDepto;
-    });
+    return this.reportes().filter(r =>
+      (tipo  === 'Todos' || r.tipo         === tipo) &&
+      (depto === 'Todos' || r.departamento === depto)
+    );
   });
 
-  readonly totalGenerados = computed(() =>
-    this.reportes().filter(r => r.estado === 'Generado').length
-  );
-  readonly totalPendientes = computed(() =>
-    this.reportes().filter(r => r.estado === 'Pendiente').length
-  );
-  readonly totalErrores = computed(() =>
-    this.reportes().filter(r => r.estado === 'Error').length
-  );
-  readonly totalRegistros = computed(() =>
-    this.reportes().reduce((acc, r) => acc + r.registros, 0)
-  );
+  readonly totalGenerados  = computed(() => this.reportes().filter(r => r.estado === 'Generado').length);
+  readonly totalPendientes = computed(() => this.reportes().filter(r => r.estado === 'Pendiente').length);
+  readonly totalErrores    = computed(() => this.reportes().filter(r => r.estado === 'Error').length);
+  readonly totalRegistros  = computed(() => this.reportes().reduce((a, r) => a + (r.registros ?? 0), 0));
 
-  cambiarFiltroTipo(valor: string): void {
-    this.filtroTipo.set(valor as TipoReporte | 'Todos');
+  ngOnInit(): void {
+    this.cargarTodo();
   }
 
-  cambiarFiltroDepartamento(valor: string): void {
-    this.filtroDepartamento.set(valor);
+  cargarTodo(): void {
+    this.cargando.set(true);
+    forkJoin({
+      reportes: this.reportesService.getReportes(
+        this.filtroTipo() !== 'Todos' ? this.filtroTipo() : undefined,
+        this.filtroYear(),
+        this.filtroMonth() ?? undefined
+      ),
+      resumen: this.reportesService.getResumenGeneral(),
+    }).subscribe({
+      next: ({ reportes, resumen }) => {
+        this.reportes.set(reportes);
+        this.resumen.set(resumen);
+        this.cargando.set(false);
+      },
+      error: () => this.cargando.set(false),
+    });
   }
 
-  descargar(reporte: any): void {
-  this.exportService.exportarReportesExcel([reporte], reporte.nombre);
-}
+  cambiarFiltroTipo(v: string):  void { this.filtroTipo.set(v);  this.cargarTodo(); }
+  cambiarFiltroDepartamento(v: string): void { this.filtroDepartamento.set(v); }
+  cambiarYear(e: Event):  void { this.filtroYear.set(+(e.target as HTMLSelectElement).value);  this.cargarTodo(); }
+  cambiarMonth(e: Event): void {
+    const v = (e.target as HTMLSelectElement).value;
+    this.filtroMonth.set(v ? +v : null);
+    this.cargarTodo();
+  }
+  cambiarEstado(v: string): void { this.filtroEstado.set(v); }
 
-exportarTodos(): void {
-  this.exportService.exportarReportesExcel(
-    this.reportesFiltrados(),
-    'Panel de reportes'
-  );
-}
 
-  regenerar(reporte: Reporte): void {
-    alert(`Regenerando reporte "${reporte.nombre}" en el backend...`);
+  exportarAsistencia(): void {
+    this.cargandoExport.set(true);
+    this.reportesService.getDatosAsistencia({
+      year:         this.filtroYear(),
+      month:        this.filtroMonth() ?? undefined,
+      departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
+    }).subscribe({
+      next: datos => {
+        this.exportService.exportarAsistenciaExcel(datos, `Asistencia ${this.filtroYear()}`);
+        this.cargandoExport.set(false);
+        this.flash('Asistencia exportada correctamente');
+      },
+      error: () => {
+        this.cargandoExport.set(false);
+        this.flash('Error al exportar asistencia');
+      }
+    });
   }
 
-  nuevoReporte(): void {
-    alert('Abriendo formulario de nuevo reporte en el backend...');
+  exportarVacaciones(): void {
+    this.cargandoExport.set(true);
+    this.reportesService.getDatosVacaciones({
+      year:         this.filtroYear(),
+      estado:       this.filtroEstado() !== 'Todos' ? this.filtroEstado() : undefined,
+      departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
+    }).subscribe({
+      next: datos => {
+        this.exportService.exportarVacacionesExcel(datos, `Vacaciones ${this.filtroYear()}`);
+        this.cargandoExport.set(false);
+        this.flash('Vacaciones exportadas correctamente');
+      },
+      error: () => {
+        this.cargandoExport.set(false);
+        this.flash('Error al exportar vacaciones');
+      }
+    });
+  }
+
+  exportarAusencias(): void {
+    this.cargandoExport.set(true);
+    this.reportesService.getDatosAusencias({
+      year:         this.filtroYear(),
+      estado:       this.filtroEstado() !== 'Todos' ? this.filtroEstado() : undefined,
+      departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
+    }).subscribe({
+      next: datos => {
+        this.exportService.exportarAusenciasExcel(datos, `Ausencias ${this.filtroYear()}`);
+        this.cargandoExport.set(false);
+        this.flash('Ausencias exportadas correctamente');
+      },
+      error: () => {
+        this.cargandoExport.set(false);
+        this.flash('Error al exportar ausencias');
+      }
+    });
+  }
+
+  private flash(msg: string): void {
+    this.mensajeExport.set(msg);
+    setTimeout(() => this.mensajeExport.set(''), 3000);
   }
 }

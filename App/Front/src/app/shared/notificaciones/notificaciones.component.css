@@ -294,7 +294,6 @@
 
 .leer-todo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* FILTROS */
 .notif-filtros {
   display: flex;
   gap: 0.35rem;
@@ -331,7 +330,6 @@
   color: white;
 }
 
-/* Icono de incidencia */
 .notif-item.incidencia { border-left-color: #f59e0b; }
 .notif-item.incidencia .notif-icon {
   background: #fef3c7;

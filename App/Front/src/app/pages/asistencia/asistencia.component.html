@@ -59,6 +59,14 @@
     </div>
   }
 
+@if (esEmpleado()) {
+  <div class="log-header-row">
+    <button class="log-toggle-btn" (click)="abrirLog()">
+      <i class="fa-solid fa-clock-rotate-left"></i> Ver mi historial de fichajes
+    </button>
+  </div>
+}
+
   @if (!esEmpleado()) {
     <div class="filters-section">
       <div class="filters">
@@ -252,16 +260,36 @@
           </div>
         </div>
 
-        @if (puedeFicharEntrada()) {
+        <!-- @if (puedeFicharEntrada()) {
           <div class="form-field">
             <label><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</label>
             <select class="form-select" [value]="modoTrabajo()" (change)="modoTrabajo.set($any($event.target).value)">
-              <option value="PRESENCIAL">🏢 Presencial</option>
-              <option value="REMOTO">🏠 Remoto</option>
-              <option value="HIBRIDO">🔀 Híbrido</option>
+              <option value="PRESENCIAL"><i class="fa-solid fa-building" style="color: rgb(58, 86, 152);"></i> Presencial</option>
+              <option value="REMOTO"><i class="fa-solid fa-house" style="color: rgb(58, 86, 152);"></i> Remoto</option>
+              <option value="HIBRIDO"><i class="fa-solid fa-building-columns" style="color: rgb(58, 86, 152);"></i> Híbrido</option>
             </select>
           </div>
-        }
+        } -->
+
+        @if (puedeFicharEntrada()) {
+  <div class="form-field">
+    <label><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</label>
+    <div class="modo-selector">
+      <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'" (click)="modoTrabajo.set('PRESENCIAL')">
+        <i class="fa-solid fa-building"></i>
+        <span>Presencial</span>
+      </button>
+      <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'" (click)="modoTrabajo.set('REMOTO')">
+        <i class="fa-solid fa-house"></i>
+        <span>Remoto</span>
+      </button>
+      <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'" (click)="modoTrabajo.set('HIBRIDO')">
+        <i class="fa-solid fa-random"></i>
+        <span>Híbrido</span>
+      </button>
+    </div>
+  </div>
+}
 
         @if (mensajeAccion()) {
           <div class="alert-success"><i class="fa-solid fa-check"></i> {{ mensajeAccion() }}</div>
@@ -468,4 +496,164 @@
 
     </div>
   </div>
+
+@if (logAbierto()) {
+  <div class="modal-backdrop" (click)="logAbierto.set(false)">
+    <div class="modal-panel modal-panel-lg" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon" style="background:#3A5698">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <div class="modal-header-copy">
+          <h2>Historial de fichajes</h2>
+          <p>{{ misRegistros().length }} registros totales</p>
+        </div>
+        <button class="close-btn" (click)="logAbierto.set(false)">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="log-filtros">
+        <div class="form-field">
+          <label>Modo de trabajo</label>
+          <select class="form-select" [value]="filtroModo()" (change)="onFiltroModoChange($event)">
+            <option value="Todos">Todos</option>
+            <option value="PRESENCIAL">🏢 Presencial</option>
+            <option value="REMOTO">🏠 Remoto</option>
+            <option value="HIBRIDO">🔀 Híbrido</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Incidencias</label>
+          <select class="form-select" [value]="filtroIncidencia()" (change)="onFiltroIncidenciaChange($event)">
+            <option value="Todos">Todos</option>
+            <option value="con">Con incidencia</option>
+            <option value="sin">Sin incidencia</option>
+          </select>
+        </div>
+        <div class="log-resumen">
+          <span class="log-stat verde">
+            <i class="fa-solid fa-check"></i>
+            {{ misRegistros().filter(r => !r.incidenciaTipo).length }} sin incidencias
+          </span>
+          <span class="log-stat amber">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            {{ misRegistros().filter(r => r.incidenciaTipo).length }} con incidencias
+          </span>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding: 0">
+
+        @if (cargandoLog()) {
+          <div class="log-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i> Cargando registros...
+          </div>
+        } @else if (misRegistros().length === 0) {
+          <div class="empty-state" style="padding: 3rem">
+            <i class="fa-solid fa-calendar-check"></i>
+            <p>No hay registros para los filtros seleccionados</p>
+          </div>
+        } @else {
+          <div class="log-tabla-wrapper">
+            <table class="log-tabla">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Entrada</th>
+                  <th>Descanso</th>
+                  <th>Salida</th>
+                  <th>Horas</th>
+                  <th>Extra</th>
+                  <th>Modo</th>
+                  <th>Estado</th>
+                  <th>Incidencia</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (r of registrosPaginados(); track r.fecha) {
+                  <tr [class.fila-incidencia]="r.incidenciaTipo">
+                    <td class="fecha-cell">{{ r.fecha }}</td>
+                    <td>{{ r.entrada || '-' }}</td>
+                    <td class="descanso-cell">
+                      {{ r.inicioDescanso || '-' }} / {{ r.finDescanso || '-' }}
+                    </td>
+                    <td>{{ r.salida || '-' }}</td>
+                    <td>
+                      <strong class="horas-val">{{ r.horasTotales ?? '-' }}</strong>
+                      @if (r.horasTotales) { <span class="horas-unit">h</span> }
+                    </td>
+                    <td>
+                      @if ((r.horasExtra ?? 0) > 0) {
+                        <span class="badge-extra">+{{ r.horasExtra }}h</span>
+                      } @else {
+                        <span class="text-gris">-</span>
+                      }
+                    </td>
+                    <td>
+                      <span class="badge-modo" [ngClass]="r.modo?.toLowerCase() ?? 'sin-modo'">
+                        {{ labelModo(r.modo) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="estado-badge" [ngClass]="r.estado?.toLowerCase()">
+                        {{ r.estado }}
+                      </span>
+                    </td>
+                    <td>
+                      @if (r.incidenciaTipo) {
+                        <div class="incidencia-info">
+                          <span class="badge-incidencia" [ngClass]="r.incidenciaEstado?.toLowerCase() ?? 'pendiente'">
+                            {{ r.incidenciaEstado ?? 'PENDIENTE' }}
+                          </span>
+                          <span class="incidencia-tipo">{{ labelIncidencia(r.incidenciaTipo) }}</span>
+                        </div>
+                      } @else {
+                        <span class="text-gris">—</span>
+                      }
+                    </td>
+                    <td>
+                      @if (r.estado === 'FINALIZADO' && !r.incidenciaTipo) {
+                        <button class="btn-inc-log" title="Crear incidencia"
+                          (click)="$event.stopPropagation(); abrirIncidenciaDesdeLog(r)">
+                          <i class="fa-solid fa-triangle-exclamation"></i>
+                        </button>
+                      }
+                      @if (r.incidenciaTipo) {
+                        <i class="fa-solid fa-circle-check text-verde" title="Incidencia reportada"></i>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          @if (totalPaginas() > 1) {
+            <div class="paginacion">
+              <button class="pag-btn" [disabled]="paginaActual() === 1" (click)="paginaAnterior()">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              @for (p of paginasArray(); track p) {
+                <button class="pag-btn pag-num" [class.activa]="paginaActual() === p" (click)="irPagina(p)">
+                  {{ p }}
+                </button>
+              }
+              <button class="pag-btn" [disabled]="paginaActual() === totalPaginas()" (click)="paginaSiguiente()">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+              <span class="pag-info">
+                Página {{ paginaActual() }} de {{ totalPaginas() }}
+                · {{ misRegistros().length }} registros
+              </span>
+            </div>
+          }
+        }
+      </div>
+
+    </div>
+  </div>
+}
 }

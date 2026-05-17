@@ -32,4 +32,10 @@ public class Asistencia {
     private Double horasExtra; // <--- horas extra respecto a la jornada de 8h
 
     private String modo; // <--- presencial o teletrabajo
+
+
+    private String incidenciaTipo;
+    private String incidenciaDescripcion;
+    private String incidenciaEstado; // <--- pendiente, resuelta, o rechazada
+    private String incidenciaFechaReporte;
 }

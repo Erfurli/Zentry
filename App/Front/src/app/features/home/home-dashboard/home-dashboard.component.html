@@ -1,60 +1,179 @@
-<div class="dashboard">
-  <div class="dashboard-container">
-    <header class="dashboard-header">
-      <div class="logo">Z</div>
-      <div class="welcome-section">
-        <h1>¡Hola, {{ summary.userName }}!</h1>
-        <p>Resumen de tu jornada laboral</p>
-      </div>
-    </header>
+<div class="home-dashboard">
+  @if (loading()) {
+    <div class="loading-state">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <p>Cargando tu resumen...</p>
+    </div>
+  } @else if (error()) {
+    <div class="error-state">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (summary()) {
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Vacaciones pendientes</div>
-        <div class="stat-value">
-          {{ summary.vacationBalance }}<span class="stat-unit"> días</span>
+    <!-- BIENVENIDA -->
+    <div class="bienvenida-card">
+      <div class="bienvenida-left">
+        <div class="bienvenida-avatar">
+          {{ summary()!.userName.substring(0,1) }}
+        </div>
+        <div>
+          <h1>¡Hola, {{ summary()!.userName.split(' ')[0] }}!</h1>
+          <p class="bienvenida-fecha">{{ fechaActual() }}</p>
+        </div>
+      </div>
+      <div class="reloj">
+        <span class="reloj-hora">{{ horaActual() }}</span>
+      </div>
+    </div>
+
+    <!-- MENSAJE FICHAJE -->
+    @if (mensajeFichaje()) {
+      <div class="mensaje-fichaje">
+        <i class="fa-solid fa-check-circle"></i>
+        {{ mensajeFichaje() }}
+      </div>
+    }
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card azul">
+        <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="kpi-info">
+          <span class="kpi-valor">{{ summary()!.todayHours }}h</span>
+          <span class="kpi-label">Horas hoy</span>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-label">Horas trabajadas hoy</div>
-        <div class="stat-value">
-          {{ summary.todayHours }}<span class="stat-unit"> h</span>
+      <div class="kpi-card verde">
+        <div class="kpi-icon"><i class="fa-solid fa-umbrella-beach"></i></div>
+        <div class="kpi-info">
+          <span class="kpi-valor">{{ summary()!.vacationBalance }}</span>
+          <span class="kpi-label">Días disponibles</span>
         </div>
       </div>
 
-      <div class="stat-card">
-        <div class="stat-label">Próximas vacaciones</div>
-        <div class="stat-value">
-          {{ summary.upcomingVacations.length ? summary.upcomingVacations[0].dates : 'Ninguna' }}
+      <div class="kpi-card morado">
+        <div class="kpi-icon"><i class="fa-solid fa-calendar-check"></i></div>
+        <div class="kpi-info">
+          <span class="kpi-valor">{{ 22 - summary()!.vacationBalance }}</span>
+          <span class="kpi-label">Días usados</span>
+        </div>
+      </div>
+
+      <div class="kpi-card naranja">
+        <div class="kpi-icon"><i class="fa-solid fa-plane-departure"></i></div>
+        <div class="kpi-info">
+          <span class="kpi-valor">{{ summary()!.upcomingVacations.length }}</span>
+          <span class="kpi-label">Próximas vacaciones</span>
         </div>
       </div>
     </div>
 
-    <section class="actions-section">
-      <h3 class="actions-title">
-        <i class="fa-solid fa-bolt"></i> Acciones rápidas
-      </h3>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-grid">
 
-      <div class="actions-grid">
-        <button class="action-btn primary-btn" type="button" (click)="fichar()">
-          <i class="fa-solid fa-door-open"></i> Fichar Entrada
-        </button>
-
-        <button class="action-btn primary-btn" type="button" (click)="fichar()">
-          <i class="fa-solid fa-door-closed"></i> Fichar Salida
-        </button>
-
-        <button class="action-btn primary-btn" type="button" (click)="solicitar('vacaciones')">
-          <i class="fa-solid fa-umbrella-beach"></i> Solicitar Vacaciones
-        </button>
-
-        <button class="action-btn primary-btn" type="button" (click)="solicitar('ausencia')">
-          <i class="fa-solid fa-calendar-xmark"></i> Solicitar Ausencia
-        </button>
+      <!-- FICHAJE RÁPIDO -->
+      <div class="card fichaje-card">
+        <div class="card-header">
+          <i class="fa-solid fa-fingerprint"></i>
+          <h2>Fichaje rápido</h2>
+        </div>
+        <div class="fichaje-botones">
+          <button class="fichaje-btn entrada" (click)="ficharEntrada()" [disabled]="fichando()">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            Fichar entrada
+          </button>
+          <button class="fichaje-btn salida" (click)="ficharSalida()" [disabled]="fichando()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Fichar salida
+          </button>
+        </div>
+        <a routerLink="/asistencia" class="ver-mas-link">
+          Ver historial completo <i class="fa-solid fa-arrow-right"></i>
+        </a>
       </div>
 
+      <!-- VACACIONES -->
+      <div class="card vacaciones-card">
+        <div class="card-header">
+          <i class="fa-solid fa-umbrella-beach"></i>
+          <h2>Mis vacaciones</h2>
+        </div>
 
-    </section>
-  </div>
+        <div class="barra-vacaciones">
+          <div class="barra-label">
+            <span>{{ 22 - summary()!.vacationBalance }} de 22 días usados</span>
+            <span>{{ summary()!.vacationBalance }} restantes</span>
+          </div>
+          <div class="barra-fondo">
+            <div class="barra-relleno" [style.width.%]="getBarraAncho()"></div>
+          </div>
+        </div>
+
+        @if (summary()!.upcomingVacations.length > 0) {
+          <div class="proximas-lista">
+            @for (vac of summary()!.upcomingVacations.slice(0,3); track vac.dates) {
+              <div class="proxima-item">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span class="proxima-fechas">{{ vac.dates }}</span>
+                <span class="proxima-badge" [class]="getBadgeClass(vac.status)">
+                  {{ vac.status }}
+                </span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-vacaciones">No tienes vacaciones próximas</p>
+        }
+
+        <a routerLink="/vacaciones" class="ver-mas-link">
+          Gestionar vacaciones <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <!-- ACCIONES RÁPIDAS -->
+      <div class="card acciones-card">
+        <div class="card-header">
+          <i class="fa-solid fa-bolt"></i>
+          <h2>Acciones rápidas</h2>
+        </div>
+        <div class="acciones-lista">
+          <a routerLink="/vacaciones" [queryParams]="{nuevo: 'true'}" class="accion-item">
+            <div class="accion-icon verde"><i class="fa-solid fa-umbrella-beach"></i></div>
+            <div class="accion-info">
+              <span class="accion-titulo">Solicitar vacaciones</span>
+              <span class="accion-desc">Pide tus días libres</span>
+            </div>
+            <i class="fa-solid fa-chevron-right accion-arrow"></i>
+          </a>
+          <a routerLink="/ausencias" [queryParams]="{nuevo: 'true'}" class="accion-item">
+            <div class="accion-icon naranja"><i class="fa-solid fa-calendar-xmark"></i></div>
+            <div class="accion-info">
+              <span class="accion-titulo">Solicitar ausencia</span>
+              <span class="accion-desc">Permiso, baja médica...</span>
+            </div>
+            <i class="fa-solid fa-chevron-right accion-arrow"></i>
+          </a>
+          <a routerLink="/asistencia" class="accion-item">
+            <div class="accion-icon azul"><i class="fa-solid fa-clock"></i></div>
+            <div class="accion-info">
+              <span class="accion-titulo">Ver asistencia</span>
+              <span class="accion-desc">Historial de fichajes</span>
+            </div>
+            <i class="fa-solid fa-chevron-right accion-arrow"></i>
+          </a>
+          <a routerLink="/chat" class="accion-item">
+            <div class="accion-icon morado"><i class="fa-solid fa-comments"></i></div>
+            <div class="accion-info">
+              <span class="accion-titulo">Abrir chat</span>
+              <span class="accion-desc">Mensajes internos</span>
+            </div>
+            <i class="fa-solid fa-chevron-right accion-arrow"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  }
 </div>

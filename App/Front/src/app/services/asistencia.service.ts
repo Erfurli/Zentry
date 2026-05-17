@@ -107,4 +107,11 @@ export class AsistenciaService {
       datos,
     );
   }
+
+  getMisRegistros(filtros: { modo?: string; incidencia?: string } = {}): Observable<AsistenciaVista[]> {
+  let params = new HttpParams();
+  if (filtros.modo && filtros.modo !== 'Todos') params = params.set('modo', filtros.modo);
+  if (filtros.incidencia && filtros.incidencia !== 'Todos') params = params.set('incidencia', filtros.incidencia);
+  return this.http.get<AsistenciaVista[]>(`${this.apiUrl}/mis-registros`, { params });
+}
 }

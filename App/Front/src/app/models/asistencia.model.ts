@@ -1,11 +1,6 @@
 export type EstadoAsistencia =
-  | 'NO_FICHADO'
-  | 'TRABAJANDO'
-  | 'EN_DESCANSO'
-  | 'FINALIZADO'
-  | 'Presente'
-  | 'Retraso'
-  | 'Ausente';
+  | 'NO_FICHADO' | 'TRABAJANDO' | 'EN_DESCANSO' | 'FINALIZADO'
+  | 'Presente'   | 'Retraso'    | 'Ausente';
 
 export interface AsistenciaHoy {
   id?: string;
@@ -20,6 +15,11 @@ export interface AsistenciaHoy {
   horasTotales?: number;
   horasExtra?: number;
   fecha: string;
+  modo?: string;
+  incidenciaTipo?: string | null;
+  incidenciaDescripcion?: string | null;
+  incidenciaEstado?: string | null;
+  incidenciaFechaReporte?: string | null;
 }
 
 export type AsistenciaVista = AsistenciaHoy;

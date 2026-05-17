@@ -296,4 +296,93 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.esEmpleado() ? 'Mi asistencia' : `Asistencia ${this.fechaSeleccionada()}`
   );
 }
+
+readonly misRegistros        = signal<AsistenciaVista[]>([]);
+readonly cargandoLog         = signal(false);
+readonly filtroModo          = signal('Todos');
+readonly filtroIncidencia    = signal('Todos');
+readonly paginaActual        = signal(1);
+readonly registrosPorPagina  = 8;
+readonly logAbierto          = signal(false);
+
+readonly registrosPaginados = computed(() => {
+  const inicio = (this.paginaActual() - 1) * this.registrosPorPagina;
+  return this.misRegistros().slice(inicio, inicio + this.registrosPorPagina);
+});
+
+readonly totalPaginas = computed(() =>
+  Math.ceil(this.misRegistros().length / this.registrosPorPagina)
+);
+
+readonly paginasArray = computed(() =>
+  Array.from({ length: this.totalPaginas() }, (_, i) => i + 1)
+);
+
+cargarMisRegistros(): void {
+  this.cargandoLog.set(true);
+  this.asistenciaService.getMisRegistros({
+    modo:        this.filtroModo(),
+    incidencia:  this.filtroIncidencia(),
+  }).subscribe({
+    next: data => {
+      this.misRegistros.set(data);
+      this.paginaActual.set(1);
+      this.cargandoLog.set(false);
+    },
+    error: () => this.cargandoLog.set(false),
+  });
+}
+
+abrirLog(): void {
+  this.logAbierto.set(true);
+  this.cargarMisRegistros();
+}
+
+onFiltroModoChange(e: Event): void {
+  this.filtroModo.set((e.target as HTMLSelectElement).value);
+  this.cargarMisRegistros();
+}
+
+onFiltroIncidenciaChange(e: Event): void {
+  this.filtroIncidencia.set((e.target as HTMLSelectElement).value);
+  this.cargarMisRegistros();
+}
+
+irPagina(p: number): void { this.paginaActual.set(p); }
+paginaAnterior(): void    { if (this.paginaActual() > 1) this.paginaActual.update(p => p - 1); }
+paginaSiguiente(): void   { if (this.paginaActual() < this.totalPaginas()) this.paginaActual.update(p => p + 1); }
+
+labelModo(modo?: string | null): string {
+  const mapa: Record<string, string> = {
+    PRESENCIAL: '🏢 Presencial',
+    REMOTO:     '🏠 Remoto',
+    HIBRIDO:    '🔀 Híbrido',
+  };
+  return mapa[modo ?? ''] ?? modo ?? '-';
+}
+
+labelIncidencia(tipo?: string | null): string {
+  const mapa: Record<string, string> = {
+    descanso_olvidado:    'Descanso olvidado',
+    descanso_incorrecto:  'Descanso incorrecto',
+    entrada_incorrecta:   'Entrada incorrecta',
+    salida_incorrecta:    'Salida incorrecta',
+    otro:                 'Otro',
+  };
+  return mapa[tipo ?? ''] ?? tipo ?? '';
+}
+
+abrirIncidenciaDesdeLog(r: AsistenciaVista): void {
+  const a = r as any;
+  this.incTipo.set('descanso_olvidado');
+  this.incInicioDesc.set(a.inicioDescanso ?? '');
+  this.incFinDesc.set(a.finDescanso ?? '');
+  this.incEntrada.set(a.entrada ?? '');
+  this.incSalida.set(a.salida ?? '');
+  this.incDescripcion.set('');
+  this.mensajeIncEmpleado.set('');
+  this.errorIncEmpleado.set('');
+  this.miAsistencia.update(m => m ? { ...m, id: a.id } : m);
+  this.modalIncidenciaEmpleadoAbierto.set(true);
+}
 }

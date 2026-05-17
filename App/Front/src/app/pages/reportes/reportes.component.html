@@ -1,148 +1,256 @@
 <div class="page-container">
+
   <div class="page-header">
     <div class="header-content">
-      <h1>Reportes</h1>
+      <h1>Reportes y Exportaciones</h1>
       <div class="breadcrumbs">
         <a routerLink="/dashboard">Dashboard</a> / Reportes
       </div>
     </div>
   </div>
 
+  @if (resumen()) {
+    <div class="resumen-grid">
+      <div class="resumen-card azul">
+        <i class="fa-solid fa-users"></i>
+        <div>
+          <span class="resumen-num">{{ resumen()!.empleadosActivos }}</span>
+          <span class="resumen-label">Empleados activos</span>
+        </div>
+      </div>
+      <div class="resumen-card verde">
+        <i class="fa-solid fa-plane"></i>
+        <div>
+          <span class="resumen-num">{{ resumen()!.vacacionesAprobadas }}</span>
+          <span class="resumen-label">Vacaciones aprobadas</span>
+        </div>
+      </div>
+      <div class="resumen-card amber">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <div>
+          <span class="resumen-num">{{ resumen()!.vacacionesPendientes }}</span>
+          <span class="resumen-label">Vacaciones pendientes</span>
+        </div>
+      </div>
+      <div class="resumen-card rojo">
+        <i class="fa-solid fa-user-slash"></i>
+        <div>
+          <span class="resumen-num">{{ resumen()!.ausencias }}</span>
+          <span class="resumen-label">Ausencias registradas</span>
+        </div>
+      </div>
+      <div class="resumen-card gris">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        <div>
+          <span class="resumen-num">{{ resumen()!.registrosAsistencia }}</span>
+          <span class="resumen-label">Registros de asistencia</span>
+        </div>
+      </div>
+      <div class="resumen-card naranja">
+        <i class="fa-solid fa-clock"></i>
+        <div>
+          <span class="resumen-num">{{ resumen()!.retrasos }}</span>
+          <span class="resumen-label">Retrasos totales</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="export-section">
+    <h2><i class="fa-solid fa-download"></i> Exportar datos</h2>
+
+    @if (mensajeExport()) {
+      <div class="mensaje-export">{{ mensajeExport() }}</div>
+    }
+
+    <div class="export-filtros">
+      <div class="form-field">
+        <label>Año</label>
+        <select class="form-select" (change)="cambiarYear($event)">
+          @for (a of anios; track a) {
+            <option [value]="a" [selected]="a === filtroYear()">{{ a }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Mes</label>
+        <select class="form-select" (change)="cambiarMonth($event)">
+          @for (m of meses; track m.v) {
+            <option [value]="m.v ?? ''" [selected]="m.v === filtroMonth()">{{ m.l }}</option>
+          }
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Departamento</label>
+        <select class="form-select" [value]="filtroDepartamento()"
+          (change)="cambiarFiltroDepartamento($any($event.target).value)">
+          <option value="Todos">Todos</option>
+          <option value="RRHH">RRHH</option>
+          <option value="IT">IT</option>
+          <option value="Ventas">Ventas</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Estado</label>
+        <select class="form-select" [value]="filtroEstado()"
+          (change)="cambiarEstado($any($event.target).value)">
+          <option value="Todos">Todos</option>
+          <option value="Aprobada">Aprobada</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Rechazada">Rechazada</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="export-cards">
+      <div class="export-card">
+        <div class="export-card-icon asistencia">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+        </div>
+        <div class="export-card-body">
+          <h3>Registros de Asistencia</h3>
+          <p>Exporta fichajes, horas trabajadas, descansos y horas extra del periodo seleccionado.</p>
+        </div>
+        <button class="export-card-btn" [disabled]="cargandoExport()" (click)="exportarAsistencia()">
+          @if (cargandoExport()) { <i class="fa-solid fa-spinner fa-spin"></i> }
+          @else { <i class="fa-solid fa-file-excel"></i> }
+          Exportar Excel
+        </button>
+      </div>
+
+      <div class="export-card">
+        <div class="export-card-icon vacaciones">
+          <i class="fa-solid fa-plane"></i>
+        </div>
+        <div class="export-card-body">
+          <h3>Solicitudes de Vacaciones</h3>
+          <p>Exporta todas las solicitudes de vacaciones con su estado y fechas.</p>
+        </div>
+        <button class="export-card-btn" [disabled]="cargandoExport()" (click)="exportarVacaciones()">
+          @if (cargandoExport()) { <i class="fa-solid fa-spinner fa-spin"></i> }
+          @else { <i class="fa-solid fa-file-excel"></i> }
+          Exportar Excel
+        </button>
+      </div>
+
+      <div class="export-card">
+        <div class="export-card-icon ausencias">
+          <i class="fa-solid fa-user-slash"></i>
+        </div>
+        <div class="export-card-body">
+          <h3>Registros de Ausencias</h3>
+          <p>Exporta ausencias justificadas, pendientes y no justificadas del periodo.</p>
+        </div>
+        <button class="export-card-btn" [disabled]="cargandoExport()" (click)="exportarAusencias()">
+          @if (cargandoExport()) { <i class="fa-solid fa-spinner fa-spin"></i> }
+          @else { <i class="fa-solid fa-file-excel"></i> }
+          Exportar Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="filters-section">
     <div class="filters">
-      <select
-        class="filter-select"
-        [value]="filtroTipo()"
-        (change)="cambiarFiltroTipo($any($event.target).value)"
-        aria-label="Filtrar por tipo de reporte"
-      >
+      <select class="filter-select" [value]="filtroTipo()"
+        (change)="cambiarFiltroTipo($any($event.target).value)">
         <option value="Todos">Todos los tipos</option>
         <option value="Asistencia">Asistencia</option>
         <option value="Vacaciones">Vacaciones</option>
         <option value="Ausencias">Ausencias</option>
-        <option value="Rendimiento">Rendimiento</option>
+        <option value="Empleados">Empleados</option>
       </select>
-
-      <select
-        class="filter-select"
-        [value]="filtroDepartamento()"
-        (change)="cambiarFiltroDepartamento($any($event.target).value)"
-        aria-label="Filtrar por departamento"
-      >
+      <select class="filter-select" [value]="filtroDepartamento()"
+        (change)="cambiarFiltroDepartamento($any($event.target).value)">
         <option value="Todos">Todos los departamentos</option>
         <option value="RRHH">RRHH</option>
         <option value="IT">IT</option>
         <option value="Ventas">Ventas</option>
       </select>
-
-      <button class="export-btn" type="button" (click)="nuevoReporte()">
-        <i class="fa-solid fa-plus" aria-hidden="true"></i> Nuevo Reporte
-      </button>
     </div>
   </div>
 
-  <div class="kpi-grid" role="list" aria-label="Resumen de reportes">
-    <div class="kpi-card generado" role="listitem">
+  <div class="kpi-grid">
+    <div class="kpi-card generado">
       <div class="kpi-number">{{ totalGenerados() }}</div>
       <div class="kpi-label">Generados</div>
     </div>
-    <div class="kpi-card pendiente" role="listitem">
+    <div class="kpi-card pendiente">
       <div class="kpi-number">{{ totalPendientes() }}</div>
       <div class="kpi-label">Pendientes</div>
     </div>
-    <div class="kpi-card error" role="listitem">
+    <div class="kpi-card error">
       <div class="kpi-number">{{ totalErrores() }}</div>
       <div class="kpi-label">Con Error</div>
     </div>
-    <div class="kpi-card registros" role="listitem">
+    <div class="kpi-card registros">
       <div class="kpi-number">{{ totalRegistros() }}</div>
       <div class="kpi-label">Total Registros</div>
     </div>
   </div>
 
   <div class="table-container">
-    <table class="reportes-table" aria-label="Listado de reportes">
-      <thead>
-        <tr>
-          <th scope="col">Nombre</th>
-          <th scope="col">Tipo</th>
-          <th scope="col">Departamento</th>
-          <th scope="col">Período</th>
-          <th scope="col">Fecha generación</th>
-          <th scope="col">Registros</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (reporte of reportesFiltrados(); track reporte.id) {
+    @if (cargando()) {
+      <div class="empty-state">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <p>Cargando reportes...</p>
+      </div>
+    } @else {
+      <table class="reportes-table">
+        <thead>
           <tr>
-            <td class="nombre-cell">
-              <i
-                class="fa-solid fa-file-chart-column tipo-icon"
-                aria-hidden="true"
-                [class.icon-asistencia]="reporte.tipo === 'Asistencia'"
-                [class.icon-vacaciones]="reporte.tipo === 'Vacaciones'"
-                [class.icon-ausencias]="reporte.tipo === 'Ausencias'"
-                [class.icon-rendimiento]="reporte.tipo === 'Rendimiento'"
-              ></i>
-              {{ reporte.nombre }}
-            </td>
-            <td>
-              <span
-                class="tipo-badge"
-                [class.asistencia]="reporte.tipo === 'Asistencia'"
-                [class.vacaciones]="reporte.tipo === 'Vacaciones'"
-                [class.ausencias]="reporte.tipo === 'Ausencias'"
-                [class.rendimiento]="reporte.tipo === 'Rendimiento'"
-              >
-                {{ reporte.tipo }}
-              </span>
-            </td>
-            <td>{{ reporte.departamento }}</td>
-            <td>{{ reporte.periodo }}</td>
-            <td>{{ reporte.fechaGeneracion }}</td>
-            <td><strong>{{ reporte.registros }}</strong></td>
-            <td>
-              <span
-                class="estado-badge"
-                [class.generado]="reporte.estado === 'Generado'"
-                [class.pendiente]="reporte.estado === 'Pendiente'"
-                [class.error]="reporte.estado === 'Error'"
-              >
-                {{ reporte.estado }}
-              </span>
-            </td>
-            <td class="acciones-cell">
-              @if (reporte.estado === 'Generado') {
-                <button
-                  class="accion-btn descargar"
-                  (click)="descargar(reporte)"
-                  [attr.aria-label]="'Descargar reporte ' + reporte.nombre"
-                >
-                  <i class="fa-solid fa-download" aria-hidden="true"></i>
-                </button>
-              }
-              @if (reporte.estado === 'Error' || reporte.estado === 'Pendiente') {
-                <button
-                  class="accion-btn regenerar"
-                  (click)="regenerar(reporte)"
-                  [attr.aria-label]="'Regenerar reporte ' + reporte.nombre"
-                >
-                  <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
-                </button>
-              }
-            </td>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Departamento</th>
+            <th>Período</th>
+            <th>Fecha generación</th>
+            <th>Registros</th>
+            <th>Estado</th>
           </tr>
-        } @empty {
-          <tr>
-            <td colspan="8" class="empty-state">
-              <i class="fa-solid fa-inbox" aria-hidden="true"></i>
-              <p>No hay reportes para los filtros seleccionados</p>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (r of reportesFiltrados(); track r.nombre) {
+            <tr>
+              <td class="nombre-cell">
+                <i class="fa-solid fa-file-chart-column tipo-icon"
+                  [class.icon-asistencia]="r.tipo === 'Asistencia'"
+                  [class.icon-vacaciones]="r.tipo === 'Vacaciones'"
+                  [class.icon-ausencias]="r.tipo === 'Ausencias'"
+                  [class.icon-empleados]="r.tipo === 'Empleados'"></i>
+                {{ r.nombre }}
+              </td>
+              <td>
+                <span class="tipo-badge"
+                  [class.asistencia]="r.tipo === 'Asistencia'"
+                  [class.vacaciones]="r.tipo === 'Vacaciones'"
+                  [class.ausencias]="r.tipo === 'Ausencias'"
+                  [class.empleados]="r.tipo === 'Empleados'">
+                  {{ r.tipo }}
+                </span>
+              </td>
+              <td>{{ r.departamento }}</td>
+              <td>{{ r.periodo }}</td>
+              <td>{{ r.fechaGeneracion }}</td>
+              <td><strong>{{ r.registros }}</strong></td>
+              <td>
+                <span class="estado-badge"
+                  [class.generado]="r.estado === 'Generado'"
+                  [class.pendiente]="r.estado === 'Pendiente'"
+                  [class.error]="r.estado === 'Error'">
+                  {{ r.estado }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty-state">
+                <i class="fa-solid fa-inbox"></i>
+                <p>No hay reportes para los filtros seleccionados</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
   </div>
 </div>
