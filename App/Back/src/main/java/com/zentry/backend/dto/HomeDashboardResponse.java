@@ -17,12 +17,14 @@ public class HomeDashboardResponse {
     private Integer vacationBalance;
     private List<VacationItem> upcomingVacations;
 
-    @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    @Data
     public static class VacationItem {
         private String dates;
         private String status;
+        private String fechaInicio; // añadir
+        private String fechaFin;    // añadir
     }
 }

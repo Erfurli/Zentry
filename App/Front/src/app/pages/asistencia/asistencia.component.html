@@ -28,7 +28,7 @@
     </div>
   </div>
 
-  @if (esEmpleado() && mensajeAccion()) {
+  <!-- @if (esEmpleado() && mensajeAccion()) {
     <div class="mensaje-accion">{{ mensajeAccion() }}</div>
   }
 
@@ -64,6 +64,156 @@
     <button class="log-toggle-btn" (click)="abrirLog()">
       <i class="fa-solid fa-clock-rotate-left"></i> Ver mi historial de fichajes
     </button>
+  </div>
+} -->
+
+@if (esEmpleado() && mensajeAccion()) {
+  <div class="mensaje-accion">{{ mensajeAccion() }}</div>
+}
+
+@if (esEmpleado()) {
+  <div class="empleado-layout">
+
+    <!-- Columna izquierda: estado + botones rápidos -->
+    <div class="empleado-col-main">
+
+      <!-- Tarjeta estado -->
+      <div class="estado-card-v2">
+        <div class="estado-card-v2-top">
+          <div>
+            <div class="estado-titulo">Mi estado actual</div>
+            <div class="estado-valor">{{ labelEstado() }}</div>
+          </div>
+          <div class="estado-chip-grande" [ngClass]="estadoActual?.toLowerCase() ?? 'no_fichado'">
+            @switch (estadoActual) {
+              @case ('TRABAJANDO')   { <i class="fa-solid fa-briefcase"></i> }
+              @case ('EN_DESCANSO') { <i class="fa-solid fa-mug-hot"></i> }
+              @case ('FINALIZADO')  { <i class="fa-solid fa-circle-check"></i> }
+              @default              { <i class="fa-solid fa-user-clock"></i> }
+            }
+          </div>
+        </div>
+
+        <!-- Métricas del día -->
+        <div class="estado-metricas-v2">
+          <div class="metrica-item">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <span class="metrica-label">Entrada</span>
+            <span class="metrica-val">{{ miAsistencia()?.entrada || '–' }}</span>
+          </div>
+          <div class="metrica-item">
+            <i class="fa-solid fa-mug-hot"></i>
+            <span class="metrica-label">Descanso</span>
+            <span class="metrica-val">
+              {{ miAsistencia()?.inicioDescanso || '–' }} / {{ miAsistencia()?.finDescanso || '–' }}
+            </span>
+          </div>
+          <div class="metrica-item">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span class="metrica-label">Salida</span>
+            <span class="metrica-val">{{ miAsistencia()?.salida || '–' }}</span>
+          </div>
+          <div class="metrica-item destaca">
+            <i class="fa-regular fa-clock"></i>
+            <span class="metrica-label">Horas hoy</span>
+            <span class="metrica-val">{{ miAsistencia()?.horasTotales ?? 0 }}h</span>
+          </div>
+          <div class="metrica-item">
+            <i class="fa-solid fa-plus"></i>
+            <span class="metrica-label">Horas extra</span>
+            <span class="metrica-val">{{ miAsistencia()?.horasExtra ?? 0 }}h</span>
+          </div>
+        </div>
+
+        <!-- Botones de acción rápida -->
+        <div class="acciones-rapidas">
+          <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()"
+            (click)="ejecutarFichaje('entrada')">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
+          </button>
+          <button class="fichaje-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()"
+            (click)="ejecutarFichaje('descanso')">
+            <i class="fa-solid fa-mug-hot"></i> Iniciar descanso
+          </button>
+          <button class="fichaje-btn vuelta" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()"
+            (click)="ejecutarFichaje('vuelta')">
+            <i class="fa-solid fa-rotate-left"></i> Volver del descanso
+          </button>
+          <button class="fichaje-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()"
+            (click)="ejecutarFichaje('salida')">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
+          </button>
+        </div>
+
+        <!-- Modo de trabajo (solo si puede fichar entrada) -->
+        @if (puedeFicharEntrada()) {
+          <div class="modo-trabajo-inline">
+            <span class="modo-label"><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</span>
+            <div class="modo-selector">
+              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'"
+                (click)="modoTrabajo.set('PRESENCIAL')">
+                <i class="fa-solid fa-building"></i><span>Presencial</span>
+              </button>
+              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'"
+                (click)="modoTrabajo.set('REMOTO')">
+                <i class="fa-solid fa-house"></i><span>Remoto</span>
+              </button>
+              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'"
+                (click)="modoTrabajo.set('HIBRIDO')">
+                <i class="fa-solid fa-random"></i><span>Híbrido</span>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Columna derecha: acciones secundarias -->
+    <div class="empleado-col-side">
+
+      <!-- Crear incidencia -->
+      @if (estadoActual === 'FINALIZADO') {
+        <div class="side-card incidencia-card">
+          <div class="side-card-icon amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="side-card-body">
+            <h3>¿Olvidaste fichar algo?</h3>
+            <p>Crea una incidencia y RRHH la revisará.</p>
+          </div>
+          <button class="incidencia-empleado-btn" (click)="abrirIncidenciaEmpleado()">
+            Crear incidencia
+          </button>
+        </div>
+      }
+
+      <!-- Ver historial -->
+      <div class="side-card">
+        <div class="side-card-icon azul"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <div class="side-card-body">
+          <h3>Historial de fichajes</h3>
+          <p>Consulta todos tus fichajes.</p>
+        </div>
+        <button class="log-toggle-btn" (click)="abrirLog()">
+          <i class="fa-solid fa-clock-rotate-left"></i> Ver historial
+        </button>
+      </div>
+
+      <!-- Resumen últimos registros -->
+      @if (misRegistros().length > 0) {
+        <div class="side-card ultimos-card">
+          <h3 class="ultimos-titulo"><i class="fa-solid fa-calendar-week"></i> Últimos fichajes</h3>
+          <div class="ultimos-lista">
+            @for (r of misRegistros().slice(0, 5); track r.fecha) {
+              <div class="ultimo-item">
+                <span class="ultimo-fecha">{{ r.fecha }}</span>
+                <span class="ultimo-horas">{{ r.horasTotales ?? 0 }}h</span>
+                <span class="estado-badge" [ngClass]="r.estado?.toLowerCase()">{{ r.estado }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+    </div>
   </div>
 }
 
@@ -315,73 +465,6 @@
   </div>
 }
 
-@if (modalIncidenciaAbierto()) {
-  <div class="modal-backdrop" (click)="modalIncidenciaAbierto.set(false)">
-    <div class="modal-panel" (click)="$event.stopPropagation()">
-
-      <div class="modal-header">
-        <div class="modal-header-icon" style="background:#f59e0b"><i class="fa-solid fa-pen-to-square"></i></div>
-        <div class="modal-header-copy">
-          <h2>Corregir incidencia</h2>
-          <p>Modifica los datos de asistencia del empleado</p>
-        </div>
-        <button class="close-btn" (click)="modalIncidenciaAbierto.set(false)">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="modal-body">
-        @if (!incidenciaAsistenciaId()) {
-          <div class="alert-error">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            Este empleado no tiene registro de asistencia para el día seleccionado.
-          </div>
-        }
-
-        <div class="form-grid">
-          <div class="form-field">
-            <label><i class="fa-solid fa-calendar"></i> Fecha</label>
-            <input type="date" class="form-input" [value]="incidenciaFecha()" disabled />
-          </div>
-          <div class="form-field">
-            <label><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada</label>
-            <input type="time" class="form-input" [value]="incidenciaEntrada()"
-              (change)="incidenciaEntrada.set($any($event.target).value)" />
-          </div>
-          <div class="form-field">
-            <label><i class="fa-solid fa-mug-hot"></i> Inicio descanso</label>
-            <input type="time" class="form-input" [value]="incidenciaInicioDesc()"
-              (change)="incidenciaInicioDesc.set($any($event.target).value)" />
-          </div>
-          <div class="form-field">
-            <label><i class="fa-solid fa-rotate-left"></i> Fin descanso</label>
-            <input type="time" class="form-input" [value]="incidenciaFinDesc()"
-              (change)="incidenciaFinDesc.set($any($event.target).value)" />
-          </div>
-          <div class="form-field">
-            <label><i class="fa-solid fa-arrow-right-from-bracket"></i> Salida</label>
-            <input type="time" class="form-input" [value]="incidenciaSalida()"
-              (change)="incidenciaSalida.set($any($event.target).value)" />
-          </div>
-        </div>
-
-        @if (mensajeIncidencia()) {
-          <div class="alert-success"><i class="fa-solid fa-check"></i> {{ mensajeIncidencia() }}</div>
-        }
-      </div>
-
-      <div class="modal-footer">
-        <button class="secondary-btn" (click)="modalIncidenciaAbierto.set(false)">Cancelar</button>
-        <button class="primary-btn" [disabled]="guardandoIncidencia() || !incidenciaAsistenciaId()" (click)="guardarIncidencia()">
-          <i class="fa-solid fa-floppy-disk"></i>
-          {{ guardandoIncidencia() ? 'Guardando...' : 'Guardar cambios' }}
-        </button>
-      </div>
-
-    </div>
-  </div>
-}
-
 @if (modalIncidenciaEmpleadoAbierto()) {
   <div class="modal-backdrop" (click)="modalIncidenciaEmpleadoAbierto.set(false)">
     <div class="modal-panel" (click)="$event.stopPropagation()">
@@ -400,14 +483,11 @@
       </div>
 
       <div class="modal-body">
-
         <div class="form-field">
           <label class="form-label">
             <i class="fa-solid fa-tag"></i> Tipo de incidencia
           </label>
-          <select class="form-select"
-                  [value]="incTipo()"
-                  (change)="incTipo.set($any($event.target).value)">
+          <select class="form-select" [value]="incTipo()" (change)="incTipo.set($any($event.target).value)">
             <option value="descanso_olvidado">Olvidé fichar el descanso</option>
             <option value="descanso_incorrecto">Horario de descanso incorrecto</option>
             <option value="entrada_incorrecta">Hora de entrada incorrecta</option>
@@ -418,35 +498,23 @@
 
         <div class="form-grid">
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-mug-hot"></i> Inicio descanso
-            </label>
-            <input type="time" class="form-input"
-                   [value]="incInicioDesc()"
+            <label class="form-label"><i class="fa-solid fa-mug-hot"></i> Inicio descanso</label>
+            <input type="time" class="form-input" [value]="incInicioDesc()"
                    (change)="incInicioDesc.set($any($event.target).value)" />
           </div>
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-rotate-left"></i> Fin descanso
-            </label>
-            <input type="time" class="form-input"
-                   [value]="incFinDesc()"
+            <label class="form-label"><i class="fa-solid fa-rotate-left"></i> Fin descanso</label>
+            <input type="time" class="form-input" [value]="incFinDesc()"
                    (change)="incFinDesc.set($any($event.target).value)" />
           </div>
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada
-            </label>
-            <input type="time" class="form-input"
-                   [value]="incEntrada()"
+            <label class="form-label"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada</label>
+            <input type="time" class="form-input" [value]="incEntrada()"
                    (change)="incEntrada.set($any($event.target).value)" />
           </div>
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-arrow-right-from-bracket"></i> Salida
-            </label>
-            <input type="time" class="form-input"
-                   [value]="incSalida()"
+            <label class="form-label"><i class="fa-solid fa-arrow-right-from-bracket"></i> Salida</label>
+            <input type="time" class="form-input" [value]="incSalida()"
                    (change)="incSalida.set($any($event.target).value)" />
           </div>
         </div>
@@ -456,25 +524,18 @@
             <i class="fa-solid fa-pen-to-square"></i> Descripción
             <span class="opcional">(opcional)</span>
           </label>
-          <textarea class="form-textarea"
-                    rows="3"
+          <textarea class="form-textarea" rows="3"
                     placeholder="Ej: Me olvidé de fichar el descanso de 13:00 a 13:30..."
                     [value]="incDescripcion()"
                     (input)="incDescripcion.set($any($event.target).value)"></textarea>
         </div>
 
         @if (mensajeIncEmpleado()) {
-          <div class="alert-success">
-            <i class="fa-solid fa-circle-check"></i> {{ mensajeIncEmpleado() }}
-          </div>
+          <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ mensajeIncEmpleado() }}</div>
         }
-
         @if (errorIncEmpleado()) {
-          <div class="error-box">
-            <i class="fa-solid fa-circle-exclamation"></i> {{ errorIncEmpleado() }}
-          </div>
+          <div class="error-box"><i class="fa-solid fa-circle-exclamation"></i> {{ errorIncEmpleado() }}</div>
         }
-
       </div>
 
       <div class="modal-footer">
@@ -496,6 +557,7 @@
 
     </div>
   </div>
+}
 
 @if (logAbierto()) {
   <div class="modal-backdrop" (click)="logAbierto.set(false)">
@@ -517,12 +579,28 @@
       <div class="log-filtros">
         <div class="form-field">
           <label>Modo de trabajo</label>
-          <select class="form-select" [value]="filtroModo()" (change)="onFiltroModoChange($event)">
-            <option value="Todos">Todos</option>
-            <option value="PRESENCIAL">🏢 Presencial</option>
-            <option value="REMOTO">🏠 Remoto</option>
-            <option value="HIBRIDO">🔀 Híbrido</option>
-          </select>
+  <div class="modo-selector" style="gap: 0.5rem">
+    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'Todos'"
+      (click)="filtroModo.set('Todos'); cargarMisRegistros()">
+      <i class="fa-solid fa-list"></i>
+      <span>Todos</span>
+    </button>
+    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'PRESENCIAL'"
+      (click)="filtroModo.set('PRESENCIAL'); cargarMisRegistros()">
+      <i class="fa-solid fa-building"></i>
+      <span>Presencial</span>
+    </button>
+    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'REMOTO'"
+      (click)="filtroModo.set('REMOTO'); cargarMisRegistros()">
+      <i class="fa-solid fa-house"></i>
+      <span>Remoto</span>
+    </button>
+    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'HIBRIDO'"
+      (click)="filtroModo.set('HIBRIDO'); cargarMisRegistros()">
+      <i class="fa-solid fa-random"></i>
+      <span>Híbrido</span>
+    </button>
+  </div>
         </div>
         <div class="form-field">
           <label>Incidencias</label>
@@ -535,17 +613,16 @@
         <div class="log-resumen">
           <span class="log-stat verde">
             <i class="fa-solid fa-check"></i>
-            {{ misRegistros().filter(r => !r.incidenciaTipo).length }} sin incidencias
+            {{ registrosSinIncidencia() }} sin incidencias
           </span>
           <span class="log-stat amber">
             <i class="fa-solid fa-triangle-exclamation"></i>
-            {{ misRegistros().filter(r => r.incidenciaTipo).length }} con incidencias
+            {{ registrosConIncidencia() }} con incidencias
           </span>
         </div>
       </div>
 
       <div class="modal-body" style="padding: 0">
-
         @if (cargandoLog()) {
           <div class="log-loading">
             <i class="fa-solid fa-spinner fa-spin"></i> Cargando registros...
@@ -577,9 +654,7 @@
                   <tr [class.fila-incidencia]="r.incidenciaTipo">
                     <td class="fecha-cell">{{ r.fecha }}</td>
                     <td>{{ r.entrada || '-' }}</td>
-                    <td class="descanso-cell">
-                      {{ r.inicioDescanso || '-' }} / {{ r.finDescanso || '-' }}
-                    </td>
+                    <td class="descanso-cell">{{ r.inicioDescanso || '-' }} / {{ r.finDescanso || '-' }}</td>
                     <td>{{ r.salida || '-' }}</td>
                     <td>
                       <strong class="horas-val">{{ r.horasTotales ?? '-' }}</strong>
@@ -655,5 +730,4 @@
 
     </div>
   </div>
-}
 }

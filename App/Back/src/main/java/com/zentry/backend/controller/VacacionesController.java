@@ -74,8 +74,8 @@ public class VacacionesController {
     }
 
     @PostMapping("/solicitar")
-    public ResponseEntity<Vacaciones> solicitar(@RequestBody Map<String, String> body,
-                                                Authentication authentication) {
+    public ResponseEntity<?> solicitar(@RequestBody Map<String, String> body,
+                                       Authentication authentication) {
         String username = authentication.getName();
 
         Usuario usuario = usuarioRepository.findByUsername(username)
@@ -85,18 +85,58 @@ public class VacacionesController {
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
         String fechaInicio = body.get("fechaInicio");
-        String fechaFin = body.get("fechaFin");
+        String fechaFin    = body.get("fechaFin");
 
-        long dias = java.time.temporal.ChronoUnit.DAYS.between(
-                java.time.LocalDate.parse(fechaInicio),
-                java.time.LocalDate.parse(fechaFin)
-        ) + 1;
+        java.time.LocalDate inicio = java.time.LocalDate.parse(fechaInicio);
+        java.time.LocalDate fin    = java.time.LocalDate.parse(fechaFin);
+
+        if (fin.isBefore(inicio)) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("error", "La fecha de fin no puede ser anterior a la de inicio"));
+        }
+
+        long diasSolicitados = java.time.temporal.ChronoUnit.DAYS.between(inicio, fin) + 1;
+
+        int anioActual = java.time.LocalDate.now().getYear();
+        int diasUsados = vacacionesRepository.findAll().stream()
+                .filter(v -> v.getEmpleadoId().equals(empleado.getId()))
+                .filter(v -> "Aprobada".equals(v.getEstado()) || "Pendiente".equals(v.getEstado()))
+                .filter(v -> v.getFechaInicio() != null
+                        && v.getFechaInicio().startsWith(String.valueOf(anioActual)))
+                .mapToInt(v -> v.getDias() != null ? v.getDias() : 0)
+                .sum();
+
+        int saldoTotal = empleado.getDiasVacaciones() != null ? empleado.getDiasVacaciones() : 22;
+        int saldoDisponible = saldoTotal - diasUsados;
+
+        if (diasSolicitados > saldoDisponible) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Saldo insuficiente",
+                    "saldoDisponible", saldoDisponible,
+                    "diasSolicitados", diasSolicitados
+            ));
+        }
+
+        boolean solapa = vacacionesRepository.findAll().stream()
+                .filter(v -> v.getEmpleadoId().equals(empleado.getId()))
+                .filter(v -> "Aprobada".equals(v.getEstado()))
+                .anyMatch(v -> {
+                    java.time.LocalDate vInicio = java.time.LocalDate.parse(v.getFechaInicio());
+                    java.time.LocalDate vFin    = java.time.LocalDate.parse(v.getFechaFin());
+                    return !fin.isBefore(vInicio) && !inicio.isAfter(vFin);
+                });
+
+        if (solapa) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Las fechas se solapan con vacaciones ya aprobadas"
+            ));
+        }
 
         Vacaciones vacacion = Vacaciones.builder()
                 .empleadoId(usuario.getEmpleadoId())
                 .fechaInicio(fechaInicio)
                 .fechaFin(fechaFin)
-                .dias((int) dias)
+                .dias((int) diasSolicitados)
                 .estado("Pendiente")
                 .build();
 
@@ -104,7 +144,10 @@ public class VacacionesController {
 
         notificacionService.notificarAdmins(
                 "Nueva solicitud de vacaciones",
-                empleado.getNombre() + " ha solicitado vacaciones del " + fechaInicio + " al " + fechaFin,
+                empleado.getNombre() + " ha solicitado vacaciones del "
+                        + fechaInicio + " al " + fechaFin
+                        + " (" + diasSolicitados + " días, saldo restante: "
+                        + (saldoDisponible - diasSolicitados) + ")",
                 "vacaciones",
                 "/vacaciones"
         );
@@ -186,6 +229,32 @@ public class VacacionesController {
                 .filter(v -> "Pendiente".equalsIgnoreCase(v.getEstado()))
                 .count();
         return ResponseEntity.ok(Map.of("count", count));
+    }
+
+    @GetMapping("/saldo")
+    public ResponseEntity<Map<String, Integer>> getSaldo(Authentication authentication) {
+        Usuario usuario = usuarioRepository.findByUsername(authentication.getName())
+                .orElseThrow();
+        Empleado empleado = empleadoRepository.findById(usuario.getEmpleadoId())
+                .orElseThrow();
+
+        int anioActual = java.time.LocalDate.now().getYear();
+        int diasUsados = vacacionesRepository.findAll().stream()
+                .filter(v -> v.getEmpleadoId().equals(empleado.getId()))
+                .filter(v -> "Aprobada".equals(v.getEstado()) || "Pendiente".equals(v.getEstado()))
+                .filter(v -> v.getFechaInicio() != null
+                        && v.getFechaInicio().startsWith(String.valueOf(anioActual)))
+                .mapToInt(v -> v.getDias() != null ? v.getDias() : 0)
+                .sum();
+
+        int saldoTotal     = empleado.getDiasVacaciones() != null ? empleado.getDiasVacaciones() : 22;
+        int saldoDisponible = saldoTotal - diasUsados;
+
+        return ResponseEntity.ok(Map.of(
+                "total",      saldoTotal,
+                "usados",     diasUsados,
+                "disponible", saldoDisponible
+        ));
     }
 
 }

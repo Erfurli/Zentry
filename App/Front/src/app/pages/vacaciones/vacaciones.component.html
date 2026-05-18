@@ -1,4 +1,5 @@
 <div class="page-container">
+
   <div class="page-header">
     <div class="header-content">
       <h1>Gestión de Vacaciones</h1>
@@ -7,48 +8,75 @@
       </div>
     </div>
     <div class="header-actions">
-  <button class="primary-btn" (click)="modalSolicitarAbierto.set(true)" style="margin-right:1rem">
-    <i class="fa-solid fa-plus"></i> Solicitar vacaciones
-  </button>
-      <div class="vista-toggle">
-        <button class="toggle-btn-vista" [class.active]="!vistaCalendario()" (click)="vistaCalendario.set(false)" title="Vista lista">
-          <i class="fa-solid fa-list"></i>
-        </button>
-        <button class="toggle-btn-vista" [class.active]="vistaCalendario()" (click)="activarVistaCalendario()" title="Vista calendario">
-          <i class="fa-solid fa-calendar-days"></i>
+      <button class="primary-btn" (click)="abrirModalSolicitar()" style="margin-right:1rem">
+        <i class="fa-solid fa-plus"></i> Solicitar vacaciones
+      </button>
+      @if (!isEmpleado) {
+        <div class="vista-toggle">
+          <button class="toggle-btn-vista" [class.active]="!vistaCalendario()" (click)="vistaCalendario.set(false)" title="Vista lista">
+            <i class="fa-solid fa-list"></i>
+          </button>
+          <button class="toggle-btn-vista" [class.active]="vistaCalendario()" (click)="activarVistaCalendario()" title="Vista calendario">
+            <i class="fa-solid fa-calendar-days"></i>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (!isEmpleado) {
+    <div class="filters-section">
+      <div class="filters">
+        <select class="filter-select" [value]="filtroEstado()" (change)="cambiarFiltroEstado($any($event.target).value)">
+          <option value="Todos">Todos los estados</option>
+          <option value="Aprobada">Aprobadas</option>
+          <option value="Pendiente">Pendientes</option>
+          <option value="Rechazada">Rechazadas</option>
+        </select>
+        <select class="filter-select" [value]="filtroDepartamento()" (change)="cambiarFiltroDepartamento($any($event.target).value)">
+          <option value="Todos">Todos los departamentos</option>
+          <option value="RRHH">RRHH</option>
+          <option value="IT">IT</option>
+          <option value="Ventas">Ventas</option>
+        </select>
+        <button class="export-btn" type="button" (click)="exportar()">
+          <i class="fa-solid fa-download"></i> Exportar
         </button>
       </div>
     </div>
-  </div>
+  }
 
-  <div class="filters-section">
-    <div class="filters">
-      <select class="filter-select" [value]="filtroEstado()" (change)="cambiarFiltroEstado($any($event.target).value)">
-        <option value="Todos">Todos los estados</option>
-        <option value="Aprobada">Aprobadas</option>
-        <option value="Pendiente">Pendientes</option>
-        <option value="Rechazada">Rechazadas</option>
-      </select>
-      <select class="filter-select" [value]="filtroDepartamento()" (change)="cambiarFiltroDepartamento($any($event.target).value)">
-        <option value="Todos">Todos los departamentos</option>
-        <option value="RRHH">RRHH</option>
-        <option value="IT">IT</option>
-        <option value="Ventas">Ventas</option>
-      </select>
-      <button class="export-btn" type="button" (click)="exportar()">
-        <i class="fa-solid fa-download"></i> Exportar
-      </button>
+  @if (!isEmpleado) {
+    <div class="kpi-grid">
+      <div class="kpi-card aprobada"><div class="kpi-number">{{ totalAprobadas() }}</div><div class="kpi-label">Aprobadas</div></div>
+      <div class="kpi-card pendiente"><div class="kpi-number">{{ totalPendientes() }}</div><div class="kpi-label">Pendientes</div></div>
+      <div class="kpi-card rechazada"><div class="kpi-number">{{ totalRechazadas() }}</div><div class="kpi-label">Rechazadas</div></div>
+      <div class="kpi-card dias"><div class="kpi-number">{{ totalDiasSolicitados() }}</div><div class="kpi-label">Días Solicitados</div></div>
     </div>
-  </div>
+  }
 
-  <div class="kpi-grid">
-    <div class="kpi-card aprobada"><div class="kpi-number">{{ totalAprobadas() }}</div><div class="kpi-label">Aprobadas</div></div>
-    <div class="kpi-card pendiente"><div class="kpi-number">{{ totalPendientes() }}</div><div class="kpi-label">Pendientes</div></div>
-    <div class="kpi-card rechazada"><div class="kpi-number">{{ totalRechazadas() }}</div><div class="kpi-label">Rechazadas</div></div>
-    <div class="kpi-card dias"><div class="kpi-number">{{ totalDiasSolicitados() }}</div><div class="kpi-label">Días Solicitados</div></div>
-  </div>
+  @if (isEmpleado && saldo()) {
+    <div class="kpi-grid">
+      <div class="kpi-card aprobada">
+        <div class="kpi-number">{{ saldo()!.disponible }}</div>
+        <div class="kpi-label">Días disponibles</div>
+      </div>
+      <div class="kpi-card pendiente">
+        <div class="kpi-number">{{ totalPendientes() }}</div>
+        <div class="kpi-label">Pendientes</div>
+      </div>
+      <div class="kpi-card rechazada">
+        <div class="kpi-number">{{ totalRechazadas() }}</div>
+        <div class="kpi-label">Rechazadas</div>
+      </div>
+      <div class="kpi-card dias">
+        <div class="kpi-number">{{ saldo()!.usados }}</div>
+        <div class="kpi-label">Días usados</div>
+      </div>
+    </div>
+  }
 
-  @if (!vistaCalendario()) {
+  @if (!vistaCalendario() && !isEmpleado) {
     <div class="table-container">
       <table class="vacaciones-table">
         <thead>
@@ -91,7 +119,7 @@
     </div>
   }
 
-  @if (vistaCalendario()) {
+  @if (vistaCalendario() || isEmpleado) {
     <div class="calendario-container">
       <div class="calendario-izquierda">
         <mat-calendar #cal [dateClass]="dateClass" (selectedChange)="onDateSelected($event)"></mat-calendar>
@@ -154,13 +182,14 @@
                     {{ s.estado }}
                   </span>
                 </div>
+
                 <div class="solicitud-card-bottom">
                   <span class="solicitud-fechas">
                     <i class="fa-solid fa-calendar-range"></i>
                     {{ s.fechaInicio }} → {{ s.fechaFin }}
                     <strong>({{ s.dias }} días)</strong>
                   </span>
-                  @if (s.estado === 'Pendiente') {
+                  @if (s.estado === 'Pendiente' && !isEmpleado) {
                     <div class="solicitud-acciones">
                       <button class="accion-btn aprobar" (click)="aprobar(s.id)" title="Aprobar"><i class="fa-solid fa-check"></i></button>
                       <button class="accion-btn rechazar" (click)="rechazar(s.id)" title="Rechazar"><i class="fa-solid fa-xmark"></i></button>
@@ -179,12 +208,12 @@
       </div>
     </div>
   }
+
 </div>
 
 @if (modalSugerenciaAbierto()) {
   <div class="modal-backdrop" (click)="cerrarModalSugerencia()">
     <div class="modal-panel" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
         <div class="modal-header-icon">
           <i class="fa-solid fa-calendar-pen"></i>
@@ -197,19 +226,14 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-
       <div class="modal-body">
         <div class="form-grid">
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-calendar-day"></i> Nueva fecha inicio
-            </label>
+            <label class="form-label"><i class="fa-solid fa-calendar-day"></i> Nueva fecha inicio</label>
             <input type="date" class="form-input" [(ngModel)]="nuevaFechaInicio" />
           </div>
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-calendar-day"></i> Nueva fecha fin
-            </label>
+            <label class="form-label"><i class="fa-solid fa-calendar-day"></i> Nueva fecha fin</label>
             <input type="date" class="form-input" [(ngModel)]="nuevaFechaFin" />
           </div>
         </div>
@@ -224,7 +248,6 @@
           <div class="error-box"><i class="fa-solid fa-circle-exclamation"></i> {{ errorSugerencia }}</div>
         }
       </div>
-
       <div class="modal-footer">
         <button class="secondary-btn" type="button" (click)="cerrarModalSugerencia()" [disabled]="loadingSugerencia">
           Cancelar
@@ -237,7 +260,6 @@
           }
         </button>
       </div>
-
     </div>
   </div>
 }
@@ -245,7 +267,6 @@
 @if (modalSolicitarAbierto()) {
   <div class="modal-backdrop" (click)="modalSolicitarAbierto.set(false)">
     <div class="modal-panel" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
         <div class="modal-header-icon">
           <i class="fa-solid fa-umbrella-beach"></i>
@@ -258,30 +279,35 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
-
       <div class="modal-body">
+        @if (saldo()) {
+          <div class="saldo-info">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>
+              Días disponibles: <strong>{{ saldo()!.disponible }}</strong>
+              de {{ saldo()!.total }}
+              <span class="saldo-usados">({{ saldo()!.usados }} usados)</span>
+            </span>
+          </div>
+        }
         <div class="form-grid">
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-calendar-day"></i> Fecha de inicio
-            </label>
-            <input type="date" class="form-input"
-                   [(ngModel)]="fechaSolicitudInicio" />
+            <label class="form-label"><i class="fa-solid fa-calendar-day"></i> Fecha de inicio</label>
+            <input type="date" class="form-input" [(ngModel)]="fechaSolicitudInicio" />
           </div>
           <div class="form-field">
-            <label class="form-label">
-              <i class="fa-solid fa-calendar-day"></i> Fecha de fin
-            </label>
+            <label class="form-label"><i class="fa-solid fa-calendar-day"></i> Fecha de fin</label>
             <input type="date" class="form-input"
                    [(ngModel)]="fechaSolicitudFin"
                    [min]="fechaSolicitudInicio" />
           </div>
         </div>
         @if (errorSolicitud) {
-          <div class="error-box"><i class="fa-solid fa-circle-exclamation"></i> {{ errorSolicitud }}</div>
+          <div class="error-box">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ errorSolicitud }}
+          </div>
         }
       </div>
-
       <div class="modal-footer">
         <button class="secondary-btn" type="button"
                 (click)="modalSolicitarAbierto.set(false)"
@@ -298,7 +324,6 @@
           }
         </button>
       </div>
-
     </div>
   </div>
 }

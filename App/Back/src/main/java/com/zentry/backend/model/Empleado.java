@@ -27,4 +27,6 @@ public class Empleado {
     private RolEmpresa rolEmpresa;
 
     private String foto;
+
+    private Integer diasVacaciones;
 }

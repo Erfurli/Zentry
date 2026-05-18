@@ -813,6 +813,160 @@
   font-weight: 500;
 }
 
+.modal-panel.modal-panel-lg {
+  max-height: 50vh;
+  min-height: 550px;
+  max-width: 1100px;
+}
+
+.modal-panel.modal-panel-lg .modal-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.log-tabla-wrapper {
+  min-height: 100px;
+}
+
+
+
+
+
+/* ── Layout empleado ── */
+.empleado-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .empleado-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Tarjeta estado v2 ── */
+.estado-card-v2 {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.estado-card-v2-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.estado-chip-grande {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; flex-shrink: 0;
+}
+.estado-chip-grande.trabajando   { background: #d1fae5; color: #065f46; }
+.estado-chip-grande.en_descanso  { background: #fef3c7; color: #92400e; }
+.estado-chip-grande.finalizado   { background: #e0e7ff; color: #3730a3; }
+.estado-chip-grande.no_fichado   { background: #f1f5f9; color: #475569; }
+
+.estado-metricas-v2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.metrica-item {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.metrica-item i  { font-size: 0.9rem; color: #94a3b8; }
+.metrica-item.destaca i { color: #3A5698; }
+.metrica-label   { font-size: 0.75rem; color: #64748b; font-weight: 600; text-transform: uppercase; }
+.metrica-val     { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
+.metrica-item.destaca .metrica-val { color: #3A5698; font-size: 1.3rem; }
+
+.acciones-rapidas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.modo-trabajo-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.modo-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ── Columna lateral ── */
+.empleado-col-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.side-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.side-card-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+}
+.side-card-icon.amber { background: #fef3c7; color: #92400e; }
+.side-card-icon.azul  { background: #dbeafe; color: #1e40af; }
+
+.side-card-body h3 { margin: 0 0 0.2rem; font-size: 0.95rem; font-weight: 700; color: #1e293b; }
+.side-card-body p  { margin: 0; font-size: 0.82rem; color: #64748b; }
+
+/* ── Últimos fichajes ── */
+.ultimos-titulo {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.ultimos-titulo i { color: #3A5698; }
+
+.ultimos-lista { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.ultimo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  font-size: 0.85rem;
+}
+.ultimo-fecha { font-weight: 600; color: #374151; }
+.ultimo-horas { font-weight: 700; color: #3A5698; }
+
 @media (max-width: 900px) {
   .filters {
     flex-direction: column;

@@ -11,6 +11,8 @@ import { AuthService } from '../../services/auth.service';
 import { ExportService } from '../../services/export.service';
 import { FestivosService, Festivo } from '../../services/festivos.service';
 import { BadgesService } from '../../services/badges.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../enviroments/enviroment';
 
 type EstadoSolicitud = 'Aprobada' | 'Pendiente' | 'Rechazada';
 
@@ -27,30 +29,29 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   private authService       = inject(AuthService);
   private exportService     = inject(ExportService);
   private festivosService   = inject(FestivosService);
-  private badgesService = inject(BadgesService);
-
-
-  readonly festivos = signal<Festivo[]>([]);
+  private badgesService     = inject(BadgesService);
+  private http              = inject(HttpClient);
 
   @ViewChild('cal') calendar!: MatCalendar<Date>;
 
   readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
 
+  readonly festivos             = signal<Festivo[]>([]);
   readonly solicitudes          = signal<VacacionesVista[]>([]);
   readonly filtroEstado         = signal<EstadoSolicitud | 'Todos'>('Todos');
   readonly filtroDepartamento   = signal<string>('Todos');
-  readonly vistaCalendario      = signal(false);
+  readonly vistaCalendario      = signal(this.isEmpleado);
   readonly mesActual            = signal(new Date());
-
+  readonly saldo                = signal<{ total: number; usados: number; disponible: number } | null>(null);
   readonly modalSugerenciaAbierto = signal(false);
   readonly solicitudArrastrada    = signal<VacacionesVista | null>(null);
+  readonly modalSolicitarAbierto  = signal(false);
+
   nuevaFechaInicio  = '';
   nuevaFechaFin     = '';
   mensajeSugerencia = '';
   loadingSugerencia = false;
   errorSugerencia   = '';
-
-  readonly modalSolicitarAbierto = signal(false);
   fechaSolicitudInicio = '';
   fechaSolicitudFin    = '';
   errorSolicitud       = '';
@@ -69,11 +70,9 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   });
 
   readonly solicitudesDelMes = computed(() => {
-    const mes      = this.mesActual();
-    const anio     = mes.getFullYear();
-    const m        = mes.getMonth();
-    const primerDia = new Date(anio, m, 1);
-    const ultimoDia = new Date(anio, m + 1, 0, 23, 59, 59);
+    const mes       = this.mesActual();
+    const primerDia = new Date(mes.getFullYear(), mes.getMonth(), 1);
+    const ultimoDia = new Date(mes.getFullYear(), mes.getMonth() + 1, 0, 23, 59, 59);
     return this.solicitudesFiltradas().filter(s => {
       const inicio = new Date(s.fechaInicio);
       const fin    = new Date(s.fechaFin);
@@ -81,15 +80,16 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
     });
   });
 
-  readonly totalAprobadas      = computed(() => this.solicitudes().filter(s => s.estado === 'Aprobada').length);
-  readonly totalPendientes     = computed(() => this.solicitudes().filter(s => s.estado === 'Pendiente').length);
-  readonly totalRechazadas     = computed(() => this.solicitudes().filter(s => s.estado === 'Rechazada').length);
+  readonly totalAprobadas       = computed(() => this.solicitudes().filter(s => s.estado === 'Aprobada').length);
+  readonly totalPendientes      = computed(() => this.solicitudes().filter(s => s.estado === 'Pendiente').length);
+  readonly totalRechazadas      = computed(() => this.solicitudes().filter(s => s.estado === 'Rechazada').length);
   readonly totalDiasSolicitados = computed(() => this.solicitudes().reduce((acc, s) => acc + s.dias, 0));
 
   ngOnInit(): void {
     this.badgesService.recargarVacaciones();
     this.cargarVacaciones();
     this.cargarFestivos(new Date().getFullYear());
+    this.cargarSaldo();
   }
 
   ngAfterViewInit(): void {
@@ -102,6 +102,12 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
         this.cargarFestivos(active.getFullYear());
       }
     });
+  }
+
+  cargarSaldo(): void {
+    this.http.get<{ total: number; usados: number; disponible: number }>(
+      `${environment.apiUrl}/vacaciones/saldo`
+    ).subscribe({ next: s => this.saldo.set(s) });
   }
 
   cargarFestivos(year: number): void {
@@ -191,15 +197,19 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
       return;
     }
     this.loadingSolicitud = true;
-    this.vacacionesService.solicitarVacaciones(this.fechaSolicitudInicio, this.fechaSolicitudFin).subscribe({
+    this.vacacionesService.solicitarVacaciones(
+      this.fechaSolicitudInicio,
+      this.fechaSolicitudFin
+    ).subscribe({
       next: () => {
         this.loadingSolicitud = false;
         this.modalSolicitarAbierto.set(false);
         this.cargarVacaciones();
+        this.cargarSaldo();
       },
-      error: () => {
+      error: (err) => {
         this.loadingSolicitud = false;
-        this.errorSolicitud = 'No se pudo crear la solicitud.';
+        this.errorSolicitud = err.error?.error ?? 'No se pudo crear la solicitud.';
       }
     });
   }
@@ -211,8 +221,8 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   onDropped(event: CdkDragDrop<VacacionesVista[]>): void {
     const s = this.solicitudArrastrada();
     if (!s) return;
-    this.nuevaFechaInicio = s.fechaInicio;
-    this.nuevaFechaFin    = s.fechaFin;
+    this.nuevaFechaInicio  = s.fechaInicio;
+    this.nuevaFechaFin     = s.fechaFin;
     this.mensajeSugerencia = '';
     this.errorSugerencia   = '';
     this.modalSugerenciaAbierto.set(true);
@@ -238,7 +248,9 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
       return;
     }
     this.loadingSugerencia = true;
-    this.vacacionesService.crearSugerencia(s.id, this.nuevaFechaInicio, this.nuevaFechaFin, this.mensajeSugerencia).subscribe({
+    this.vacacionesService.crearSugerencia(
+      s.id, this.nuevaFechaInicio, this.nuevaFechaFin, this.mensajeSugerencia
+    ).subscribe({
       next: () => {
         this.loadingSugerencia = false;
         this.cerrarModalSugerencia();
@@ -251,17 +263,14 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   }
 
   puedeArrastrar(solicitud: VacacionesVista): boolean {
-    const rol = this.authService.getSystemRole();
-    if (rol === 'ADMIN') return true;
+    if (this.authService.getSystemRole() === 'ADMIN') return true;
     const empleadoId = this.authService.getEmpleadoId();
     return solicitud.estado === 'Pendiente' &&
            solicitud.empleadoId === String(empleadoId);
   }
 
   dateClass: MatCalendarCellClassFunction<Date> = (date) => {
-    if (this.festivosService.esFestivo(date, this.festivos())) {
-      return 'dia-festivo';
-    }
+    if (this.festivosService.esFestivo(date, this.festivos())) return 'dia-festivo';
     for (const s of this.solicitudesFiltradas()) {
       const inicio = new Date(s.fechaInicio);
       const fin    = new Date(s.fechaFin);

@@ -358,47 +358,252 @@ body {
 
 
 
-/* TEMA OSCURO */
-body.tema-oscuro {
-  --bg-page:    #0f172a;
-  --bg-card:    #1e293b;
-  --bg-input:   #334155;
-  --text-main:  #f1f5f9;
-  --text-muted: #94a3b8;
-  --border:     #334155;
-  background: #0f172a;
-  color: #f1f5f9;
-}
+/* ── TEMA OSCURO ── */
 
-body.tema-oscuro .perfil-card,
-body.tema-oscuro .modal-panel,
-body.tema-oscuro .chat-sidebar,
-body.tema-oscuro .chat-main,
-body.tema-oscuro .notif-panel,
-body.tema-oscuro .config-dropdown {
-  background: #1e293b !important;
-  border-color: #334155 !important;
+body.tema-oscuro,
+body.tema-oscuro .page-container,
+body.tema-oscuro app-layout,
+body.tema-oscuro .main-content,
+body.tema-oscuro .content-area,
+body.tema-oscuro .layout-content {
+  background: #0f172a !important;
   color: #f1f5f9 !important;
 }
 
-body.tema-oscuro .sidebar-item:hover,
-body.tema-oscuro .config-item:hover {
+/* ── tarjetas y secciones ── */
+body.tema-oscuro .page-header,
+body.tema-oscuro .filters-section,
+body.tema-oscuro .kpi-card,
+body.tema-oscuro .table-container,
+body.tema-oscuro .grafico-container,
+body.tema-oscuro .estado-card,
+body.tema-oscuro .estado-card-v2,
+body.tema-oscuro .side-card,
+body.tema-oscuro .lista-card,
+body.tema-oscuro .export-section,
+body.tema-oscuro .export-card,
+body.tema-oscuro .resumen-card,
+body.tema-oscuro .resumen-grid .resumen-card,
+body.tema-oscuro .pendiente-chip,
+body.tema-oscuro .modal-panel,
+body.tema-oscuro .notif-panel,
+body.tema-oscuro .chat-layout,
+body.tema-oscuro .chat-sidebar,
+body.tema-oscuro .chat-main,
+body.tema-oscuro .chat-header,
+body.tema-oscuro .chat-mensajes,
+body.tema-oscuro .chat-input-area,
+body.tema-oscuro .chat-vacio,
+body.tema-oscuro .chat-input,
+body.tema-oscuro .sidebar-lista,
+body.tema-oscuro .sidebar-item,
+body.tema-oscuro .estado-dropdown {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* ── textos ── */
+body.tema-oscuro h1,
+body.tema-oscuro h2,
+body.tema-oscuro h3,
+body.tema-oscuro h4,
+body.tema-oscuro p,
+body.tema-oscuro span,
+body.tema-oscuro td,
+body.tema-oscuro th,
+body.tema-oscuro label,
+body.tema-oscuro .breadcrumbs,
+body.tema-oscuro .kpi-label,
+body.tema-oscuro .kpi-number,
+body.tema-oscuro .estado-titulo,
+body.tema-oscuro .estado-valor,
+body.tema-oscuro .metrica-label,
+body.tema-oscuro .metrica-val,
+body.tema-oscuro .fm-label,
+body.tema-oscuro .fm-val,
+body.tema-oscuro .sidebar-nombre,
+body.tema-oscuro .sidebar-seccion-label,
+body.tema-oscuro .lista-nombre,
+body.tema-oscuro .lista-sub,
+body.tema-oscuro .log-stat,
+body.tema-oscuro .pag-info,
+body.tema-oscuro .resumen-label,
+body.tema-oscuro .resumen-num,
+body.tema-oscuro .export-card-body h3,
+body.tema-oscuro .export-card-body p,
+body.tema-oscuro .ultimos-titulo,
+body.tema-oscuro .ultimo-fecha,
+body.tema-oscuro .leyenda-nombre,
+body.tema-oscuro .leyenda-valor {
+  color: #f1f5f9 !important;
+}
+
+/* ── textos secundarios ── */
+body.tema-oscuro .breadcrumbs a,
+body.tema-oscuro .ver-mas,
+body.tema-oscuro .pendiente-link {
+  color: #93c5fd !important;
+}
+
+/* ── tablas ── */
+body.tema-oscuro table,
+body.tema-oscuro .asistencia-table,
+body.tema-oscuro .reportes-table,
+body.tema-oscuro .log-tabla {
+  background: #1e293b !important;
+}
+
+body.tema-oscuro th {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro td {
+  border-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+body.tema-oscuro tbody tr:hover {
   background: #334155 !important;
 }
 
-body.tema-oscuro .form-field input,
-body.tema-oscuro .form-field select,
-body.tema-oscuro .chat-input {
+/* ── inputs ── */
+body.tema-oscuro input,
+body.tema-oscuro select,
+body.tema-oscuro textarea,
+body.tema-oscuro .filter-select,
+body.tema-oscuro .filter-date,
+body.tema-oscuro .form-input,
+body.tema-oscuro .form-select,
+body.tema-oscuro .form-textarea {
   background: #334155 !important;
   border-color: #475569 !important;
   color: #f1f5f9 !important;
 }
 
-body.tema-oscuro .dato-item { border-color: #334155; }
-body.tema-oscuro .dato-label,
-body.tema-oscuro .text-muted,
-body.tema-oscuro .sidebar-ultimo { color: #94a3b8 !important; }
-body.tema-oscuro h1, body.tema-oscuro h2, body.tema-oscuro h3 { color: #f1f5f9 !important; }
+/* ── modales ── */
+body.tema-oscuro .modal-header,
+body.tema-oscuro .modal-footer,
+body.tema-oscuro .log-filtros {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .modal-body {
+  background: #1e293b !important;
+}
+
+body.tema-oscuro .fichaje-metrica,
+body.tema-oscuro .metrica-item,
+body.tema-oscuro .ultimo-item,
+body.tema-oscuro .log-filtros .form-field label {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+/* ── botones ── */
+body.tema-oscuro .modo-btn {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #94a3b8 !important;
+}
+body.tema-oscuro .modo-btn.activo {
+  background: #1e3a5f !important;
+  border-color: #3A5698 !important;
+  color: #93c5fd !important;
+}
+
+/* ── paginación ── */
+body.tema-oscuro .pag-btn {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #94a3b8 !important;
+}
+body.tema-oscuro .pag-btn.activa {
+  background: #3A5698 !important;
+  color: white !important;
+}
+
+/* ── chat mensajes ── */
+body.tema-oscuro .mensaje-burbuja {
+  background: #334155 !important;
+  color: #f1f5f9 !important;
+}
+body.tema-oscuro .mensaje-burbuja.mio {
+  background: #1e3a5f !important;
+  color: #f1f5f9 !important;
+}
+body.tema-oscuro .msg-texto,
+body.tema-oscuro .msg-hora,
+body.tema-oscuro .msg-autor-nombre {
+  color: #f1f5f9 !important;
+}
+
+/* ── toast ── */
+body.tema-oscuro .toast-msg {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+/* ── botones secundarios ── */
+body.tema-oscuro .secondary-btn,
+body.tema-oscuro .btn-cancelar {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+/* ── item activo del sidebar ── */
+body.tema-oscuro .sidebar-item.active,
+body.tema-oscuro .sidebar-item:hover {
+  background: #334155 !important;
+}
+
+body.tema-oscuro .sidebar-item.active .sidebar-nombre {
+  color: #93c5fd !important;
+}
+
+/* ── panel notificaciones ── */
+body.tema-oscuro .notif-item {
+  border-color: #334155 !important;
+  background: #1e293b !important;
+}
+body.tema-oscuro .notif-item:hover {
+  background: #334155 !important;
+}
+body.tema-oscuro .notif-header {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+/* ── drop de configuración ── */
+body.tema-oscuro .config-item {
+  color: #f1f5f9 !important;
+}
+body.tema-oscuro .config-item:hover {
+  background: #334155 !important;
+}
+body.tema-oscuro .config-item i:first-child {
+  color: #94a3b8 !important;
+}
+body.tema-oscuro .config-seccion-label {
+  color: #64748b !important;
+}
+body.tema-oscuro .config-divider {
+  background: #334155 !important;
+}
+body.tema-oscuro .config-submenu {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+body.tema-oscuro .config-subitem {
+  color: #f1f5f9 !important;
+}
+body.tema-oscuro .config-subitem:hover {
+  background: #334155 !important;
+}
 
 @media (max-width: 600px) {
   .modal-panel {

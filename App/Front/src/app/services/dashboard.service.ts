@@ -5,7 +5,12 @@ import { environment } from '../../enviroments/enviroment';
 
 export interface DashboardSummary {
   vacationBalance: number;
-  upcomingVacations: { dates: string; status: string }[];
+  upcomingVacations: {
+    dates: string;
+    status: string;
+    fechaInicio: string;
+    fechaFin: string;
+  }[];
   todayHours: number;
   userName: string;
 }

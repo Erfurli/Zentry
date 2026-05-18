@@ -24,6 +24,8 @@
   }
 
   @if (!cargando() && kpis()) {
+
+    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card azul">
         <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
@@ -37,6 +39,7 @@
         <div class="kpi-data">
           <div class="kpi-number">{{ kpis()!.presentes }}</div>
           <div class="kpi-label">Presentes hoy</div>
+          <div class="kpi-pct">{{ getPct(kpis()!.presentes) }}%</div>
         </div>
       </div>
       <div class="kpi-card amber">
@@ -44,6 +47,7 @@
         <div class="kpi-data">
           <div class="kpi-number">{{ kpis()!.retrasos }}</div>
           <div class="kpi-label">Retrasos hoy</div>
+          <div class="kpi-pct">{{ getPct(kpis()!.retrasos) }}%</div>
         </div>
       </div>
       <div class="kpi-card rojo">
@@ -51,10 +55,12 @@
         <div class="kpi-data">
           <div class="kpi-number">{{ kpis()!.ausentes }}</div>
           <div class="kpi-label">Ausentes hoy</div>
+          <div class="kpi-pct">{{ getPct(kpis()!.ausentes) }}%</div>
         </div>
       </div>
     </div>
 
+    <!-- PENDIENTES CHIPS -->
     <div class="pendientes-grid">
       <div class="pendiente-chip vacaciones">
         <i class="fa-solid fa-plane"></i>
@@ -76,71 +82,106 @@
       </div>
     </div>
 
-    <div class="listas-grid">
+    <!-- MAIN GRID: gráfica + listas -->
+    <div class="main-grid">
 
-      <div class="lista-card">
-        <div class="lista-header">
-          <h2><i class="fa-solid fa-plane"></i> Vacaciones por aprobar</h2>
-          <a routerLink="/vacaciones" class="ver-mas">Ver todas</a>
+      <!-- CARRUSEL GRÁFICAS -->
+      <div class="grafica-card">
+        <div class="grafica-header">
+          <div class="grafica-titulo">
+            <i class="fa-solid {{ graficaInfo().icono }}"
+               [style.color]="graficaInfo().color"></i>
+            <h2>{{ graficaInfo().titulo }}</h2>
+          </div>
+          <div class="grafica-nav">
+            <button class="nav-btn" (click)="anterior()">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="nav-dots">
+              @for (g of GRAFICAS; track $index) {
+                <span class="nav-dot"
+                      [class.activo]="graficaActual() === $index"
+                      (click)="irAGrafica($index)">
+                </span>
+              }
+            </div>
+            <button class="nav-btn" (click)="siguiente()">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
-        @if (vacacionesPend().length === 0) {
-          <div class="lista-vacia">
-            <i class="fa-solid fa-check-circle"></i>
-            <p>Sin solicitudes pendientes</p>
-          </div>
-        } @else {
-          <div class="lista-items">
-            @for (v of vacacionesPend(); track v.id) {
-              <div class="lista-item">
-                <div class="lista-avatar">{{ v.empleado.charAt(0) }}</div>
-                <div class="lista-info">
-                  <span class="lista-nombre">{{ v.empleado }}</span>
-                  <span class="lista-sub">{{ v.fechaInicio }} → {{ v.fechaFin }} · {{ v.dias }} días</span>
-                </div>
-                <div class="lista-acciones">
-                  <button class="accion-aprobar" (click)="aprobarVacacion(v.id)" title="Aprobar">
-                    <i class="fa-solid fa-check"></i>
-                  </button>
-                  <button class="accion-rechazar" (click)="rechazarVacacion(v.id)" title="Rechazar">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>
-              </div>
-            }
-          </div>
-        }
+        <div class="grafica-wrapper">
+          <canvas #chartCanvas></canvas>
+        </div>
       </div>
 
-      <div class="lista-card">
-        <div class="lista-header">
-          <h2><i class="fa-solid fa-user-slash"></i> Ausencias por justificar</h2>
-          <a routerLink="/ausencias" class="ver-mas">Ver todas</a>
-        </div>
-        @if (ausenciasPend().length === 0) {
-          <div class="lista-vacia">
-            <i class="fa-solid fa-check-circle"></i>
-            <p>Sin ausencias pendientes</p>
-          </div>
-        } @else {
-          <div class="lista-items">
-            @for (a of ausenciasPend(); track a.id) {
-              <div class="lista-item">
-                <div class="lista-avatar ausencia">{{ a.empleado.charAt(0) }}</div>
-                <div class="lista-info">
-                  <span class="lista-nombre">{{ a.empleado }}</span>
-                  <span class="lista-sub">{{ a.tipo }} · {{ a.fechaInicio }} → {{ a.fechaFin }}</span>
-                </div>
-                <div class="lista-acciones">
-                  <button class="accion-aprobar" (click)="justificarAusencia(a.id)" title="Justificar">
-                    <i class="fa-solid fa-check"></i>
-                  </button>
-                </div>
-              </div>
-            }
-          </div>
-        }
-      </div>
+      <!-- LISTAS -->
+      <div class="listas-col">
 
+        <div class="lista-card">
+          <div class="lista-header">
+            <h2><i class="fa-solid fa-plane"></i> Vacaciones por aprobar</h2>
+            <a routerLink="/vacaciones" class="ver-mas">Ver todas</a>
+          </div>
+          @if (vacacionesPend().length === 0) {
+            <div class="lista-vacia">
+              <i class="fa-solid fa-check-circle"></i>
+              <p>Sin solicitudes pendientes</p>
+            </div>
+          } @else {
+            <div class="lista-items">
+              @for (v of vacacionesPend(); track v.id) {
+                <div class="lista-item">
+                  <div class="lista-avatar">{{ v.empleado.charAt(0) }}</div>
+                  <div class="lista-info">
+                    <span class="lista-nombre">{{ v.empleado }}</span>
+                    <span class="lista-sub">{{ v.fechaInicio }} → {{ v.fechaFin }} · {{ v.dias }} días</span>
+                  </div>
+                  <div class="lista-acciones">
+                    <button class="accion-aprobar" (click)="aprobarVacacion(v.id)" title="Aprobar">
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                    <button class="accion-rechazar" (click)="rechazarVacacion(v.id)" title="Rechazar">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="lista-card">
+          <div class="lista-header">
+            <h2><i class="fa-solid fa-user-slash"></i> Ausencias por justificar</h2>
+            <a routerLink="/ausencias" class="ver-mas">Ver todas</a>
+          </div>
+          @if (ausenciasPend().length === 0) {
+            <div class="lista-vacia">
+              <i class="fa-solid fa-check-circle"></i>
+              <p>Sin ausencias pendientes</p>
+            </div>
+          } @else {
+            <div class="lista-items">
+              @for (a of ausenciasPend(); track a.id) {
+                <div class="lista-item">
+                  <div class="lista-avatar ausencia">{{ a.empleado.charAt(0) }}</div>
+                  <div class="lista-info">
+                    <span class="lista-nombre">{{ a.empleado }}</span>
+                    <span class="lista-sub">{{ a.tipo }} · {{ a.fechaInicio }} → {{ a.fechaFin }}</span>
+                  </div>
+                  <div class="lista-acciones">
+                    <button class="accion-aprobar" (click)="justificarAusencia(a.id)" title="Justificar">
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
     </div>
   }
 </div>

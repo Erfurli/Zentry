@@ -56,6 +56,8 @@ public class DashboardController {
                 .map(v -> HomeDashboardResponse.VacationItem.builder()
                         .dates(formatRange(v.getFechaInicio(), v.getFechaFin()))
                         .status(v.getEstado())
+                        .fechaInicio(v.getFechaInicio())
+                        .fechaFin(v.getFechaFin())
                         .build())
                 .toList();
 

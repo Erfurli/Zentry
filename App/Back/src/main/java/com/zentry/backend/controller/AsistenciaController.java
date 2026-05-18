@@ -78,7 +78,7 @@ public class AsistenciaController {
     }
 
     private AsistenciaVistaDTO toResponse(Asistencia a, String nombre, String departamento) {
-        return new AsistenciaVistaDTO(
+        AsistenciaVistaDTO dto = new AsistenciaVistaDTO(
                 a.getId(), a.getEmpleadoId(), nombre, departamento,
                 a.getEstado() != null ? a.getEstado() : "NO_FICHADO",
                 a.getEntrada(), a.getSalida(),
@@ -86,6 +86,11 @@ public class AsistenciaController {
                 a.getHorasTotales(), a.getHorasExtra(),
                 a.getFecha()
         );
+        dto.setIncidenciaTipo(a.getIncidenciaTipo());
+        dto.setIncidenciaDescripcion(a.getIncidenciaDescripcion());
+        dto.setIncidenciaEstado(a.getIncidenciaEstado());
+        dto.setIncidenciaFechaReporte(a.getIncidenciaFechaReporte());
+        return dto;
     }
 
 
@@ -306,13 +311,16 @@ public class AsistenciaController {
         Asistencia asistencia = asistenciaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
 
-        if (datos.containsKey("entrada")        && datos.get("entrada")        != null && !datos.get("entrada").isBlank())
+        String tipo        = datos.getOrDefault("tipo", "otro");
+        String descripcion = datos.getOrDefault("descripcion", "Sin descripción adicional");
+
+        if (datos.containsKey("entrada") && datos.get("entrada") != null && !datos.get("entrada").isBlank())
             asistencia.setEntrada(datos.get("entrada"));
-        if (datos.containsKey("salida")         && datos.get("salida")         != null && !datos.get("salida").isBlank())
+        if (datos.containsKey("salida") && datos.get("salida") != null && !datos.get("salida").isBlank())
             asistencia.setSalida(datos.get("salida"));
         if (datos.containsKey("inicioDescanso") && datos.get("inicioDescanso") != null && !datos.get("inicioDescanso").isBlank())
             asistencia.setInicioDescanso(datos.get("inicioDescanso"));
-        if (datos.containsKey("finDescanso")    && datos.get("finDescanso")    != null && !datos.get("finDescanso").isBlank())
+        if (datos.containsKey("finDescanso") && datos.get("finDescanso") != null && !datos.get("finDescanso").isBlank())
             asistencia.setFinDescanso(datos.get("finDescanso"));
 
         if (asistencia.getEntrada() != null && asistencia.getSalida() != null) {
@@ -324,23 +332,24 @@ public class AsistenciaController {
             asistencia.setHorasExtra(Math.max(0, Math.round((horas - JORNADA_HORAS) * 100.0) / 100.0));
         }
 
+        asistencia.setIncidenciaTipo(tipo);
+        asistencia.setIncidenciaDescripcion(descripcion);
+        asistencia.setIncidenciaEstado("PENDIENTE");
+        asistencia.setIncidenciaFechaReporte(fechaHoy());
+
         asistenciaRepository.save(asistencia);
 
-        String tipo        = datos.getOrDefault("tipo", "otro");
-        String descripcion = datos.getOrDefault("descripcion", "Sin descripción adicional");
+        String tipoLabel = switch (tipo) {
+            case "descanso_olvidado"   -> "Descanso olvidado";
+            case "descanso_incorrecto" -> "Horario de descanso incorrecto";
+            case "entrada_incorrecta"  -> "Hora de entrada incorrecta";
+            case "salida_incorrecta"   -> "Hora de salida incorrecta";
+            default                    -> "Otro";
+        };
 
-        String tiposMap;
-        switch (tipo) {
-            case "descanso_olvidado"   -> tiposMap = "Descanso olvidado";
-            case "descanso_incorrecto" -> tiposMap = "Horario de descanso incorrecto";
-            case "entrada_incorrecta"  -> tiposMap = "Hora de entrada incorrecta";
-            case "salida_incorrecta"   -> tiposMap = "Hora de salida incorrecta";
-            default                    -> tiposMap = "Otro";
-        }
-
-        String resumenCambios = String.format(
+        String resumen = String.format(
                 "Tipo: %s | Entrada: %s | Descanso: %s–%s | Salida: %s | Nota: %s",
-                tiposMap,
+                tipoLabel,
                 asistencia.getEntrada()        != null ? asistencia.getEntrada()        : "–",
                 asistencia.getInicioDescanso() != null ? asistencia.getInicioDescanso() : "–",
                 asistencia.getFinDescanso()    != null ? asistencia.getFinDescanso()    : "–",
@@ -350,7 +359,7 @@ public class AsistenciaController {
 
         notificacionService.notificarAdmins(
                 "Incidencia de asistencia",
-                empleado.getNombre() + " ha reportado una incidencia. " + resumenCambios,
+                empleado.getNombre() + " ha reportado una incidencia. " + resumen,
                 "incidencia",
                 "/asistencia"
         );
@@ -366,6 +375,39 @@ public class AsistenciaController {
                 .filter(a -> "INCIDENCIA".equalsIgnoreCase(a.getEstado()))
                 .count();
         return ResponseEntity.ok(Map.of("count", count));
+    }
+
+    @GetMapping("/mis-registros")
+    public ResponseEntity<List<AsistenciaVistaDTO>> getMisRegistros(
+            Authentication auth,
+            @RequestParam(required = false) String modo,
+            @RequestParam(required = false) String incidencia) {
+
+        Empleado empleado = resolverEmpleado(auth);
+        List<Asistencia> lista = asistenciaRepository
+                .findByEmpleadoIdOrderByFechaDesc(empleado.getId());
+
+        if (modo != null && !modo.equals("Todos")) {
+            lista = lista.stream()
+                    .filter(a -> modo.equalsIgnoreCase(a.getModo()))
+                    .toList();
+        }
+
+        if ("con".equals(incidencia)) {
+            lista = lista.stream()
+                    .filter(a -> a.getIncidenciaTipo() != null)
+                    .toList();
+        } else if ("sin".equals(incidencia)) {
+            lista = lista.stream()
+                    .filter(a -> a.getIncidenciaTipo() == null)
+                    .toList();
+        }
+
+        return ResponseEntity.ok(
+                lista.stream()
+                        .map(a -> toResponse(a, empleado.getNombre(), empleado.getDepartamento()))
+                        .toList()
+        );
     }
 
 

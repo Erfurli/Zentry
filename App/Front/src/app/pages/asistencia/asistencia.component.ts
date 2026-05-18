@@ -104,10 +104,18 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
     return mapa[this.estadoActual ?? 'NO_FICHADO'] ?? (this.estadoActual ?? 'Sin fichar');
   }
 
+  // ngOnInit(): void {
+  //   this.cargarDatos();
+  //   if (this.esEmpleado()) this.cargarMiAsistenciaHoy();
+  // }
+
   ngOnInit(): void {
-    this.cargarDatos();
-    if (this.esEmpleado()) this.cargarMiAsistenciaHoy();
+  this.cargarDatos();
+  if (this.esEmpleado()) {
+    this.cargarMiAsistenciaHoy();
+    this.cargarMisRegistros(); 
   }
+}
 
   ngAfterViewInit(): void {}
   ngOnDestroy(): void { this.chart?.destroy(); }
@@ -160,6 +168,16 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  ejecutarFichaje(tipo: 'entrada' | 'descanso' | 'vuelta' | 'salida'): void {
+  const acciones = {
+    entrada:  () => this.ficharEntrada(),
+    descanso: () => this.iniciarDescanso(),
+    vuelta:   () => this.finalizarDescanso(),
+    salida:   () => this.ficharSalida(),
+  };
+  acciones[tipo]();
+}
+
 
   abrirIncidencia(empleado: AsistenciaVista): void {
     this.incidenciaEmpleadoId.set(empleado.empleadoId ?? '');
@@ -196,6 +214,8 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
+
+
 
 
   onDeptoChange(e: Event): void  { this.filtroDepartamento.set((e.target as HTMLSelectElement).value); }
@@ -318,6 +338,13 @@ readonly paginasArray = computed(() =>
   Array.from({ length: this.totalPaginas() }, (_, i) => i + 1)
 );
 
+readonly registrosSinIncidencia = computed(() =>
+  this.misRegistros().filter(r => !r.incidenciaTipo).length
+);
+readonly registrosConIncidencia = computed(() =>
+  this.misRegistros().filter(r => r.incidenciaTipo).length
+);
+
 cargarMisRegistros(): void {
   this.cargandoLog.set(true);
   this.asistenciaService.getMisRegistros({
@@ -354,9 +381,9 @@ paginaSiguiente(): void   { if (this.paginaActual() < this.totalPaginas()) this.
 
 labelModo(modo?: string | null): string {
   const mapa: Record<string, string> = {
-    PRESENCIAL: '🏢 Presencial',
-    REMOTO:     '🏠 Remoto',
-    HIBRIDO:    '🔀 Híbrido',
+    PRESENCIAL: 'Presencial',
+    REMOTO:     'Remoto',
+    HIBRIDO:    'Híbrido',
   };
   return mapa[modo ?? ''] ?? modo ?? '-';
 }
