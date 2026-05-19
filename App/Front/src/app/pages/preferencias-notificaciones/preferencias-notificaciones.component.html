@@ -1,0 +1,76 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <div class="header-content">
+      <h1><i class="fa-solid fa-bell"></i> Preferencias de notificaciones</h1>
+      <div class="breadcrumbs">
+        <a routerLink="/dashboard">Dashboard</a> / Notificaciones
+      </div>
+    </div>
+  </div>
+
+  <div class="pref-layout">
+
+    <div class="pref-intro">
+      <p>Elige cómo quieres recibir cada tipo de notificación. Puedes activar las notificaciones <strong>en la app</strong> y/o por <strong>correo electrónico</strong> de forma independiente.</p>
+    </div>
+
+    <div class="pref-tabla-header">
+      <span class="pref-col-tipo">Tipo</span>
+      <span class="pref-col-toggle">En app</span>
+      <span class="pref-col-toggle">Email</span>
+    </div>
+
+    <div class="pref-lista">
+      @for (pref of preferencias(); track pref.tipo) {
+        <div class="pref-fila">
+          <div class="pref-info">
+            <div class="pref-icono">
+              <i class="{{ pref.icon }}"></i>
+            </div>
+            <div class="pref-texto">
+              <span class="pref-label">{{ pref.label }}</span>
+              <span class="pref-desc">{{ pref.descripcion }}</span>
+            </div>
+          </div>
+
+          <div class="pref-toggle-col">
+            <button
+              class="toggle-pill"
+              [class.on]="pref.inApp"
+              (click)="toggleInApp(pref.tipo)"
+              [attr.aria-label]="'Notificación en app para ' + pref.label">
+              <span class="toggle-thumb"></span>
+            </button>
+          </div>
+
+          <div class="pref-toggle-col">
+            <button
+              class="toggle-pill"
+              [class.on]="pref.email"
+              (click)="toggleEmail(pref.tipo)"
+              [attr.aria-label]="'Notificación por email para ' + pref.label">
+              <span class="toggle-thumb"></span>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="pref-footer">
+      @if (guardado()) {
+        <div class="guardado-ok">
+          <i class="fa-solid fa-circle-check"></i> Preferencias guardadas correctamente
+        </div>
+      }
+      <button class="primary-btn" (click)="guardar()" [disabled]="guardando()">
+        @if (guardando()) {
+          <i class="fa-solid fa-spinner fa-spin"></i> Guardando...
+        } @else {
+          <i class="fa-solid fa-floppy-disk"></i> Guardar preferencias
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

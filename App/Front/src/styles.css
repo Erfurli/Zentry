@@ -605,6 +605,486 @@ body.tema-oscuro .config-subitem:hover {
   background: #334155 !important;
 }
 
+/* ── home dashboard ── */
+body.tema-oscuro .home-dashboard,
+body.tema-oscuro .bienvenida-card,
+body.tema-oscuro .card,
+body.tema-oscuro .fichaje-card,
+body.tema-oscuro .vacaciones-card,
+body.tema-oscuro .acciones-card,
+body.tema-oscuro .kpi-card {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .bienvenida-card {
+  background: linear-gradient(135deg, #1e3a5f, #2d4a7a) !important;
+}
+
+body.tema-oscuro .kpi-card.azul   { background: #1e2d4a !important; }
+body.tema-oscuro .kpi-card.verde  { background: #1a2e24 !important; }
+body.tema-oscuro .kpi-card.morado { background: #261e3a !important; }
+body.tema-oscuro .kpi-card.naranja{ background: #2e2218 !important; }
+
+body.tema-oscuro .kpi-card.azul   .kpi-icon { background: #1d3a6b !important; color: #93c5fd !important; }
+body.tema-oscuro .kpi-card.verde  .kpi-icon { background: #14532d !important; color: #86efac !important; }
+body.tema-oscuro .kpi-card.morado .kpi-icon { background: #3b1f6b !important; color: #c4b5fd !important; }
+body.tema-oscuro .kpi-card.naranja .kpi-icon { background: #7c2d12 !important; color: #fdba74 !important; }
+
+body.tema-oscuro .proxima-item {
+  background: #0f172a !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .proxima-fechas { color: #e2e8f0 !important; }
+
+body.tema-oscuro .barra-fondo { background: #334155 !important; }
+
+body.tema-oscuro .accion-item { color: #f1f5f9 !important; }
+body.tema-oscuro .accion-item:hover { background: #0f172a !important; }
+body.tema-oscuro .accion-titulo { color: #f1f5f9 !important; }
+body.tema-oscuro .accion-desc   { color: #94a3b8 !important; }
+
+body.tema-oscuro .fichaje-btn.entrada { background: #065f46 !important; }
+body.tema-oscuro .fichaje-btn.salida  { background: #7f1d1d !important; }
+
+body.tema-oscuro .ver-mas-link { color: #93c5fd !important; }
+body.tema-oscuro .empty-vacaciones { color: #64748b !important; }
+
+body.tema-oscuro .card-header i { color: #93c5fd !important; }
+body.tema-oscuro .card-header h2 { color: #f1f5f9 !important; }
+
+/* ── panel RRHH (admin-dashboard) ── */
+body.tema-oscuro .estado-card,
+body.tema-oscuro .admin-kpi-card,
+body.tema-oscuro .pendiente-card,
+body.tema-oscuro .pendiente-item,
+body.tema-oscuro .lista-item,
+body.tema-oscuro .grafico-card {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .pendiente-item:hover,
+body.tema-oscuro .lista-item:hover {
+  background: #334155 !important;
+}
+
+/* ── tabla empleados ── */
+body.tema-oscuro .empleados-table,
+body.tema-oscuro .empleados-table th,
+body.tema-oscuro .empleados-table td {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .empleados-table th {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .empleados-table tbody tr:hover {
+  background: #334155 !important;
+}
+
+/* ── vacaciones ── */
+body.tema-oscuro .calendario-container,
+body.tema-oscuro .calendario-izquierda,
+body.tema-oscuro .calendario-derecha {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .solicitud-card {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .solicitud-card.aprobada { background: #052e16 !important; border-color: #10b981 !important; }
+body.tema-oscuro .solicitud-card.pendiente { background: #2d1f00 !important; border-color: #f59e0b !important; }
+body.tema-oscuro .solicitud-card.rechazada { background: #2d0a0a !important; border-color: #ef4444 !important; }
+
+body.tema-oscuro .solicitud-nombre { color: #f1f5f9 !important; }
+body.tema-oscuro .solicitud-depto  { color: #94a3b8 !important; }
+body.tema-oscuro .solicitud-fechas { color: #cbd5e1 !important; }
+
+body.tema-oscuro .leyenda-item { color: #94a3b8 !important; }
+
+body.tema-oscuro .saldo-info {
+  background: #1e3a5f !important;
+  border-color: #3A5698 !important;
+  color: #93c5fd !important;
+}
+
+body.tema-oscuro .saldo-usados { color: #94a3b8 !important; }
+
+/* ── filtros y KPIs de vacaciones ── */
+body.tema-oscuro .kpi-card.aprobada { background: #052e16 !important; }
+body.tema-oscuro .kpi-card.pendiente { background: #2d1f00 !important; }
+body.tema-oscuro .kpi-card.rechazada { background: #2d0a0a !important; }
+body.tema-oscuro .kpi-card.dias { background: #1e2d4a !important; }
+
+body.tema-oscuro .kpi-number { color: #f1f5f9 !important; }
+body.tema-oscuro .kpi-label  { color: #94a3b8 !important; }
+
+/* ── mat-calendar tema oscuro ── */
+body.tema-oscuro .mat-calendar,
+body.tema-oscuro .mat-calendar-body,
+body.tema-oscuro .mat-calendar-header {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .mat-calendar-body-cell-content {
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .mat-calendar-body-today .mat-calendar-body-cell-content {
+  border-color: #3A5698 !important;
+}
+
+body.tema-oscuro .mat-calendar-arrow,
+body.tema-oscuro .mat-calendar-period-button,
+body.tema-oscuro .mat-calendar-previous-button,
+body.tema-oscuro .mat-calendar-next-button {
+  color: #f1f5f9 !important;
+}
+
+/* ── filters section ── */
+body.tema-oscuro .filters-section { background: #1e293b !important; }
+
+body.tema-oscuro .export-btn {
+  background: #264489 !important;
+  color: white !important;
+}
+
+/* ── mensaje fichaje ── */
+body.tema-oscuro .mensaje-fichaje {
+  background: #052e16 !important;
+  color: #86efac !important;
+}
+
+/* ── sidebar labels y badges ── */
+body.tema-oscuro .sidebar-label,
+body.tema-oscuro .menu-label,
+body.tema-oscuro .nav-label,
+body.tema-oscuro .menu-item span,
+body.tema-oscuro .sidebar-menu-item span {
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .badge-conv,
+body.tema-oscuro .badge-total {
+  background: #ef4444 !important;
+  color: white !important;
+}
+
+body.tema-oscuro .sidebar-seccion-label {
+  color: #64748b !important;
+}
+
+body.tema-oscuro .sidebar-ultimo {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .sidebar-hora {
+  color: #64748b !important;
+}
+
+body.tema-oscuro .sidebar-item.tiene-noLeidos {
+  background: #1a2535 !important;
+}
+
+/* ══════════════════════════════════════
+   ADMIN DASHBOARD
+══════════════════════════════════════ */
+body.tema-oscuro .grafica-card,
+body.tema-oscuro .lista-card,
+body.tema-oscuro .pendiente-chip {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .grafica-titulo h2,
+body.tema-oscuro .lista-header h2,
+body.tema-oscuro .lista-nombre,
+body.tema-oscuro .pendiente-num {
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .lista-header {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .lista-sub,
+body.tema-oscuro .pendiente-chip span,
+body.tema-oscuro .kpi-pct {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .lista-item {
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .nav-btn {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .nav-dot { background: #475569 !important; }
+body.tema-oscuro .nav-dot.activo { background: #3A5698 !important; }
+
+/* KPIs del admin-dashboard (border-left, no background completo) */
+body.tema-oscuro .kpi-card.azul,
+body.tema-oscuro .kpi-card.verde,
+body.tema-oscuro .kpi-card.amber,
+body.tema-oscuro .kpi-card.rojo {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+/* ══════════════════════════════════════
+   VACACIONES — CALENDARIO
+══════════════════════════════════════ */
+body.tema-oscuro .calendario-container {
+  background: #1e293b !important;
+  box-shadow: none !important;
+}
+
+body.tema-oscuro .calendario-derecha {
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .calendario-derecha h3 {
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .leyenda-item {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .drag-hint {
+  background: #0f172a !important;
+  color: #64748b !important;
+}
+
+body.tema-oscuro .drag-placeholder {
+  border-color: #475569 !important;
+  background: #0f172a !important;
+}
+
+/* Fondo del mat-calendar */
+body.tema-oscuro .mat-calendar {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .mat-calendar-table-header th,
+body.tema-oscuro .mat-calendar-body-label,
+body.tema-oscuro .mat-calendar-period-button {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .mat-calendar-body-cell-content {
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .mat-calendar-body-today:not(.mat-calendar-body-selected)
+  .mat-calendar-body-cell-content {
+  border-color: #3A5698 !important;
+}
+
+body.tema-oscuro .mat-calendar-arrow { fill: #94a3b8 !important; }
+
+body.tema-oscuro .mat-calendar-previous-button,
+body.tema-oscuro .mat-calendar-next-button {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .mat-calendar-body-cell:hover
+  .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+  background: #334155 !important;
+}
+
+/* ══════════════════════════════════════
+   CHAT — MODALES (modal-chat, modal-perfil)
+══════════════════════════════════════ */
+body.tema-oscuro .modal-chat,
+body.tema-oscuro .modal-perfil {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .modal-chat-header,
+body.tema-oscuro .modal-chat-footer {
+  background: #0f172a !important;
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .modal-chat-header h2,
+body.tema-oscuro .modal-perfil h2 {
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .modal-chat-header p,
+body.tema-oscuro .modal-chat-header .modal-chat-header p {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .modal-chat-body {
+  background: #1e293b !important;
+}
+
+body.tema-oscuro .modal-close-btn {
+  background: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .modal-close-btn:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .participante-check {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .participante-check:hover {
+  background: #334155 !important;
+  border-color: #475569 !important;
+}
+
+body.tema-oscuro .participante-check.seleccionado {
+  background: #1e3a5f !important;
+  border-color: #3A5698 !important;
+}
+
+body.tema-oscuro .participante-nombre { color: #f1f5f9 !important; }
+body.tema-oscuro .participante-rol    { color: #64748b !important; }
+
+body.tema-oscuro .participante-check-icon {
+  background: #334155 !important;
+  color: #64748b !important;
+}
+
+body.tema-oscuro .participante-check-icon.visible {
+  background: #3A5698 !important;
+  color: white !important;
+}
+
+body.tema-oscuro .participante-arrow {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #64748b !important;
+}
+
+body.tema-oscuro .perfil-rol { color: #94a3b8 !important; }
+
+body.tema-oscuro .perfil-estado {
+  background: #0f172a !important;
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .estado-container {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .estado-container:hover { background: #334155 !important; }
+
+body.tema-oscuro .estado-dropdown {
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .estado-opcion { color: #f1f5f9 !important; }
+body.tema-oscuro .estado-opcion:hover { background: #334155 !important; }
+body.tema-oscuro .estado-opcion.activa {
+  background: #1e3a5f !important;
+  color: #93c5fd !important;
+}
+
+/* sidebar search input */
+body.tema-oscuro .sidebar-search {
+  border-color: #334155 !important;
+  background: #1e293b !important;
+}
+
+body.tema-oscuro .sidebar-search input {
+  color: #f1f5f9 !important;
+  background: transparent !important;
+}
+
+body.tema-oscuro .sidebar-header {
+  border-color: #334155 !important;
+}
+
+body.tema-oscuro .sidebar-header h2 { color: #f1f5f9 !important; }
+
+/* reply bar */
+body.tema-oscuro .reply-bar {
+  background: #0f172a !important;
+  border-color: #3A5698 !important;
+}
+
+body.tema-oscuro .reply-bar-info,
+body.tema-oscuro .reply-bar-texto { color: #94a3b8 !important; }
+
+/* emoji picker y acciones */
+body.tema-oscuro .msg-acciones,
+body.tema-oscuro .emoji-picker {
+  background: #334155 !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+}
+
+body.tema-oscuro .msg-accion-btn { color: #94a3b8 !important; }
+body.tema-oscuro .msg-accion-btn:hover {
+  background: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .emoji-btn.activo { background: #1e3a5f !important; }
+
+body.tema-oscuro .reaccion-chip {
+  background: #334155 !important;
+  border-color: #475569 !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .reaccion-chip.mia {
+  background: #1e3a5f !important;
+  border-color: #3A5698 !important;
+}
+
+body.tema-oscuro .reply-preview {
+  background: #334155 !important;
+}
+
+body.tema-oscuro .reply-autor { color: #93c5fd !important; }
+body.tema-oscuro .reply-texto { color: #94a3b8 !important; }
+
+/* vista toggle vacaciones */
+body.tema-oscuro .vista-toggle {
+  background: #334155 !important;
+}
+
+body.tema-oscuro .toggle-btn-vista {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .toggle-btn-vista.active {
+  background: #1e3a5f !important;
+  color: #93c5fd !important;
+}
+
 @media (max-width: 600px) {
   .modal-panel {
     border-radius: 16px;

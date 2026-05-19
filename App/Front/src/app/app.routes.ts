@@ -14,6 +14,7 @@ import { CambiarPasswordComponent } from './pages/cambiar-password/cambiar-passw
 import { ResetearPasswordComponent } from './pages/resetear-password/resetear-password.component';
 import { ChatComponent } from './pages/chat/chat.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
+import { PreferenciasNotificacionesComponent } from './pages/preferencias-notificaciones/preferencias-notificaciones.component';
 
 export const routes: Routes = [
   {
@@ -90,6 +91,12 @@ export const routes: Routes = [
       {
         path: 'perfil',
         component: PerfilComponent,
+        canActivate: [authGuard],
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
+      },
+      {
+        path: 'preferencias-notificaciones',
+        component: PreferenciasNotificacionesComponent,
         canActivate: [authGuard],
         data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
