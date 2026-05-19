@@ -39,6 +39,7 @@ export class AusenciasComponent implements OnInit {
 
   readonly filtroTipo = signal('Todos');
   readonly filtroEstado = signal('Todos');
+  readonly filtroNombre = signal('');
 
   readonly modalAbierto = signal(false);
   readonly enviando = signal(false);
@@ -53,10 +54,12 @@ export class AusenciasComponent implements OnInit {
   readonly ausenciasFiltradas = computed(() => {
     const tipo = this.filtroTipo();
     const estado = this.filtroEstado();
+    const nom = this.filtroNombre().trim().toLowerCase();
     return this.ausencias().filter(a => {
       const coincideTipo = tipo === 'Todos' || a.tipo === tipo;
       const coincideEstado = estado === 'Todos' || a.estado === estado;
-      return coincideTipo && coincideEstado;
+      const coincideNombre = !nom || a.empleado.toLowerCase().includes(nom);
+      return coincideTipo && coincideEstado && coincideNombre;
     });
   });
 
@@ -151,6 +154,10 @@ export class AusenciasComponent implements OnInit {
 
   onEstadoChange(event: Event): void {
     this.filtroEstado.set((event.target as HTMLSelectElement).value);
+  }
+
+  onNombreChange(event: Event): void {
+    this.filtroNombre.set((event.target as HTMLInputElement).value);
   }
 
   justificar(id: string): void {
