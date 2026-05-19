@@ -1,0 +1,186 @@
+<div class="tablon-container">
+
+  <div class="tablon-header">
+    <div class="tablon-title">
+      <i class="fa-solid fa-bullhorn"></i>
+      <h2>Tablón de anuncios</h2>
+      @if (noLeidos() > 0) {
+        <span class="badge-nuevo">{{ noLeidos() }} nuevo{{ noLeidos() > 1 ? 's' : '' }}</span>
+      }
+    </div>
+
+    <!-- Botón nuevo anuncio (solo admin) -->
+    @if (esAdmin()) {
+      <button class="btn-nuevo-anuncio" (click)="abrirFormulario()">
+        <i class="fa-solid fa-plus"></i>
+        Nuevo anuncio
+      </button>
+    }
+  </div>
+
+
+  @if (cargando()) {
+    <div class="tablon-loading">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+    </div>
+  }
+
+  @if (!cargando()) {
+    @if (anuncios().length === 0) {
+      <div class="tablon-vacio">
+        <i class="fa-regular fa-newspaper"></i>
+        <p>No hay anuncios publicados</p>
+      </div>
+    } @else {
+      <div class="anuncios-lista">
+        @for (anuncio of anuncios(); track anuncio.id) {
+          <div
+            class="anuncio-card"
+            [class.destacado]="anuncio.destacado"
+            [class.no-leido]="!estaVisto(anuncio)"
+            (click)="verAnuncio(anuncio)">
+
+            <!-- Franja de categoría -->
+            <div class="anuncio-franja" [class]="'franja-' + anuncio.categoria.toLowerCase()"></div>
+
+            <div class="anuncio-body">
+              <div class="anuncio-top">
+                <span class="anuncio-categoria" [class]="'cat-' + anuncio.categoria.toLowerCase()">
+                  <i [class]="getCategoriaIcon(anuncio.categoria)"></i>
+                  {{ anuncio.categoria }}
+                </span>
+                @if (anuncio.destacado) {
+                  <span class="badge-destacado"><i class="fa-solid fa-star"></i> Destacado</span>
+                }
+                @if (!estaVisto(anuncio)) {
+                  <span class="badge-sin-leer">Nuevo</span>
+                }
+              </div>
+
+              <h3 class="anuncio-titulo">{{ anuncio.titulo }}</h3>
+              <p class="anuncio-preview">{{ anuncio.contenido | slice:0:120 }}{{ anuncio.contenido.length > 120 ? '…' : '' }}</p>
+
+              <div class="anuncio-meta">
+                <span><i class="fa-regular fa-user"></i> {{ anuncio.autorNombre }}</span>
+                <span><i class="fa-regular fa-calendar"></i> {{ formatearFecha(anuncio.fechaCreacion!) }}</span>
+                @if (anuncio.fechaExpiracion) {
+                  <span class="expira"><i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncio.fechaExpiracion) }}</span>
+                }
+              </div>
+
+              <!-- Acciones admin -->
+              @if (esAdmin()) {
+                <div class="anuncio-acciones-admin" (click)="$event.stopPropagation()">
+                  <button class="btn-accion editar" (click)="editarAnuncio(anuncio)">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button class="btn-accion archivar" (click)="archivarAnuncio(anuncio)">
+                    <i class="fa-solid fa-archive"></i>
+                  </button>
+                  <button class="btn-accion eliminar" (click)="eliminarAnuncio(anuncio)">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  <!-- ══ MODAL DETALLE ANUNCIO ════════════════════════════════════ -->
+  @if (anuncioSeleccionado()) {
+    <div class="modal-overlay" (click)="cerrarModal()">
+      <div class="modal-detalle" (click)="$event.stopPropagation()">
+        <button class="modal-cerrar" (click)="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
+
+        <div class="modal-franja" [class]="'franja-' + anuncioSeleccionado()!.categoria.toLowerCase()"></div>
+
+        <div class="modal-content">
+          <span class="anuncio-categoria" [class]="'cat-' + anuncioSeleccionado()!.categoria.toLowerCase()">
+            <i [class]="getCategoriaIcon(anuncioSeleccionado()!.categoria)"></i>
+            {{ anuncioSeleccionado()!.categoria }}
+          </span>
+          <h2>{{ anuncioSeleccionado()!.titulo }}</h2>
+          <p class="modal-contenido">{{ anuncioSeleccionado()!.contenido }}</p>
+
+          <div class="modal-meta">
+            <span><i class="fa-regular fa-user"></i> Publicado por <strong>{{ anuncioSeleccionado()!.autorNombre }}</strong></span>
+            <span><i class="fa-regular fa-calendar"></i> {{ formatearFecha(anuncioSeleccionado()!.fechaCreacion!) }}</span>
+            @if (anuncioSeleccionado()!.fechaExpiracion) {
+              <span class="expira"><i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncioSeleccionado()!.fechaExpiracion!) }}</span>
+            }
+            <span class="leidos-count">
+              <i class="fa-regular fa-eye"></i>
+              {{ anuncioSeleccionado()!.vistoPor?.length ?? 0 }} persona{{ (anuncioSeleccionado()!.vistoPor?.length ?? 0) !== 1 ? 's' : '' }} lo han leído
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ══ MODAL FORMULARIO (ADMIN) ═════════════════════════════════ -->
+  @if (mostrarFormulario()) {
+    <div class="modal-overlay" (click)="cerrarFormulario()">
+      <div class="modal-form" (click)="$event.stopPropagation()">
+        <div class="form-header">
+          <h3><i class="fa-solid fa-bullhorn"></i> {{ modoEdicion() ? 'Editar anuncio' : 'Nuevo anuncio' }}</h3>
+          <button class="modal-cerrar" (click)="cerrarFormulario()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="form-body">
+          <div class="form-group">
+            <label>Título *</label>
+            <input type="text" [(ngModel)]="form.titulo" placeholder="Título del anuncio" maxlength="100" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Categoría *</label>
+              <select [(ngModel)]="form.categoria">
+                <option value="GENERAL">General</option>
+                <option value="IMPORTANTE">Importante</option>
+                <option value="EVENTO">Evento</option>
+                <option value="URGENTE">Urgente</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Fecha de expiración</label>
+              <input type="datetime-local" [(ngModel)]="form.fechaExpiracion" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Contenido *</label>
+            <textarea [(ngModel)]="form.contenido" rows="5" placeholder="Escribe el contenido del anuncio…" maxlength="2000"></textarea>
+            <span class="char-count">{{ form.contenido?.length ?? 0 }} / 2000</span>
+          </div>
+
+          <div class="form-check">
+            <label class="check-label">
+              <input type="checkbox" [(ngModel)]="form.destacado" />
+              <span class="check-custom"></span>
+              Marcar como destacado
+            </label>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button class="btn-cancelar" (click)="cerrarFormulario()">Cancelar</button>
+          <button class="btn-guardar" (click)="guardarAnuncio()" [disabled]="guardando()">
+            @if (guardando()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            } @else {
+              <i class="fa-solid fa-floppy-disk"></i>
+            }
+            {{ guardando() ? 'Guardando…' : 'Publicar anuncio' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
