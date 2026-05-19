@@ -37,6 +37,10 @@
         <option value="Pendiente">Pendientes</option>
         <option value="No Justificada">No Justificadas</option>
       </select>
+
+      @if (!isEmpleado) {
+        <input type="text" class="filter-search" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
+      }
     </div>
 
     <button class="export-btn" (click)="exportar()">

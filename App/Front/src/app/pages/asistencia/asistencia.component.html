@@ -236,6 +236,9 @@
             <option value="Ausente">Ausentes</option>
           </select>
         }
+        @if (!esEmpleado()) {
+          <input type="text" class="filter-search" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
+        }
         <button class="export-btn" type="button" (click)="exportar()">
   <i class="fa-solid fa-download"></i> Exportar
 </button>

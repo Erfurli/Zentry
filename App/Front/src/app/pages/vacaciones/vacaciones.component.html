@@ -39,6 +39,9 @@
           <option value="IT">IT</option>
           <option value="Ventas">Ventas</option>
         </select>
+        @if (!isEmpleado) {
+          <input type="text" class="filter-search" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="cambiarFiltroNombre($any($event.target).value)" />
+        }
         <button class="export-btn" type="button" (click)="exportar()">
           <i class="fa-solid fa-download"></i> Exportar
         </button>

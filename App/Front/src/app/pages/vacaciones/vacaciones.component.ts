@@ -40,6 +40,7 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   readonly solicitudes          = signal<VacacionesVista[]>([]);
   readonly filtroEstado         = signal<EstadoSolicitud | 'Todos'>('Todos');
   readonly filtroDepartamento   = signal<string>('Todos');
+  readonly filtroNombre         = signal<string>('');
   readonly vistaCalendario      = signal(this.isEmpleado);
   readonly mesActual            = signal(new Date());
   readonly saldo                = signal<{ total: number; usados: number; disponible: number } | null>(null);
@@ -62,10 +63,12 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   readonly solicitudesFiltradas = computed(() => {
     const estado = this.filtroEstado();
     const depto  = this.filtroDepartamento();
+    const nom    = this.filtroNombre().trim().toLowerCase();
     return this.solicitudes().filter(s => {
-      const coincideEstado = estado === 'Todos' || s.estado === estado;
-      const coincideDepto  = depto  === 'Todos' || s.departamento === depto;
-      return coincideEstado && coincideDepto;
+      const coincideEstado  = estado === 'Todos' || s.estado === estado;
+      const coincideDepto   = depto  === 'Todos' || s.departamento === depto;
+      const coincideNombre  = !nom || s.empleado.toLowerCase().includes(nom);
+      return coincideEstado && coincideDepto && coincideNombre;
     });
   });
 
@@ -163,6 +166,10 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
 
   cambiarFiltroDepartamento(valor: string): void {
     this.filtroDepartamento.set(valor);
+  }
+
+  cambiarFiltroNombre(valor: string): void {
+    this.filtroNombre.set(valor);
   }
 
   aprobar(id: string): void {

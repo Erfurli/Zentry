@@ -26,6 +26,7 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly empleados          = signal<AsistenciaVista[]>([]);
   readonly filtroDepartamento = signal('Todos');
   readonly filtroEstado       = signal('Todos');
+  readonly filtroNombre       = signal('');
   readonly vistaGrafico       = signal(false);
   readonly fechaSeleccionada  = signal(new Date().toISOString().split('T')[0]);
   readonly miAsistencia       = signal<AsistenciaHoy | null>(null);
@@ -77,9 +78,11 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly empleadosFiltrados = computed(() => {
     const dep = this.filtroDepartamento();
     const est = this.filtroEstado();
+    const nom = this.filtroNombre().trim().toLowerCase();
     return this.empleados().filter(e =>
       (dep === 'Todos' || e.departamento === dep) &&
-      (est === 'Todos' || e.estado === est)
+      (est === 'Todos' || e.estado === est) &&
+      (!nom || e.nombre.toLowerCase().includes(nom))
     );
   });
 
@@ -220,6 +223,7 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onDeptoChange(e: Event): void  { this.filtroDepartamento.set((e.target as HTMLSelectElement).value); }
   onEstadoChange(e: Event): void { this.filtroEstado.set((e.target as HTMLSelectElement).value); }
+  onNombreChange(e: Event): void { this.filtroNombre.set((e.target as HTMLInputElement).value); }
   onFechaChange(e: Event): void  {
     this.fechaSeleccionada.set((e.target as HTMLInputElement).value);
     this.cargarDatos();

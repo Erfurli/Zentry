@@ -1,0 +1,160 @@
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AnuncioService } from '../../services/anuncio.service';
+import { Anuncio } from '../../models/anuncio.model';
+import { AuthService } from '../../services/auth.service';
+
+@Component({
+  selector: 'app-tablon-anuncios',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './anuncios.component.html',
+  styleUrls: ['./anuncios.component.css']
+})
+export class TablonAnunciosComponent implements OnInit {
+
+  private anuncioService = inject(AnuncioService);
+  private authService    = inject(AuthService);
+
+  readonly anuncios            = signal<Anuncio[]>([]);
+  readonly cargando            = signal(true);
+  readonly anuncioSeleccionado = signal<Anuncio | null>(null);
+  readonly mostrarFormulario   = signal(false);
+  readonly modoEdicion         = signal(false);
+  readonly guardando           = signal(false);
+
+  private readonly STORAGE_KEY = 'zentry_anuncios_vistos';
+  private vistosLocal: Set<string> = new Set();
+
+
+  form: Partial<Anuncio> = this.formVacio();
+
+  readonly esAdmin = computed(() => this.authService.isAdmin());
+
+  readonly noLeidos = computed(() =>
+    this.anuncios().filter(a => !this.estaVisto(a)).length
+  );
+
+  ngOnInit(): void {
+    this.cargarVistosLocal();
+    this.cargarAnuncios();
+  }
+
+  cargarAnuncios(): void {
+    this.cargando.set(true);
+    this.anuncioService.getAnuncios().subscribe({
+      next: data => { this.anuncios.set(data); this.cargando.set(false); },
+      error: ()   => { this.cargando.set(false); }
+    });
+  }
+
+  verAnuncio(anuncio: Anuncio): void {
+    this.anuncioSeleccionado.set(anuncio);
+    if (!this.estaVisto(anuncio) && anuncio.id) {
+      this.anuncioService.marcarVisto(anuncio.id).subscribe();
+      this.marcarVistoLocal(anuncio.id);
+      // Actualiza contador en memoria
+      this.anuncios.update(lista =>
+        lista.map(a => a.id === anuncio.id
+          ? { ...a, vistoPor: [...(a.vistoPor ?? []), 'yo'] }
+          : a
+        )
+      );
+    }
+  }
+
+  cerrarModal(): void { this.anuncioSeleccionado.set(null); }
+
+  abrirFormulario(): void {
+    this.form = this.formVacio();
+    this.modoEdicion.set(false);
+    this.mostrarFormulario.set(true);
+  }
+
+  editarAnuncio(anuncio: Anuncio): void {
+    this.form = {
+      ...anuncio,
+      fechaExpiracion: anuncio.fechaExpiracion
+        ? new Date(anuncio.fechaExpiracion).toISOString().slice(0, 16)
+        : undefined
+    };
+    this.modoEdicion.set(true);
+    this.mostrarFormulario.set(true);
+  }
+
+  cerrarFormulario(): void { this.mostrarFormulario.set(false); }
+
+  guardarAnuncio(): void {
+    if (!this.form.titulo?.trim() || !this.form.contenido?.trim()) return;
+
+    this.guardando.set(true);
+    const payload: Anuncio = {
+      titulo:          this.form.titulo!,
+      contenido:       this.form.contenido!,
+      categoria:       (this.form.categoria as Anuncio['categoria']) ?? 'GENERAL',
+      destacado:       this.form.destacado ?? false,
+      fechaExpiracion: this.form.fechaExpiracion
+        ? new Date(this.form.fechaExpiracion as string).toISOString()
+        : null
+    };
+
+    const op = this.modoEdicion() && this.form.id
+      ? this.anuncioService.editar(this.form.id, payload)
+      : this.anuncioService.crear(payload);
+
+    op.subscribe({
+      next: () => { this.guardando.set(false); this.cerrarFormulario(); this.cargarAnuncios(); },
+      error: () => { this.guardando.set(false); }
+    });
+  }
+
+  archivarAnuncio(anuncio: Anuncio): void {
+    if (!anuncio.id) return;
+    this.anuncioService.cambiarEstado(anuncio.id, false).subscribe(() => this.cargarAnuncios());
+  }
+
+  eliminarAnuncio(anuncio: Anuncio): void {
+    if (!anuncio.id) return;
+    if (!confirm(`¿Eliminar el anuncio "${anuncio.titulo}"?`)) return;
+    this.anuncioService.eliminar(anuncio.id).subscribe(() => this.cargarAnuncios());
+  }
+
+
+  getCategoriaIcon(cat: string): string {
+    const map: Record<string, string> = {
+      IMPORTANTE: 'fa-solid fa-circle-exclamation',
+      URGENTE:    'fa-solid fa-triangle-exclamation',
+      EVENTO:     'fa-solid fa-calendar-star',
+      GENERAL:    'fa-solid fa-circle-info'
+    };
+    return map[cat] ?? 'fa-solid fa-circle-info';
+  }
+
+  formatearFecha(fecha: string): string {
+    return new Date(fecha).toLocaleDateString('es-ES', {
+      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  estaVisto(anuncio: Anuncio): boolean {
+    return !!anuncio.id && this.vistosLocal.has(anuncio.id);
+  }
+
+
+  private cargarVistosLocal(): void {
+    try {
+      const raw = localStorage.getItem(this.STORAGE_KEY);
+      this.vistosLocal = new Set(raw ? JSON.parse(raw) : []);
+    } catch { this.vistosLocal = new Set(); }
+  }
+
+  private marcarVistoLocal(id: string): void {
+    this.vistosLocal.add(id);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify([...this.vistosLocal]));
+  }
+
+  private formVacio(): Partial<Anuncio> {
+    return { titulo: '', contenido: '', categoria: 'GENERAL', destacado: false, fechaExpiracion: undefined };
+  }
+}
