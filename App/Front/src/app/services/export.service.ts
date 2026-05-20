@@ -29,7 +29,7 @@ const ST = {
   title: (): any => ({
     font:      { name: 'Arial', sz: 16, bold: true, color: { rgb: C.white } },
     fill:      { fgColor: { rgb: C.primary } },
-    alignment: { horizontal: 'center', vertical: 'center' },
+    alignment: { horizontal: 'center', vertical: 'center', wrapText: false },
   }),
   subtitle: (): any => ({
     font:      { name: 'Arial', sz: 10, bold: true, color: { rgb: C.white } },
@@ -72,9 +72,9 @@ const ST = {
   }),
 };
 
-const cell  = (v: any, s: any) => ({ v, s, t: typeof v === 'number' ? 'n' : 's' });
-const blank = (s: any)         => ({ v: '', s });
-const totalBlank = ()          => blank(ST.total());
+const cell      = (v: any, s: any) => ({ v, s, t: typeof v === 'number' ? 'n' : 's' });
+const blank     = (s: any)         => ({ v: '', s });
+const totalBlank = ()              => blank(ST.total());
 
 function estadoBadge(estado: string): any {
   const lower = (estado ?? '').toLowerCase();
@@ -122,10 +122,22 @@ function emptyDataRow(texto: string, cols: number): any[] {
   ];
 }
 
-function makeSheet(rows: any[][], cols: number[], merges: any[], rowHeights?: number[]): any {
+function calcColWidths(colWidths: number[], titulo: string): number[] {
+  const totalActual = colWidths.reduce((a, b) => a + b, 0);
+  const minTotal = Math.ceil(titulo.length / 1.1);
+  if (totalActual >= minTotal) return colWidths;
+  const factor = minTotal / totalActual;
+  return colWidths.map(w => Math.ceil(w * factor));
+}
+
+function makeSheet(
+  rows: any[][], cols: number[], merges: any[],
+  rowHeights?: number[], titulo = ''
+): any {
   const ws = XLSX.utils.aoa_to_sheet(rows);
   ws['!merges'] = merges;
-  ws['!cols']   = cols.map(w => ({ wch: w }));
+  const adjustedCols = titulo ? calcColWidths(cols, titulo) : cols;
+  ws['!cols']   = adjustedCols.map(w => ({ wch: w }));
   ws['!rows']   = rowHeights
     ? rowHeights.map(h => ({ hpt: h }))
     : [{ hpt: 42 }, { hpt: 22 }, { hpt: 8 }, { hpt: 24 },
@@ -142,21 +154,21 @@ export class ExportService {
 
 
   exportarAusenciasExcel(ausencias: AusenciaVista[], subtitulo = 'Todos los empleados'): void {
-    const wb   = XLSX.utils.book_new();
-    const COLS = 7;
+    const wb    = XLSX.utils.book_new();
+    const COLS  = 9;
+    const TITULO = 'ZENTRY · Ausencias';
     const headers = ['Empleado', 'Departamento', 'Fecha inicio', 'Fecha fin',
                      'Días', 'Tipo', 'Estado', 'Motivo', 'Fecha solicitud'];
 
-    const resumen = this.buildResumenAusencias(ausencias);
-    XLSX.utils.book_append_sheet(wb, resumen, 'Resumen');
+    XLSX.utils.book_append_sheet(wb, this.buildResumenAusencias(ausencias), 'Resumen');
 
     const rows: any[][] = [
-      ...headerRows('ZENTRY · Ausencias', subtitulo, COLS + 2),
+      ...headerRows(TITULO, subtitulo, COLS),
       headers.map(h => cell(h, ST.colHeader())),
     ];
 
     if (ausencias.length === 0) {
-      rows.push(emptyDataRow('Sin ausencias registradas', COLS + 2));
+      rows.push(emptyDataRow('Sin ausencias registradas', COLS));
     } else {
       ausencias.forEach((a, i) => {
         const ev = i % 2 === 0;
@@ -182,11 +194,11 @@ export class ExportService {
     }
 
     const merges = [
-      ...mergesHeader(COLS + 2),
-      ...(ausencias.length === 0 ? [{ s: { r: 4, c: 0 }, e: { r: 4, c: COLS + 1 } }] : []),
+      ...mergesHeader(COLS),
+      ...(ausencias.length === 0 ? [{ s: { r: 4, c: 0 }, e: { r: 4, c: COLS - 1 } }] : []),
     ];
 
-    const ws = makeSheet(rows, [18, 14, 13, 13, 7, 16, 14, 22, 16], merges);
+    const ws = makeSheet(rows, [20, 14, 13, 13, 7, 16, 14, 22, 16], merges, undefined, TITULO);
     XLSX.utils.book_append_sheet(wb, ws, 'Ausencias');
     descargar(wb, `Ausencias_${this.fecha()}.xlsx`);
   }
@@ -206,30 +218,30 @@ export class ExportService {
       [cell(this.fecha(), ST.subtitle()), null],
       [blank(ST.empty()), null],
       [cell('Indicador', ST.colHeader()), cell('Valor', ST.colHeader())],
-      [cell('Total ausencias',    ST.field()),  cell(ausencias.length, ST.data(false, true, C.primary))],
-      [cell('Justificadas',       ST.field(true)), cell(justificadas,   ST.badge(C.green_bg, C.green_fg))],
-      [cell('Pendientes',         ST.field()),  cell(pendientes,        ST.badge(C.amber_bg, C.amber_fg))],
-      [cell('No justificadas',    ST.field(true)), cell(noJustificadas, ST.badge(C.red_bg,   C.red_fg))],
-      [cell('Total días',         ST.field()),  cell(totalDias,         ST.data(false, true, C.primary))],
+      [cell('Total ausencias',    ST.field()),      cell(ausencias.length,  ST.data(false, true, C.primary))],
+      [cell('Justificadas',       ST.field(true)),  cell(justificadas,      ST.badge(C.green_bg, C.green_fg))],
+      [cell('Pendientes',         ST.field()),      cell(pendientes,        ST.badge(C.amber_bg, C.amber_fg))],
+      [cell('No justificadas',    ST.field(true)),  cell(noJustificadas,    ST.badge(C.red_bg, C.red_fg))],
+      [cell('Total días',         ST.field()),      cell(totalDias,         ST.data(false, true, C.primary))],
     ];
 
-    const ws = makeSheet(rows, [24, 16], [
+    return makeSheet(rows, [26, 18], [
       { s: { r: 0, c: 0 }, e: { r: 0, c: 1 } },
       { s: { r: 1, c: 0 }, e: { r: 1, c: 1 } },
       { s: { r: 2, c: 0 }, e: { r: 2, c: 1 } },
-    ]);
-    return ws;
+    ], undefined, 'ZENTRY · Resumen de Ausencias');
   }
 
 
   exportarVacacionesExcel(vacaciones: VacacionesVista[], subtitulo = 'Todos los empleados'): void {
-    const wb   = XLSX.utils.book_new();
-    const COLS = 5;
+    const wb     = XLSX.utils.book_new();
+    const COLS   = 6;
+    const TITULO = 'ZENTRY · Vacaciones';
 
     XLSX.utils.book_append_sheet(wb, this.buildResumenVacaciones(vacaciones), 'Resumen');
 
     const rows: any[][] = [
-      ...headerRows('ZENTRY · Vacaciones', subtitulo, COLS),
+      ...headerRows(TITULO, subtitulo, COLS),
       ['Empleado', 'Departamento', 'Fecha inicio', 'Fecha fin', 'Días', 'Estado']
         .map(h => cell(h, ST.colHeader())),
     ];
@@ -240,11 +252,11 @@ export class ExportService {
       vacaciones.forEach((v, i) => {
         const ev = i % 2 === 0;
         rows.push([
-          cell(v.empleado,    ST.data(ev, true)),
-          cell(v.departamento,ST.data(ev)),
-          cell(v.fechaInicio, ST.data(ev)),
-          cell(v.fechaFin,    ST.data(ev)),
-          cell(v.dias,        ST.data(ev, true, C.primary)),
+          cell(v.empleado,     ST.data(ev, true)),
+          cell(v.departamento, ST.data(ev)),
+          cell(v.fechaInicio,  ST.data(ev)),
+          cell(v.fechaFin,     ST.data(ev)),
+          cell(v.dias,         ST.data(ev, true, C.primary)),
           estadoBadge(v.estado),
         ]);
       });
@@ -257,11 +269,11 @@ export class ExportService {
     }
 
     const merges = [
-      ...mergesHeader(COLS + 1),
-      ...(vacaciones.length === 0 ? [{ s: { r: 4, c: 0 }, e: { r: 4, c: COLS } }] : []),
+      ...mergesHeader(COLS),
+      ...(vacaciones.length === 0 ? [{ s: { r: 4, c: 0 }, e: { r: 4, c: COLS - 1 } }] : []),
     ];
 
-    const ws = makeSheet(rows, [18, 14, 13, 13, 7, 12], merges);
+    const ws = makeSheet(rows, [20, 16, 13, 13, 7, 14], merges, undefined, TITULO);
     XLSX.utils.book_append_sheet(wb, ws, 'Vacaciones');
     descargar(wb, `Vacaciones_${this.fecha()}.xlsx`);
   }
@@ -281,19 +293,18 @@ export class ExportService {
       [cell(this.fecha(), ST.subtitle()), null],
       [blank(ST.empty()), null],
       [cell('Indicador', ST.colHeader()), cell('Valor', ST.colHeader())],
-      [cell('Total solicitudes', ST.field()),       cell(vacaciones.length, ST.data(false, true, C.primary))],
-      [cell('Aprobadas',         ST.field(true)),   cell(aprobadas,  ST.badge(C.green_bg, C.green_fg))],
-      [cell('Pendientes',        ST.field()),        cell(pendientes, ST.badge(C.amber_bg, C.amber_fg))],
-      [cell('Rechazadas',        ST.field(true)),   cell(rechazadas, ST.badge(C.red_bg,   C.red_fg))],
-      [cell('Total días',        ST.field()),        cell(totalDias,  ST.data(false, true, C.primary))],
+      [cell('Total solicitudes', ST.field()),     cell(vacaciones.length, ST.data(false, true, C.primary))],
+      [cell('Aprobadas',         ST.field(true)), cell(aprobadas,         ST.badge(C.green_bg, C.green_fg))],
+      [cell('Pendientes',        ST.field()),     cell(pendientes,        ST.badge(C.amber_bg, C.amber_fg))],
+      [cell('Rechazadas',        ST.field(true)), cell(rechazadas,        ST.badge(C.red_bg, C.red_fg))],
+      [cell('Total días',        ST.field()),     cell(totalDias,         ST.data(false, true, C.primary))],
     ];
 
-    const ws = makeSheet(rows, [24, 16], [
+    return makeSheet(rows, [26, 18], [
       { s: { r: 0, c: 0 }, e: { r: 0, c: 1 } },
       { s: { r: 1, c: 0 }, e: { r: 1, c: 1 } },
       { s: { r: 2, c: 0 }, e: { r: 2, c: 1 } },
-    ]);
-    return ws;
+    ], undefined, 'ZENTRY · Resumen de Vacaciones');
   }
 
 
@@ -301,43 +312,44 @@ export class ExportService {
     asistencias: AsistenciaVista[] | AsistenciaRaw[],
     subtitulo = 'Todos los empleados'
   ): void {
-    const wb   = XLSX.utils.book_new();
-    const COLS = 7;
+    const wb     = XLSX.utils.book_new();
+    const COLS   = 7;
+    const TITULO = 'ZENTRY · Asistencia';
+    const lista  = asistencias as any[];
 
-    XLSX.utils.book_append_sheet(wb, this.buildResumenAusencias(asistencias as any[]), 'Resumen');
+    XLSX.utils.book_append_sheet(wb, this.buildResumenAsistencia(lista), 'Resumen');
 
     const rows: any[][] = [
-      ...headerRows('ZENTRY · Asistencia', subtitulo, COLS),
-      ['Empleado/Fecha', 'Entrada', 'Descanso inicio', 'Descanso fin',
-       'Salida', 'Horas', 'Estado/Modo'].map(h => cell(h, ST.colHeader())),
+      ...headerRows(TITULO, subtitulo, COLS),
+      ['Empleado / Fecha', 'Entrada', 'Inicio descanso', 'Fin descanso',
+       'Salida', 'Horas', 'Estado / Modo'].map(h => cell(h, ST.colHeader())),
     ];
 
-    const lista = asistencias as any[];
     if (lista.length === 0) {
       rows.push(emptyDataRow('Sin registros de asistencia', COLS));
     } else {
       lista.forEach((a, i) => {
         const ev    = i % 2 === 0;
-        const label = (a as any).nombre ?? (a as any).fecha ?? '';
-        const horas = (a as any).horasTotales ?? (a as any).horas ?? 0;
+        const label = a.nombre ?? a.fecha ?? '';
+        const horas = a.horasTotales ?? a.horas ?? 0;
         const extra = horas - 8;
 
         rows.push([
-          cell(label,                      ST.data(ev, true)),
-          cell(a.entrada ?? '-',           ST.data(ev)),
-          cell((a as any).inicioDescanso ?? '-', ST.data(ev)),
-          cell((a as any).finDescanso ?? '-',    ST.data(ev)),
-          cell(a.salida ?? '-',            ST.data(ev)),
-          cell(horas,                      ST.data(ev, true, C.primary)),
-          (a as any).estado
-            ? estadoBadge((a as any).estado)
+          cell(label,                         ST.data(ev, true)),
+          cell(a.entrada        ?? '-',        ST.data(ev)),
+          cell(a.inicioDescanso ?? '-',        ST.data(ev)),
+          cell(a.finDescanso    ?? '-',        ST.data(ev)),
+          cell(a.salida         ?? '-',        ST.data(ev)),
+          cell(horas,                          ST.data(ev, true, C.primary)),
+          a.estado
+            ? estadoBadge(a.estado)
             : extra > 0
               ? cell(`+${extra.toFixed(1)}h extra`, ST.badge(C.green_bg, C.green_fg))
-              : cell((a as any).modo ?? '-', ST.data(ev)),
+              : cell(a.modo ?? '-',                 ST.data(ev)),
         ]);
       });
 
-      const totalHoras = lista.reduce((acc, a) => acc + ((a as any).horasTotales ?? (a as any).horas ?? 0), 0);
+      const totalHoras = lista.reduce((acc, a) => acc + (a.horasTotales ?? a.horas ?? 0), 0);
       rows.push([
         cell('TOTAL', ST.total()), totalBlank(), totalBlank(), totalBlank(), totalBlank(),
         cell(+totalHoras.toFixed(2), ST.total()), totalBlank(),
@@ -349,18 +361,46 @@ export class ExportService {
       ...(lista.length === 0 ? [{ s: { r: 4, c: 0 }, e: { r: 4, c: COLS - 1 } }] : []),
     ];
 
-    const ws = makeSheet(rows, [18, 10, 15, 13, 10, 8, 16], merges);
+    const ws = makeSheet(rows, [20, 10, 15, 13, 10, 8, 16], merges, undefined, TITULO);
     XLSX.utils.book_append_sheet(wb, ws, 'Asistencia');
     descargar(wb, `Asistencia_${this.fecha()}.xlsx`);
   }
 
-
-  exportarReportesExcel(reportes: any[], subtitulo = 'Panel de reportes'): void {
-    const wb   = XLSX.utils.book_new();
-    const COLS = 7;
+  private buildResumenAsistencia(lista: any[]): any {
+    const presentes  = lista.filter(a => ['Presente','TRABAJANDO','FINALIZADO','EN_DESCANSO'].includes(a.estado ?? '')).length;
+    const retrasos   = lista.filter(a => a.estado === 'Retraso').length;
+    const ausentes   = lista.filter(a => ['Ausente','NO_FICHADO'].includes(a.estado ?? '')).length;
+    const totalHoras = lista.reduce((acc, a) => acc + (a.horasTotales ?? a.horas ?? 0), 0);
+    const horasExtra = lista.reduce((acc, a) => acc + (a.horasExtra ?? 0), 0);
 
     const rows: any[][] = [
-      ...headerRows('ZENTRY · Reportes', subtitulo, COLS),
+      [cell('ZENTRY · Resumen de Asistencia', ST.title()), null],
+      [cell(this.fecha(), ST.subtitle()), null],
+      [blank(ST.empty()), null],
+      [cell('Indicador', ST.colHeader()), cell('Valor', ST.colHeader())],
+      [cell('Total registros',  ST.field()),     cell(lista.length,              ST.data(false, true, C.primary))],
+      [cell('Presentes',        ST.field(true)), cell(presentes,                 ST.badge(C.green_bg, C.green_fg))],
+      [cell('Con retraso',      ST.field()),     cell(retrasos,                  ST.badge(C.amber_bg, C.amber_fg))],
+      [cell('Ausentes',         ST.field(true)), cell(ausentes,                  ST.badge(C.red_bg, C.red_fg))],
+      [cell('Total horas',      ST.field()),     cell(+totalHoras.toFixed(2),    ST.data(false, true, C.primary))],
+      [cell('Horas extra',      ST.field(true)), cell(+horasExtra.toFixed(2),    ST.badge(C.green_bg, C.green_fg))],
+    ];
+
+    return makeSheet(rows, [26, 18], [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 1 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 1 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 1 } },
+    ], undefined, 'ZENTRY · Resumen de Asistencia');
+  }
+
+
+  exportarReportesExcel(reportes: any[], subtitulo = 'Panel de reportes'): void {
+    const wb     = XLSX.utils.book_new();
+    const COLS   = 7;
+    const TITULO = 'ZENTRY · Reportes';
+
+    const rows: any[][] = [
+      ...headerRows(TITULO, subtitulo, COLS),
       ['Nombre', 'Tipo', 'Departamento', 'Periodo', 'Fecha generación', 'Registros', 'Estado']
         .map(h => cell(h, ST.colHeader())),
     ];
@@ -371,12 +411,12 @@ export class ExportService {
       reportes.forEach((r, i) => {
         const ev = i % 2 === 0;
         rows.push([
-          cell(r.nombre,           ST.data(ev, true)),
+          cell(r.nombre,          ST.data(ev, true)),
           tipoBadge(r.tipo),
-          cell(r.departamento,     ST.data(ev)),
-          cell(r.periodo,          ST.data(ev)),
-          cell(r.fechaGeneracion,  ST.data(ev)),
-          cell(r.registros,        ST.data(ev, true, C.primary)),
+          cell(r.departamento,    ST.data(ev)),
+          cell(r.periodo,         ST.data(ev)),
+          cell(r.fechaGeneracion, ST.data(ev)),
+          cell(r.registros,       ST.data(ev, true, C.primary)),
           estadoBadge(r.estado),
         ]);
       });
@@ -393,11 +433,10 @@ export class ExportService {
       ...(reportes.length === 0 ? [{ s: { r: 4, c: 0 }, e: { r: 4, c: COLS - 1 } }] : []),
     ];
 
-    const ws = makeSheet(rows, [28, 14, 14, 12, 16, 10, 12], merges);
+    const ws = makeSheet(rows, [28, 14, 14, 12, 16, 10, 12], merges, undefined, TITULO);
     XLSX.utils.book_append_sheet(wb, ws, 'Reportes');
     descargar(wb, `Reportes_${this.fecha()}.xlsx`);
   }
-
 
   private fecha(): string {
     return new Date().toISOString().split('T')[0];
