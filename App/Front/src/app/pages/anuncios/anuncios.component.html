@@ -9,7 +9,6 @@
       }
     </div>
 
-    <!-- Botón nuevo anuncio (solo admin) -->
     @if (esAdmin()) {
       <button class="btn-nuevo-anuncio" (click)="abrirFormulario()">
         <i class="fa-solid fa-plus"></i>
@@ -40,7 +39,6 @@
             [class.no-leido]="!estaVisto(anuncio)"
             (click)="verAnuncio(anuncio)">
 
-            <!-- Franja de categoría -->
             <div class="anuncio-franja" [class]="'franja-' + anuncio.categoria.toLowerCase()"></div>
 
             <div class="anuncio-body">
@@ -68,7 +66,6 @@
                 }
               </div>
 
-              <!-- Acciones admin -->
               @if (esAdmin()) {
                 <div class="anuncio-acciones-admin" (click)="$event.stopPropagation()">
                   <button class="btn-accion editar" (click)="editarAnuncio(anuncio)">
@@ -88,40 +85,6 @@
       </div>
     }
   }
-
-  <!-- ══ MODAL DETALLE ANUNCIO ════════════════════════════════════ -->
-  @if (anuncioSeleccionado()) {
-    <div class="modal-overlay" (click)="cerrarModal()">
-      <div class="modal-detalle" (click)="$event.stopPropagation()">
-        <button class="modal-cerrar" (click)="cerrarModal()"><i class="fa-solid fa-xmark"></i></button>
-
-        <div class="modal-franja" [class]="'franja-' + anuncioSeleccionado()!.categoria.toLowerCase()"></div>
-
-        <div class="modal-content">
-          <span class="anuncio-categoria" [class]="'cat-' + anuncioSeleccionado()!.categoria.toLowerCase()">
-            <i [class]="getCategoriaIcon(anuncioSeleccionado()!.categoria)"></i>
-            {{ anuncioSeleccionado()!.categoria }}
-          </span>
-          <h2>{{ anuncioSeleccionado()!.titulo }}</h2>
-          <p class="modal-contenido">{{ anuncioSeleccionado()!.contenido }}</p>
-
-          <div class="modal-meta">
-            <span><i class="fa-regular fa-user"></i> Publicado por <strong>{{ anuncioSeleccionado()!.autorNombre }}</strong></span>
-            <span><i class="fa-regular fa-calendar"></i> {{ formatearFecha(anuncioSeleccionado()!.fechaCreacion!) }}</span>
-            @if (anuncioSeleccionado()!.fechaExpiracion) {
-              <span class="expira"><i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncioSeleccionado()!.fechaExpiracion!) }}</span>
-            }
-            <span class="leidos-count">
-              <i class="fa-regular fa-eye"></i>
-              {{ anuncioSeleccionado()!.vistoPor?.length ?? 0 }} persona{{ (anuncioSeleccionado()!.vistoPor?.length ?? 0) !== 1 ? 's' : '' }} lo han leído
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  }
-
-  <!-- ══ MODAL FORMULARIO (ADMIN) ═════════════════════════════════ -->
   @if (mostrarFormulario()) {
     <div class="modal-overlay" (click)="cerrarFormulario()">
       <div class="modal-form" (click)="$event.stopPropagation()">

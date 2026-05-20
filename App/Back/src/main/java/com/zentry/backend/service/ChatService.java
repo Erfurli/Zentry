@@ -28,16 +28,35 @@ public class ChatService {
     private final UsuarioRepository usuarioRepo;
     private final EmpleadoRepository empleadoRepo;
 
+    /**
+     * Obtiene el histórico de conversaciones de las cuales es partícipe un usuario.
+     * 
+     * @param usuarioId identificador del usuario
+     * @return lista de DTOs con la información consolidada de cada conversación
+     */
     public List<ConversacionDTO> getConversacionesDeUsuario(String usuarioId) {
         return conversacionRepo.findByParticipantesContaining(usuarioId)
                 .stream().map(c -> toConversacionDTO(c, usuarioId)).toList();
     }
 
+    /**
+     * Retorna los mensajes legibles ordenados cronológicamente de una conversación.
+     * 
+     * @param conversacionId identificador de la conversación
+     * @return lista estructurada de mensajes en formato DTO
+     */
     public List<MensajeDTO> getMensajes(String conversacionId) {
         return mensajeRepo.findByConversacionIdAndEliminadoFalseOrderByEnviadoEnAsc(conversacionId)
                 .stream().map(this::toMensajeDTO).toList();
     }
 
+    /**
+     * Procesa, persiste y retransmite un nuevo mensaje a través de WebSockets.
+     * 
+     * @param req datos de entrada del mensaje a enviar
+     * @param autorId identificador único de quien envía el mensaje
+     * @return el MensajeDTO persistido y formateado
+     */
     public MensajeDTO enviarMensaje(EnviarMensajeRequest req, String autorId) {
         Conversacion conv = conversacionRepo.findById(req.getConversacionId())
                 .orElseThrow(() -> new RuntimeException("Conversación no encontrada"));
@@ -77,6 +96,12 @@ public class ChatService {
         return dto;
     }
 
+    /**
+     * Agrega o remueve el emoji de reacción en un mensaje específico por parte de un usuario.
+     * 
+     * @param req datos de la reacción (mensajeId, emoji)
+     * @param usuarioId identificador del usuario que ejecuta la reacción
+     */
     public void toggleReaccion(ReaccionRequest req, String usuarioId) {
         Optional<Reaccion> existente = reaccionRepo
                 .findByMensajeIdAndUsuarioIdAndEmoji(req.getMensajeId(), usuarioId, req.getEmoji());
@@ -96,6 +121,14 @@ public class ChatService {
         messagingTemplate.convertAndSend("/topic/conversacion/" + actualizado.getConversacionId(), dto);
     }
 
+    /**
+     * Crea un nuevo canal conversacional de tipo Grupo.
+     * 
+     * @param nombre nombre visual del grupo
+     * @param participanteIds lista de integrantes iniciales
+     * @param creadorId identificador del usuario creador
+     * @return la conversación grupal en formato DTO
+     */
     public ConversacionDTO crearGrupo(String nombre, List<String> participanteIds, String creadorId) {
         List<String> todos = new ArrayList<>(participanteIds);
         if (!todos.contains(creadorId)) todos.add(creadorId);
@@ -110,6 +143,14 @@ public class ChatService {
         return toConversacionDTO(conversacionRepo.save(conv), creadorId);
     }
 
+    /**
+     * Inicia una conversación directa e individual entre dos usuarios en el sistema.
+     * Si ya existía, recupera la conversación previa.
+     * 
+     * @param usuarioAId primer participante (remitente)
+     * @param usuarioBId segundo participante (destinatario)
+     * @return la conversación individual resuelta en formato DTO
+     */
     public ConversacionDTO abrirConversacionIndividual(String usuarioAId, String usuarioBId) {
         List<Conversacion> existentes = conversacionRepo.findByParticipantesContaining(usuarioAId)
                 .stream()
@@ -213,6 +254,7 @@ public class ChatService {
                 })
                 .orElse("");
     }
+    
     private String resolverFoto(String usuarioId) {
         return usuarioRepo.findById(usuarioId)
                 .map(u -> {
@@ -225,7 +267,6 @@ public class ChatService {
                 })
                 .orElse(null);
     }
-
 
     private String generarIniciales(String nombre) {
         if (nombre == null || nombre.isBlank()) return "?";

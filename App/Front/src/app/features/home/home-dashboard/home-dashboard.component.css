@@ -3,7 +3,6 @@
   margin: 0 auto;
 }
 
-/* LOADING / ERROR */
 .loading-state, .error-state {
   display: flex;
   flex-direction: column;
@@ -18,7 +17,6 @@
 .loading-state i, .error-state i { font-size: 2.5rem; }
 .error-state { color: #ef4444; }
 
-/* BIENVENIDA */
 .bienvenida-card {
   background: linear-gradient(135deg, var(--zentry-primary), var(--zentry-primary-light, #4669B9));
   border-radius: 20px;
@@ -69,7 +67,6 @@
   letter-spacing: 0.05em;
 }
 
-/* MENSAJE FICHAJE */
 .mensaje-fichaje {
   background: #d1fae5;
   color: #065f46;
@@ -88,7 +85,6 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* KPIs */
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -130,7 +126,6 @@
 .kpi-valor { font-size: 1.8rem; font-weight: 800; color: #1e293b; line-height: 1; }
 .kpi-label { font-size: 0.8rem; color: #64748b; font-weight: 500; }
 
-/* MAIN GRID */
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 1.5fr 1fr;
@@ -154,7 +149,6 @@
 .card-header i { color: var(--zentry-primary); font-size: 1rem; }
 .card-header h2 { margin: 0; font-size: 1rem; font-weight: 700; color: #1e293b; }
 
-/* FICHAJE */
 .fichaje-botones {
   display: flex;
   flex-direction: column;
@@ -182,7 +176,6 @@
 .fichaje-btn.entrada { background: #10b981; }
 .fichaje-btn.salida  { background: #ef4444; }
 
-/* VER MÁS */
 .ver-mas-link {
   display: flex;
   align-items: center;
@@ -196,7 +189,6 @@
 
 .ver-mas-link:hover { gap: 0.6rem; }
 
-/* VACACIONES */
 .barra-vacaciones { margin-bottom: 1.25rem; }
 
 .barra-label {
@@ -260,7 +252,6 @@
   margin: 0 0 1rem;
 }
 
-/* ACCIONES */
 .acciones-lista {
   display: flex;
   flex-direction: column;
@@ -307,7 +298,10 @@
 .accion-desc   { font-size: 0.78rem; color: #94a3b8; }
 .accion-arrow  { color: #cbd5e1; font-size: 0.8rem; }
 
-/* RESPONSIVE */
+.tablon-row {
+  margin-top: 1.25rem;
+}
+
 @media (max-width: 1024px) {
   .kpi-grid  { grid-template-columns: repeat(2, 1fr); }
   .main-grid { grid-template-columns: 1fr 1fr; }

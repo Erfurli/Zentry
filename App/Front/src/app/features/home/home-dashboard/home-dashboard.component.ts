@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DashboardService, DashboardSummary } from '../../../services/dashboard.service';
 import { AsistenciaService } from '../../../services/asistencia.service';
+import { TablonAnunciosComponent } from '../../../pages/anuncios/anuncios.component';
 
 @Component({
   selector: 'app-home-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TablonAnunciosComponent],
   templateUrl: './home-dashboard.component.html',
   styleUrls: ['./home-dashboard.component.css']
 })
@@ -15,36 +16,35 @@ export class HomeDashboardComponent implements OnInit {
   private dashboardService  = inject(DashboardService);
   private asistenciaService = inject(AsistenciaService);
 
-  readonly summary         = signal<DashboardSummary | null>(null);
-  readonly loading         = signal(true);
-  readonly error           = signal('');
-  readonly fichando        = signal(false);
-  readonly mensajeFichaje  = signal('');
-  readonly horaActual      = signal(this.getHora());
-  readonly fechaActual     = signal(this.getFecha());
+  readonly summary        = signal<DashboardSummary | null>(null);
+  readonly loading        = signal(true);
+  readonly error          = signal('');
+  readonly fichando       = signal(false);
+  readonly mensajeFichaje = signal('');
+  readonly horaActual     = signal(this.getHora());
+  readonly fechaActual    = signal(this.getFecha());
 
   ngOnInit(): void {
     this.dashboardService.getHomeSummary().subscribe({
       next: data => { this.summary.set(data); this.loading.set(false); },
-      error: () => { this.error.set('No se pudo cargar el resumen.'); this.loading.set(false); }
+      error: ()   => { this.error.set('No se pudo cargar el resumen.'); this.loading.set(false); }
     });
-
     setInterval(() => this.horaActual.set(this.getHora()), 60000);
   }
 
   ficharEntrada(): void {
     this.fichando.set(true);
     this.asistenciaService.ficharEntrada().subscribe({
-      next: (res: any) => { this.mostrarMensaje(res?.mensaje ?? 'Entrada registrada'); },
-      error: (err: any) => { this.mostrarMensaje(err?.error?.mensaje ?? 'Error al fichar'); }
+      next: (res: any) => this.mostrarMensaje(res?.mensaje ?? 'Entrada registrada'),
+      error: (err: any) => this.mostrarMensaje(err?.error?.mensaje ?? 'Error al fichar')
     });
   }
 
   ficharSalida(): void {
     this.fichando.set(true);
     this.asistenciaService.ficharSalida().subscribe({
-      next: (res: any) => { this.mostrarMensaje(res?.mensaje ?? 'Salida registrada'); },
-      error: (err: any) => { this.mostrarMensaje(err?.error?.mensaje ?? 'Error al fichar'); }
+      next: (res: any) => this.mostrarMensaje(res?.mensaje ?? 'Salida registrada'),
+      error: (err: any) => this.mostrarMensaje(err?.error?.mensaje ?? 'Error al fichar')
     });
   }
 
@@ -63,8 +63,7 @@ export class HomeDashboardComponent implements OnInit {
   formatearFechaVacacion(fechaInicio: string, fechaFin: string): string {
     const opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
     const ini = new Date(fechaInicio + 'T00:00:00');
-    const fin = new Date(fechaFin + 'T00:00:00');
-
+    const fin = new Date(fechaFin    + 'T00:00:00');
     if (ini.getMonth() === fin.getMonth()) {
       return `${ini.getDate()}–${fin.getDate()} ${fin.toLocaleDateString('es-ES', { month: 'short' })}`;
     }

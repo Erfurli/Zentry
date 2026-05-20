@@ -304,7 +304,6 @@ export class ExportService {
     const wb   = XLSX.utils.book_new();
     const COLS = 7;
 
-    // XLSX.utils.book_append_sheet(wb, this.buildResumenAsistencia(asistencias as any[]), 'Resumen');
     XLSX.utils.book_append_sheet(wb, this.buildResumenAusencias(asistencias as any[]), 'Resumen');
 
     const rows: any[][] = [

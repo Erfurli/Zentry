@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AnuncioService } from '../../services/anuncio.service';
 import { Anuncio } from '../../models/anuncio.model';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tablon-anuncios',
@@ -16,6 +17,7 @@ export class TablonAnunciosComponent implements OnInit {
 
   private anuncioService = inject(AnuncioService);
   private authService    = inject(AuthService);
+  private router = inject(Router);
 
   readonly anuncios            = signal<Anuncio[]>([]);
   readonly cargando            = signal(true);
@@ -50,19 +52,10 @@ export class TablonAnunciosComponent implements OnInit {
   }
 
   verAnuncio(anuncio: Anuncio): void {
-    this.anuncioSeleccionado.set(anuncio);
-    if (!this.estaVisto(anuncio) && anuncio.id) {
-      this.anuncioService.marcarVisto(anuncio.id).subscribe();
-      this.marcarVistoLocal(anuncio.id);
-      // Actualiza contador en memoria
-      this.anuncios.update(lista =>
-        lista.map(a => a.id === anuncio.id
-          ? { ...a, vistoPor: [...(a.vistoPor ?? []), 'yo'] }
-          : a
-        )
-      );
-    }
+  if (anuncio.id) {
+    this.router.navigate(['/anuncios', anuncio.id]);
   }
+}
 
   cerrarModal(): void { this.anuncioSeleccionado.set(null); }
 

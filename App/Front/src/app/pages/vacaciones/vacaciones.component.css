@@ -360,7 +360,6 @@
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-/* helper used inside modal forms */
 .opcional {
   font-size: 0.8rem;
   color: #94a3b8;

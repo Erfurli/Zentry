@@ -1,0 +1,192 @@
+<div class="detalle-page">
+
+  <div class="detalle-topbar">
+    <button class="btn-volver" (click)="volver()">
+      <i class="fa-solid fa-arrow-left"></i> Volver al tablón
+    </button>
+  </div>
+
+  @if (cargando()) {
+    <div class="detalle-loading">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+    </div>
+  }
+
+  @if (!cargando() && anuncio()) {
+    <div class="detalle-layout">
+
+      <div class="detalle-main">
+
+        <div class="detalle-franja" [class]="'franja-' + anuncio()!.categoria.toLowerCase()"></div>
+
+        <div class="detalle-card">
+          <div class="detalle-card-top">
+            <span class="anuncio-categoria" [class]="'cat-' + anuncio()!.categoria.toLowerCase()">
+              <i [class]="getCategoriaIcon(anuncio()!.categoria)"></i>
+              {{ anuncio()!.categoria }}
+            </span>
+            @if (anuncio()!.destacado) {
+              <span class="badge-destacado"><i class="fa-solid fa-star"></i> Destacado</span>
+            }
+          </div>
+
+          <h1 class="detalle-titulo">{{ anuncio()!.titulo }}</h1>
+
+          @if (anuncio()!.imagenBase64) {
+            <div class="detalle-imagen-wrapper">
+              <img [src]="anuncio()!.imagenBase64" alt="Imagen del anuncio" class="detalle-imagen" />
+            </div>
+          }
+
+          @if (esAdmin()) {
+            <div class="subir-imagen-area">
+              <label class="btn-subir-img" [class.cargando]="subiendoImg()">
+                @if (subiendoImg()) {
+                  <i class="fa-solid fa-spinner fa-spin"></i> Subiendo...
+                } @else {
+                  <i class="fa-solid fa-image"></i>
+                  {{ anuncio()!.imagenBase64 ? 'Cambiar imagen' : 'Añadir imagen' }}
+                }
+                <input type="file" accept="image/*" (change)="onImagenSeleccionada($event)" hidden />
+              </label>
+            </div>
+          }
+
+          <p class="detalle-contenido">{{ anuncio()!.contenido }}</p>
+
+          <div class="detalle-meta">
+            <div class="meta-autor" (click)="irAPerfil(anuncio()!.autorId!)" title="Ver perfil">
+              <div class="meta-avatar">{{ getIniciales(anuncio()!.autorNombre ?? '?') }}</div>
+              <div class="meta-autor-info">
+                <span class="meta-autor-nombre">{{ anuncio()!.autorNombre ?? 'Desconocido' }}</span>
+                <span class="meta-fecha">{{ formatearFecha(anuncio()!.fechaCreacion!) }}</span>
+              </div>
+            </div>
+            <div class="meta-stats">
+              <span><i class="fa-regular fa-eye"></i> {{ anuncio()!.vistoPor?.length ?? 0 }} leídos</span>
+              <span><i class="fa-regular fa-comment"></i> {{ anuncio()!.comentarios?.length ?? 0 }} comentarios</span>
+              @if (anuncio()!.fechaExpiracion) {
+                <span class="expira">
+                  <i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncio()!.fechaExpiracion!) }}
+                </span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="comentarios-section">
+          <h3 class="comentarios-titulo">
+            <i class="fa-regular fa-comments"></i>
+            Comentarios
+            <span class="comentarios-count">{{ anuncio()!.comentarios?.length ?? 0 }}</span>
+          </h3>
+
+          <div class="comentario-input-area">
+            @if (respondiendo) {
+              <div class="respondiendo-a">
+                <i class="fa-solid fa-reply"></i>
+                Respondiendo a <strong>{{ respondiendo.autorNombre }}</strong>
+                <button class="btn-cancelar-resp" (click)="cancelarRespuesta()">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            }
+            <div class="comentario-input-row">
+              <textarea
+                id="input-comentario"
+                class="comentario-input"
+                [(ngModel)]="textoComentario"
+                placeholder="Escribe un comentario..."
+                rows="2"
+                (keydown.enter)="$event.preventDefault(); enviarComentario()">
+              </textarea>
+              <button class="btn-enviar-comentario"
+                      (click)="enviarComentario()"
+                      [disabled]="!textoComentario.trim() || enviando()">
+                @if (enviando()) {
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                } @else {
+                  <i class="fa-solid fa-paper-plane"></i>
+                }
+              </button>
+            </div>
+          </div>
+
+          @if (comentariosRaiz().length === 0) {
+            <div class="sin-comentarios">
+              <i class="fa-regular fa-comment-dots"></i>
+              <p>Sé el primero en comentar</p>
+            </div>
+          }
+
+          @for (c of comentariosRaiz(); track c.id) {
+            <div class="comentario-bloque">
+              <div class="comentario">
+                <div class="comentario-avatar" (click)="irAPerfil(c.autorId)" title="Ver perfil">
+                  @if (c.autorFoto) {
+                    <img [src]="c.autorFoto" [alt]="c.autorNombre" class="avatar-foto" />
+                  } @else {
+                    {{ getIniciales(c.autorNombre) }}
+                  }
+                </div>
+                <div class="comentario-contenido">
+                  <div class="comentario-header">
+                    <span class="comentario-autor" (click)="irAPerfil(c.autorId)">{{ c.autorNombre }}</span>
+                    <span class="comentario-fecha">{{ formatearFechaCorta(c.fecha) }}</span>
+                  </div>
+                  <p class="comentario-texto">{{ c.texto }}</p>
+                  <div class="comentario-acciones">
+                    <button class="btn-responder" (click)="responder(c)">
+                      <i class="fa-solid fa-reply"></i> Responder
+                    </button>
+                    @if (puedeEliminarComentario(c)) {
+                      <button class="btn-eliminar-com" (click)="eliminarComentario(c.id)">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              @for (r of respuestasA(c.id); track r.id) {
+                <div class="comentario respuesta">
+                  <div class="comentario-avatar pequeño" (click)="irAPerfil(r.autorId)" title="Ver perfil">
+                    @if (r.autorFoto) {
+                      <img [src]="r.autorFoto" [alt]="r.autorNombre" class="avatar-foto" />
+                    } @else {
+                      {{ getIniciales(r.autorNombre) }}
+                    }
+                  </div>
+                  <div class="comentario-contenido">
+                    <div class="comentario-header">
+                      <span class="comentario-autor" (click)="irAPerfil(r.autorId)">{{ r.autorNombre }}</span>
+                      <span class="comentario-fecha">{{ formatearFechaCorta(r.fecha) }}</span>
+                    </div>
+                    @if (r.respuestaATexto) {
+                      <div class="reply-quote">
+                        <span class="reply-quote-autor">{{ r.respuestaAAutor }}</span>
+                        {{ r.respuestaATexto }}
+                      </div>
+                    }
+                    <p class="comentario-texto">{{ r.texto }}</p>
+                    <div class="comentario-acciones">
+                      <button class="btn-responder" (click)="responder(c)">
+                        <i class="fa-solid fa-reply"></i> Responder
+                      </button>
+                      @if (puedeEliminarComentario(r)) {
+                        <button class="btn-eliminar-com" (click)="eliminarComentario(r.id)">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+  }
+</div>

@@ -388,7 +388,6 @@
   margin-top: 0.1rem;
 }
 
-/* MAIN GRID */
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -396,7 +395,6 @@
   margin-top: 1.5rem;
 }
 
-/* GRÁFICA */
 .grafica-card {
   background: white;
   border-radius: 16px;
@@ -471,7 +469,6 @@
   position: relative;
 }
 
-/* LISTAS COL */
 .listas-col {
   display: flex;
   flex-direction: column;

@@ -36,6 +36,14 @@ public class AusenciaController {
         this.notificacionService = notificacionService;
     }
 
+    /**
+     * Obtiene la vista agrupada de ausencias permitiendo filtros por tipo y estado.
+     * Excluye ausencias de empleados que ya no se encuentren en estado activo.
+     * 
+     * @param tipo tipo de ausencia a buscar (opcional)
+     * @param estado estado actual del reporte (opcional)
+     * @return lista estructurada en DTO con datos de ausencias
+     */
     @GetMapping("/vista")
     public List<AusenciaVistaDTO> getVista(
             @RequestParam(required = false) String tipo,
@@ -54,6 +62,12 @@ public class AusenciaController {
                 .toList();
     }
 
+    /**
+     * Recupera el listado propio de ausencias del usuario que realiza la petición.
+     * 
+     * @param authentication credenciales del empleado conectado
+     * @return ResponseEntity que contiene la lista de DTOs de ausencias correspondientes al empleado
+     */
     @GetMapping("/mis-ausencias")
     public ResponseEntity<List<AusenciaVistaDTO>> getMisAusencias(Authentication authentication) {
         String username = authentication.getName();
@@ -70,6 +84,13 @@ public class AusenciaController {
         return ResponseEntity.ok(misAusencias);
     }
 
+    /**
+     * Registra una nueva solicitud de ausencia en el sistema notificando a los administradores.
+     * 
+     * @param body mapa con los valores "fechaInicio", "fechaFin", "tipo" y "motivo"
+     * @param authentication credenciales del empleado solicitante
+     * @return ResponseEntity con la entidad de Ausencia creada
+     */
     @PostMapping("/solicitar")
     public ResponseEntity<Ausencia> solicitar(@RequestBody Map<String, String> body,
                                               Authentication authentication) {
@@ -115,6 +136,13 @@ public class AusenciaController {
         return ResponseEntity.ok(ausencia);
     }
 
+    /**
+     * Aprueba justificadamente una ausencia registrada previamente en el sistema.
+     * 
+     * @param id identificador de la ausencia a justificar
+     * @param authentication credenciales de la persona que justifica (usualmente RRHH / Admin)
+     * @return ResponseEntity con la ausencia actualizada
+     */
     @PatchMapping("/{id}/justificar")
     public ResponseEntity<Ausencia> justificar(@PathVariable String id,
                                                Authentication authentication) {
@@ -133,6 +161,13 @@ public class AusenciaController {
         return ResponseEntity.ok(guardada);
     }
 
+    /**
+     * Declara una ausencia registrada previamente como "No Justificada".
+     * 
+     * @param id identificador de la ausencia rechazada/no justificada
+     * @param authentication credenciales de la persona que realiza la acción
+     * @return ResponseEntity con la ausencia actualizada
+     */
     @PatchMapping("/{id}/no-justificar")
     public ResponseEntity<Ausencia> noJustificar(@PathVariable String id,
                                                  Authentication authentication) {
@@ -142,7 +177,6 @@ public class AusenciaController {
         ausencia.setEstado("No Justificada");
         Ausencia guardada = ausenciaRepository.save(ausencia);
 
-        // Notificar al empleado
         notificarEmpleado(ausencia.getEmpleadoId(),
                 "Ausencia no justificada",
                 "Tu ausencia del " + ausencia.getFechaInicio()
@@ -152,6 +186,12 @@ public class AusenciaController {
         return ResponseEntity.ok(guardada);
     }
 
+    /**
+     * Convierte el modelo de Ausencia a un DTO legible para la vista.
+     * 
+     * @param a la entidad Ausencia
+     * @return el objeto AusenciaVistaDTO mapeado
+     */
     private AusenciaVistaDTO toDTO(Ausencia a) {
         Empleado emp = empleadoRepository.findById(a.getEmpleadoId()).orElse(null);
         return new AusenciaVistaDTO(
@@ -169,6 +209,13 @@ public class AusenciaController {
         );
     }
 
+    /**
+     * Envía notificaciones in-app/email internas al empleado afectado.
+     * 
+     * @param empleadoId identificador único del empleado
+     * @param titulo cabecera del mensaje
+     * @param mensaje contenido del aviso
+     */
     private void notificarEmpleado(String empleadoId, String titulo, String mensaje) {
         usuarioRepository.findAll().stream()
                 .filter(u -> empleadoId.equals(u.getEmpleadoId()))

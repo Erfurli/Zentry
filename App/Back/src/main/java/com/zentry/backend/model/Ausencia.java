@@ -21,8 +21,8 @@ public class Ausencia {
     private String fechaInicio;
     private String fechaFin;
     private Integer dias;
-    private String tipo;       // Enfermedad | Asunto Personal | Médico | Familiar
-    private String estado;     // Pendiente | Justificada | No Justificada
+    private String tipo;
+    private String estado;
     private String motivo;
     private String fechaSolicitud;
 

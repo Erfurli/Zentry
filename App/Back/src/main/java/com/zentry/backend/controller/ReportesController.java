@@ -26,7 +26,14 @@ public class ReportesController {
     private final VacacionesRepository vacacionesRepository;
     private final AusenciaRepository ausenciaRepository;
 
-
+    /**
+     * Genera la lista de reportes ejecutados con sus metadatos básicos y volumen de datos.
+     * 
+     * @param tipo categoría del reporte ("Asistencia", "Vacaciones", "Ausencias", "Empleados")
+     * @param year año para filtrar los datos (opcional)
+     * @param month mes numérico para filtrar los datos de asistencia (opcional)
+     * @return lista de DTOs resúmenes de los reportes correspondientes
+     */
     @GetMapping
     public List<ReporteResumenDTO> getReportes(
             @RequestParam(required = false) String tipo,
@@ -76,7 +83,14 @@ public class ReportesController {
         return reportes;
     }
 
-
+    /**
+     * Extrae un volcado estructurado de datos de asistencia para su exportación o análisis detallado.
+     * 
+     * @param year año de filtro (opcional)
+     * @param month mes de filtro (opcional)
+     * @param departamento departamento del empleado para filtrar (opcional)
+     * @return lista de mapas representativos de filas del reporte
+     */
     @GetMapping("/datos/asistencia")
     public List<Map<String, Object>> getDatosAsistencia(
             @RequestParam(required = false) Integer year,
@@ -119,7 +133,14 @@ public class ReportesController {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * Extrae datos históricos de solicitudes vacacionales para el reporte.
+     * 
+     * @param year año del inicio del periodo (opcional)
+     * @param estado estado del registro a filtrar (opcional)
+     * @param departamento filtro de departamento opcional
+     * @return lista de mapas clave-valor formateados para la tabla del reporte
+     */
     @GetMapping("/datos/vacaciones")
     public List<Map<String, Object>> getDatosVacaciones(
             @RequestParam(required = false) Integer year,
@@ -157,7 +178,14 @@ public class ReportesController {
                 .collect(Collectors.toList());
     }
 
-
+    /**
+     * Extrae el reporte detallado de incidencias y ausencias de empleados.
+     * 
+     * @param year año del reporte (opcional)
+     * @param estado estado del registro (opcional)
+     * @param departamento departamento del empleado (opcional)
+     * @return lista de mapas representativos del conjunto de datos de ausencias
+     */
     @GetMapping("/datos/ausencias")
     public List<Map<String, Object>> getDatosAusencias(
             @RequestParam(required = false) Integer year,
@@ -197,7 +225,6 @@ public class ReportesController {
                 .collect(Collectors.toList());
     }
 
-
     @GetMapping("/resumen-general")
     public Map<String, Object> getResumenGeneral() {
         long empleadosActivos   = empleadoRepository.findAll().stream().filter(Empleado::getActivo).count();
@@ -219,7 +246,6 @@ public class ReportesController {
         res.put("retrasos",            retrasos);
         return res;
     }
-
 
     private boolean matchYear(String fecha, Integer year) {
         return fecha != null && fecha.startsWith(String.valueOf(year));

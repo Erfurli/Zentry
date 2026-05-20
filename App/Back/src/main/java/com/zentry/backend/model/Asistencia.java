@@ -26,12 +26,12 @@ public class Asistencia {
     private String inicioDescanso;
     private String finDescanso;
 
-    private String estado; // <--- no fichado, trabajando, en descanso o finalizado
+    private String estado;
 
-    private Double horasTotales; // <--- descontando el descanso
-    private Double horasExtra; // <--- horas extra respecto a la jornada de 8h
+    private Double horasTotales;
+    private Double horasExtra;
 
-    private String modo; // <--- presencial o teletrabajo
+    private String modo;
 
 
     private String incidenciaTipo;

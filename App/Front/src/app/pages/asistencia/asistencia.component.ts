@@ -48,7 +48,6 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly guardandoIncidencia    = signal(false);
   readonly mensajeIncidencia      = signal('');
 
-  // Incidencia empleado (auto-reporte)
   readonly modalIncidenciaEmpleadoAbierto = signal(false);
   readonly incTipo        = signal('descanso_olvidado');
   readonly incInicioDesc  = signal('');
@@ -116,7 +115,7 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
   this.cargarDatos();
   if (this.esEmpleado()) {
     this.cargarMiAsistenciaHoy();
-    this.cargarMisRegistros(); 
+    this.cargarMisRegistros();
   }
 }
 

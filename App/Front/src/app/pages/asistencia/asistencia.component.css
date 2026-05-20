@@ -828,11 +828,6 @@
   min-height: 100px;
 }
 
-
-
-
-
-/* ── Layout empleado ── */
 .empleado-layout {
   display: grid;
   grid-template-columns: 1fr 380px;
@@ -844,7 +839,6 @@
   .empleado-layout { grid-template-columns: 1fr; }
 }
 
-/* ── Tarjeta estado v2 ── */
 .estado-card-v2 {
   background: white;
   border-radius: 16px;
@@ -912,7 +906,6 @@
   gap: 0.4rem;
 }
 
-/* ── Columna lateral ── */
 .empleado-col-side {
   display: flex;
   flex-direction: column;
@@ -941,7 +934,6 @@
 .side-card-body h3 { margin: 0 0 0.2rem; font-size: 0.95rem; font-weight: 700; color: #1e293b; }
 .side-card-body p  { margin: 0; font-size: 0.82rem; color: #64748b; }
 
-/* ── Últimos fichajes ── */
 .ultimos-titulo {
   margin: 0 0 0.25rem;
   font-size: 0.95rem;

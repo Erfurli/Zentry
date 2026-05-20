@@ -87,7 +87,6 @@
   </div>
 </div>
 
-<!-- ─── Modal editar / crear ─────────────────────────────────────────────── -->
 @if (modalAbierto()) {
   <app-empleado-modal
     [empleado]="empleadoEditando()"
@@ -96,7 +95,6 @@
   </app-empleado-modal>
 }
 
-<!-- ─── Modal info empleado ───────────────────────────────────────────────── -->
 @if (modalInfoAbierto()) {
   <div class="modal-overlay" (click)="cerrarModalInfo()">
     <div class="modal-info-card" (click)="$event.stopPropagation()">
@@ -154,7 +152,6 @@
   </div>
 }
 
-<!-- ─── Modal exportar datos ──────────────────────────────────────────────── -->
 @if (modalExportarAbierto()) {
   <div class="modal-overlay" (click)="cerrarModalExportar()">
     <div class="modal-exportar-card" (click)="$event.stopPropagation()">

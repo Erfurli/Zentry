@@ -43,12 +43,19 @@ public class VacacionesController {
         return vacacionesRepository.findAll();
     }
 
+    /**
+     * Recupera un listado completo estructurado en DTOs filtrando opcionalmente por estado y año.
+     * Excluye aquellos registros de empleados inactivos o dados de baja.
+     * 
+     * @param estado estado del registro (ej. "Aprobada", "Pendiente", "Rechazada")
+     * @param year año de inicio del periodo vacacional
+     * @return lista de DTOs que mapean los periodos vacacionales
+     */
     @GetMapping("/vista")
     public List<VacacionesVistaDTO> getVista(@RequestParam(required = false) String estado,
                                              @RequestParam(required = false) Integer year) {
         return vacacionesRepository.findAll().stream()
                 .filter(v -> {
-                    // Excluir vacaciones de empleados dados de baja
                     return empleadoRepository.findById(v.getEmpleadoId())
                             .map(emp -> Boolean.TRUE.equals(emp.getActivo()))
                             .orElse(false);
@@ -73,6 +80,13 @@ public class VacacionesController {
                 .toList();
     }
 
+    /**
+     * Procesa la solicitud de vacaciones de un empleado, validando solapamientos y disponibilidad de saldo de días.
+     * 
+     * @param body mapa con claves "fechaInicio" y "fechaFin"
+     * @param authentication credenciales del empleado que solicita las vacaciones
+     * @return ResponseEntity con los datos del periodo vacacional creado o mensaje de error en caso de fallo
+     */
     @PostMapping("/solicitar")
     public ResponseEntity<?> solicitar(@RequestBody Map<String, String> body,
                                        Authentication authentication) {
@@ -155,6 +169,13 @@ public class VacacionesController {
         return ResponseEntity.ok(vacacion);
     }
 
+    /**
+     * Aprueba un periodo vacacional pendiente, enviando alertas por mail e in-app.
+     * 
+     * @param id identificador del periodo vacacional a aprobar
+     * @param authentication credenciales del administrador que aprueba
+     * @return la entidad Vacaciones actualizada
+     */
     @PatchMapping("/{id}/aprobar")
     public Vacaciones aprobar(@PathVariable String id, Authentication authentication) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
@@ -189,6 +210,13 @@ public class VacacionesController {
         return guardada;
     }
 
+    /**
+     * Rechaza una solicitud vacacional, enviando notificaciones respectivas.
+     * 
+     * @param id identificador de la vacación a denegar
+     * @param authentication credenciales del usuario que ejecuta la acción
+     * @return la entidad Vacaciones actualizada
+     */
     @PatchMapping("/{id}/rechazar")
     public Vacaciones rechazar(@PathVariable String id, Authentication authentication) {
         Vacaciones vacacion = vacacionesRepository.findById(id).orElseThrow();
@@ -217,7 +245,7 @@ public class VacacionesController {
                     authentication.getName() + " ha rechazado las vacaciones de " + emp.getNombre(),
                     "vacaciones",
                     "/vacaciones"
-            );
+                );
         }
 
         return guardada;
@@ -231,6 +259,12 @@ public class VacacionesController {
         return ResponseEntity.ok(Map.of("count", count));
     }
 
+    /**
+     * Obtiene el desglose de días de vacaciones totales, consumidos y disponibles para el empleado actual en el año en curso.
+     * 
+     * @param authentication credenciales del empleado conectado
+     * @return ResponseEntity con un desglose descriptivo de los días de vacaciones del usuario
+     */
     @GetMapping("/saldo")
     public ResponseEntity<Map<String, Integer>> getSaldo(Authentication authentication) {
         Usuario usuario = usuarioRepository.findByUsername(authentication.getName())

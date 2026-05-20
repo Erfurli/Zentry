@@ -348,8 +348,6 @@
   }
 }
 
-/* ─── Botón exportar ──────────────────────────────────────────────────────── */
-
 .accion-btn.exportar {
   background: #d1fae5;
   color: #065f46;
@@ -359,8 +357,6 @@
   background: #10b981;
   color: white;
 }
-
-/* ─── Modal exportar ──────────────────────────────────────────────────────── */
 
 .modal-exportar-card {
   background: white;

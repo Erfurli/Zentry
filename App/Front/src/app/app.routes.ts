@@ -15,20 +15,13 @@ import { ResetearPasswordComponent } from './pages/resetear-password/resetear-pa
 import { ChatComponent } from './pages/chat/chat.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { PreferenciasNotificacionesComponent } from './pages/preferencias-notificaciones/preferencias-notificaciones.component';
+import { TablonAnunciosComponent } from './pages/anuncios/anuncios.component';
+import { AnuncioDetalleComponent } from './pages/anuncio-detalle/anuncio-detalle.component';
 
 export const routes: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'cambiar-password',
-    component: CambiarPasswordComponent,
-  },
-  {
-    path: 'resetear-password',
-    component: ResetearPasswordComponent,
-  },
+  { path: 'login', component: LoginComponent },
+  { path: 'cambiar-password', component: CambiarPasswordComponent },
+  { path: 'resetear-password', component: ResetearPasswordComponent },
   {
     path: '',
     component: AppLayoutComponent,
@@ -95,16 +88,25 @@ export const routes: Routes = [
         data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
       {
+        path: 'anuncios',
+        component: TablonAnunciosComponent,
+        canActivate: [authGuard],
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
+      },
+      {
         path: 'preferencias-notificaciones',
         component: PreferenciasNotificacionesComponent,
+        canActivate: [authGuard],
+        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
+      },
+      {
+        path: 'anuncios/:id',
+        component: AnuncioDetalleComponent,
         canActivate: [authGuard],
         data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
-  {
-    path: '**',
-    redirectTo: 'login',
-  },
+  { path: '**', redirectTo: 'login' },
 ];

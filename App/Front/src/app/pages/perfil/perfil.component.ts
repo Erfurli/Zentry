@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { VacacionesService, VacacionesVista } from '../../services/vacaciones.service';
 import { FestivosService, Festivo } from '../../services/festivos.service';
 import { environment } from '../../../enviroments/enviroment';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
@@ -18,6 +19,7 @@ export class PerfilComponent implements OnInit {
   private http         = inject(HttpClient);
   private vacService   = inject(VacacionesService);
   private festivosService = inject(FestivosService);
+  private route = inject(ActivatedRoute);
 
   readonly empleado        = signal<any>(null);
   readonly vacaciones      = signal<VacacionesVista[]>([]);
@@ -47,15 +49,17 @@ export class PerfilComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const empleadoId = this.authService.getEmpleadoId();
-    if (empleadoId) {
-      this.http.get<any>(`${environment.apiUrl}/empleados/${empleadoId}`).subscribe({
-        next: emp => {
-          this.empleado.set(emp);
-          if (emp.foto) this.fotoPreview.set(emp.foto);
-        }
-      });
-    }
+  const empleadoIdParam = this.route.snapshot.queryParamMap.get('empleadoId');
+  const empleadoId = empleadoIdParam ?? this.authService.getEmpleadoId();
+
+  if (empleadoId) {
+    this.http.get<any>(`${environment.apiUrl}/empleados/${empleadoId}`).subscribe({
+      next: emp => {
+        this.empleado.set(emp);
+        if (emp.foto) this.fotoPreview.set(emp.foto);
+      }
+    });
+  }
 
     this.vacService.getMisVacaciones().subscribe({
       next: vacs => this.vacaciones.set(vacs)

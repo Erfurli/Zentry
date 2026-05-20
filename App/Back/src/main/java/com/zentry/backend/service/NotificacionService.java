@@ -34,6 +34,15 @@ public class NotificacionService {
         this.emailService           = emailService;
     }
 
+    /**
+     * Registra una notificación en la base de datos o por email dependiendo de las preferencias del destinatario.
+     * 
+     * @param usuarioDestinatarioId identificador del usuario de destino
+     * @param titulo encabezado descriptivo de la notificación
+     * @param mensaje contenido o cuerpo informativo detallado
+     * @param tipo categoría del mensaje (ej: "vacaciones", "ausencia", "chat")
+     * @param ruta ruta interna de redireccionamiento de la aplicación al pulsar el aviso
+     */
     public void crear(String usuarioDestinatarioId, String titulo, String mensaje,
                       String tipo, String ruta) {
 
@@ -70,6 +79,14 @@ public class NotificacionService {
         }
     }
 
+    /**
+     * Envia una alerta interna a todos los usuarios con rol de administrador en el sistema.
+     * 
+     * @param titulo cabecera
+     * @param mensaje cuerpo descriptivo
+     * @param tipo categoría del mensaje
+     * @param ruta redireccionamiento interno
+     */
     public void notificarAdmins(String titulo, String mensaje, String tipo, String ruta) {
         usuarioRepository.findAll().stream()
                 .filter(u -> !u.getRolSistema().name().equals("USER"))
@@ -99,11 +116,22 @@ public class NotificacionService {
         }
     }
 
+    /**
+     * Recupera las notificaciones asignadas a un usuario ordenadas por fecha.
+     * 
+     * @param usuarioId identificador del usuario
+     * @return lista de notificaciones correspondientes
+     */
     public List<Notificacion> getParaUsuario(String usuarioId) {
         return notificacionRepository
                 .findByUsuarioDestinatarioIdOrderByFechaDesc(usuarioId);
     }
 
+    /**
+     * Cambia el estado de una notificación a "leída".
+     * 
+     * @param notifId identificador de la notificación
+     */
     public void marcarLeida(String notifId) {
         notificacionRepository.findById(notifId).ifPresent(n -> {
             n.setLeida(true);
@@ -111,6 +139,11 @@ public class NotificacionService {
         });
     }
 
+    /**
+     * Cambia de forma masiva el estado de todas las notificaciones de un usuario a "leídas".
+     * 
+     * @param usuarioId identificador del usuario destino
+     */
     public void marcarTodasLeidas(String usuarioId) {
         List<Notificacion> notifs = notificacionRepository
                 .findByUsuarioDestinatarioIdOrderByFechaDesc(usuarioId);

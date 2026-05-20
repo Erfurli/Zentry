@@ -118,7 +118,6 @@
   align-items: center;
 }
 
-/* TOGGLE PILL */
 .toggle-pill {
   width: 48px;
   height: 26px;
@@ -152,7 +151,6 @@
   transform: translateX(22px);
 }
 
-/* FOOTER */
 .pref-footer {
   display: flex;
   justify-content: flex-end;
@@ -207,7 +205,6 @@
   transform: none;
 }
 
-/* TEMA OSCURO */
 body.tema-oscuro .pref-layout,
 body.tema-oscuro .page-header {
   background: #1e293b !important;

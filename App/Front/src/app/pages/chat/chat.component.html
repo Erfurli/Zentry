@@ -434,24 +434,6 @@
   </main>
 </div>
 
-<!-- <div class="toast-container">
-  @for (toast of toasts(); track toast.id) {
-    <div class="toast-msg" (click)="cerrarToast(toast.id)">
-      <div class="toast-icon"><i class="fa-solid fa-message"></i></div>
-      <div class="toast-body">
-        <span class="toast-conv">{{ toast.conv }}</span>
-        <span class="toast-autor">{{ toast.autor }}</span>
-        <span class="toast-texto"
-          >{{ toast.texto | slice: 0 : 60
-          }}{{ toast.texto.length > 60 ? "..." : "" }}</span
-        >
-      </div>
-      <button class="toast-close" (click)="cerrarToast(toast.id)">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-    </div>
-  }
-</div> -->
 
 @if (modalPerfil()) {
   <div class="modal-overlay" (click)="modalPerfil.set(null)">

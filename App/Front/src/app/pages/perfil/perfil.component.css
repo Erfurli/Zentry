@@ -4,7 +4,6 @@
   margin: 0 auto;
 }
 
-/* HERO */
 .perfil-hero {
   display: flex;
   align-items: center;
@@ -98,7 +97,6 @@
   gap: 0.4rem;
 }
 
-/* GRID */
 .perfil-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -133,7 +131,6 @@
   color: #1e293b;
 }
 
-/* DATOS */
 .datos-lista { display: flex; flex-direction: column; gap: 0.75rem; }
 
 .dato-item {
@@ -147,7 +144,6 @@
 .dato-label { font-size: 0.85rem; color: #94a3b8; font-weight: 500; }
 .dato-valor { font-size: 0.9rem; color: #1e293b; font-weight: 600; }
 
-/* VACACIONES STATS */
 .vac-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -171,7 +167,6 @@
 .vac-num  { font-size: 1.8rem; font-weight: 700; color: #1e293b; }
 .vac-label { font-size: 0.78rem; color: #64748b; font-weight: 500; }
 
-/* LISTA VAC */
 .vac-lista { display: flex; flex-direction: column; gap: 0.5rem; max-height: 200px; overflow-y: auto; }
 
 .vac-item {
@@ -201,7 +196,6 @@
 
 .empty-msg { color: #94a3b8; font-size: 0.88rem; text-align: center; padding: 1rem; }
 
-/* CALENDARIO */
 .cal-nav {
   display: flex;
   align-items: center;

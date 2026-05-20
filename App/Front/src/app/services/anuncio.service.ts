@@ -2,13 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Anuncio } from '../models/anuncio.model';
+import { environment } from '../../enviroments/enviroment';
 
 @Injectable({ providedIn: 'root' })
 export class AnuncioService {
   private http = inject(HttpClient);
-  private base = '/api/anuncios';
+  private base = `${environment.apiUrl}/anuncios`;
 
-  // ── Empleados ────────────────────────────────────────────────────
   getAnuncios(): Observable<Anuncio[]> {
     return this.http.get<Anuncio[]>(this.base);
   }
@@ -17,7 +17,6 @@ export class AnuncioService {
     return this.http.post<void>(`${this.base}/${id}/visto`, {});
   }
 
-  // ── Admin ────────────────────────────────────────────────────────
   getTodosAdmin(): Observable<Anuncio[]> {
     return this.http.get<Anuncio[]>(`${this.base}/admin/todos`);
   }
@@ -37,4 +36,20 @@ export class AnuncioService {
   eliminar(id: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
+
+  getAnuncio(id: string): Observable<Anuncio> {
+  return this.http.get<Anuncio>(`${this.base}/${id}`);
+}
+
+comentar(id: string, texto: string, respuestaAId?: string): Observable<Anuncio> {
+  return this.http.post<Anuncio>(`${this.base}/${id}/comentarios`, { texto, respuestaAId });
+}
+
+eliminarComentario(anuncioId: string, comentarioId: string): Observable<Anuncio> {
+  return this.http.delete<Anuncio>(`${this.base}/${anuncioId}/comentarios/${comentarioId}`);
+}
+
+subirImagen(id: string, imagen: string): Observable<Anuncio> {
+  return this.http.patch<Anuncio>(`${this.base}/${id}/imagen`, { imagen });
+}
 }

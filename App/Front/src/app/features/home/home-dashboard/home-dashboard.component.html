@@ -11,12 +11,9 @@
     </div>
   } @else if (summary()) {
 
-    <!-- BIENVENIDA -->
     <div class="bienvenida-card">
       <div class="bienvenida-left">
-        <div class="bienvenida-avatar">
-          {{ summary()!.userName.substring(0,1) }}
-        </div>
+        <div class="bienvenida-avatar">{{ summary()!.userName.substring(0,1) }}</div>
         <div>
           <h1>¡Hola, {{ summary()!.userName.split(' ')[0] }}!</h1>
           <p class="bienvenida-fecha">{{ fechaActual() }}</p>
@@ -27,7 +24,6 @@
       </div>
     </div>
 
-    <!-- MENSAJE FICHAJE -->
     @if (mensajeFichaje()) {
       <div class="mensaje-fichaje">
         <i class="fa-solid fa-check-circle"></i>
@@ -35,7 +31,6 @@
       </div>
     }
 
-    <!-- KPIs -->
     <div class="kpi-grid">
       <div class="kpi-card azul">
         <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
@@ -44,7 +39,6 @@
           <span class="kpi-label">Horas hoy</span>
         </div>
       </div>
-
       <div class="kpi-card verde">
         <div class="kpi-icon"><i class="fa-solid fa-umbrella-beach"></i></div>
         <div class="kpi-info">
@@ -52,7 +46,6 @@
           <span class="kpi-label">Días disponibles</span>
         </div>
       </div>
-
       <div class="kpi-card morado">
         <div class="kpi-icon"><i class="fa-solid fa-calendar-check"></i></div>
         <div class="kpi-info">
@@ -60,7 +53,6 @@
           <span class="kpi-label">Días usados</span>
         </div>
       </div>
-
       <div class="kpi-card naranja">
         <div class="kpi-icon"><i class="fa-solid fa-plane-departure"></i></div>
         <div class="kpi-info">
@@ -70,10 +62,8 @@
       </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div class="main-grid">
 
-      <!-- FICHAJE RÁPIDO -->
       <div class="card fichaje-card">
         <div class="card-header">
           <i class="fa-solid fa-fingerprint"></i>
@@ -81,12 +71,10 @@
         </div>
         <div class="fichaje-botones">
           <button class="fichaje-btn entrada" (click)="ficharEntrada()" [disabled]="fichando()">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i>
-            Fichar entrada
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
           </button>
           <button class="fichaje-btn salida" (click)="ficharSalida()" [disabled]="fichando()">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-            Fichar salida
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
           </button>
         </div>
         <a routerLink="/asistencia" class="ver-mas-link">
@@ -95,47 +83,41 @@
       </div>
 
       <div class="card vacaciones-card">
-  <div class="card-header">
-    <i class="fa-solid fa-umbrella-beach"></i>
-    <h2>Mis vacaciones</h2>
-  </div>
+        <div class="card-header">
+          <i class="fa-solid fa-umbrella-beach"></i>
+          <h2>Mis vacaciones</h2>
+        </div>
+        <div class="barra-vacaciones">
+          <div class="barra-label">
+            <span>{{ 22 - summary()!.vacationBalance }} de 22 días usados</span>
+            <span>{{ summary()!.vacationBalance }} restantes</span>
+          </div>
+          <div class="barra-fondo">
+            <div class="barra-relleno" [style.width.%]="getBarraAncho()"></div>
+          </div>
+        </div>
+        @if (summary()!.upcomingVacations.length > 0) {
+          <div class="proximas-lista">
+            @for (vac of summary()!.upcomingVacations.slice(0,3); track vac.dates) {
+              <div class="proxima-item">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span class="proxima-fechas">
+                  {{ vac.fechaInicio && vac.fechaFin
+                      ? formatearFechaVacacion(vac.fechaInicio, vac.fechaFin)
+                      : vac.dates }}
+                </span>
+                <span class="proxima-badge" [class]="getBadgeClass(vac.status)">{{ vac.status }}</span>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="empty-vacaciones">No tienes vacaciones próximas</p>
+        }
+        <a routerLink="/vacaciones" class="ver-mas-link">
+          Gestionar vacaciones <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
 
-  <div class="barra-vacaciones">
-    <div class="barra-label">
-      <span>{{ 22 - summary()!.vacationBalance }} de 22 días usados</span>
-      <span>{{ summary()!.vacationBalance }} restantes</span>
-    </div>
-    <div class="barra-fondo">
-      <div class="barra-relleno" [style.width.%]="getBarraAncho()"></div>
-    </div>
-  </div>
-
-  @if (summary()!.upcomingVacations.length > 0) {
-    <div class="proximas-lista">
-      @for (vac of summary()!.upcomingVacations.slice(0, 3); track vac.fechaInicio) {
-  <div class="proxima-item">
-    <i class="fa-solid fa-calendar-days"></i>
-    <span class="proxima-fechas">
-      {{ vac.fechaInicio && vac.fechaFin
-          ? formatearFechaVacacion(vac.fechaInicio, vac.fechaFin)
-          : vac.dates }}
-    </span>
-    <span class="proxima-badge" [class]="getBadgeClass(vac.status)">
-      {{ vac.status }}
-    </span>
-  </div>
-}
-    </div>
-  } @else {
-    <p class="empty-vacaciones">No tienes vacaciones próximas</p>
-  }
-
-  <a routerLink="/vacaciones" class="ver-mas-link">
-    Gestionar vacaciones <i class="fa-solid fa-arrow-right"></i>
-  </a>
-</div>
-
-      <!-- ACCIONES RÁPIDAS -->
       <div class="card acciones-card">
         <div class="card-header">
           <i class="fa-solid fa-bolt"></i>
@@ -178,5 +160,10 @@
       </div>
 
     </div>
+
+    <div class="tablon-row">
+      <app-tablon-anuncios></app-tablon-anuncios>
+    </div>
+
   }
 </div>

@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("BUSCANDO USUARIO CON NOMBRE: '" + username + "'");
+
 
         Usuario usuario = usuarioRepository.findByUsername(username)
                 .orElseThrow(() -> {
@@ -31,7 +31,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                     return new UsernameNotFoundException("Usuario no encontrado");
                 });
 
-        System.out.println("USUARIO ENCONTRADO: " + usuario.getUsername());
 
         if (!Boolean.TRUE.equals(usuario.getActivo())) {
             throw new UsernameNotFoundException("Usuario inactivo");

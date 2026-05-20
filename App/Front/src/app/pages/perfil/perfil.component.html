@@ -1,6 +1,5 @@
 <div class="perfil-page">
 
-  <!-- CABECERA PERFIL -->
   <div class="perfil-hero">
     <div class="perfil-avatar-wrapper">
       <div class="perfil-avatar">
@@ -30,7 +29,6 @@
 
   <div class="perfil-grid">
 
-    <!-- DATOS PERSONALES -->
     <div class="perfil-card">
       <div class="card-header">
         <i class="fa-solid fa-id-card"></i>
@@ -64,7 +62,6 @@
       </div>
     </div>
 
-    <!-- RESUMEN VACACIONES -->
     <div class="perfil-card">
       <div class="card-header">
         <i class="fa-solid fa-umbrella-beach"></i>
@@ -105,7 +102,6 @@
       </div>
     </div>
 
-    <!-- CALENDARIO PERSONAL -->
     <div class="perfil-card perfil-card-full">
       <div class="card-header">
         <i class="fa-solid fa-calendar-days"></i>
@@ -121,7 +117,6 @@
         </div>
       </div>
 
-      <!-- LEYENDA -->
       <div class="cal-leyenda">
         <span class="leyenda-item"><span class="leyenda-dot aprobada"></span>Vacaciones aprobadas</span>
         <span class="leyenda-item"><span class="leyenda-dot pendiente"></span>Pendientes</span>
@@ -130,7 +125,6 @@
       </div>
 
       <div class="cal-grid">
-        <!-- Cabecera días semana -->
         <div class="cal-head">L</div>
         <div class="cal-head">M</div>
         <div class="cal-head">X</div>
@@ -139,12 +133,10 @@
         <div class="cal-head finde">S</div>
         <div class="cal-head finde">D</div>
 
-        <!-- Espacios vacíos inicio -->
         @for (i of [].constructor(primerDiaSemana()); track $index) {
           <div class="cal-dia vacio"></div>
         }
 
-        <!-- Días del mes -->
         @for (dia of diasEnMes(); track dia.getDate()) {
           <div class="cal-dia {{ getClaseDia(dia) }}" [title]="getTooltipDia(dia)">
             <span class="cal-num">{{ dia.getDate() }}</span>

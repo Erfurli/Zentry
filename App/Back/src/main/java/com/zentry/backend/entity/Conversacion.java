@@ -20,7 +20,7 @@ public class Conversacion {
     private String id;
     private String nombre;
     private TipoConversacion tipo;
-    private List<String> participantes = new ArrayList<>(); // lista de usuarioIds
+    private List<String> participantes = new ArrayList<>();
     private String creadorId;
     private LocalDateTime creadaEn;
 }

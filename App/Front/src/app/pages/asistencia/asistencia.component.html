@@ -28,45 +28,6 @@
     </div>
   </div>
 
-  <!-- @if (esEmpleado() && mensajeAccion()) {
-    <div class="mensaje-accion">{{ mensajeAccion() }}</div>
-  }
-
-  @if (esEmpleado()) {
-    <div class="estado-card">
-      <div class="estado-card-left">
-        <div class="estado-titulo">Mi estado actual</div>
-        <div class="estado-valor">{{ labelEstado() }}</div>
-      </div>
-
-      @if (estadoActual === 'FINALIZADO') {
-        <div class="estado-card-center">
-          <button class="incidencia-empleado-btn" type="button" (click)="abrirIncidenciaEmpleado()">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            Crear incidencia
-          </button>
-          <span class="incidencia-hint">¿Olvidaste fichar algo?</span>
-        </div>
-      }
-
-      <div class="estado-metricas">
-        <div><span>Entrada:</span> {{ miAsistencia()?.entrada || '-' }}</div>
-        <div><span>Descanso:</span> {{ miAsistencia()?.inicioDescanso || '-' }} – {{ miAsistencia()?.finDescanso || '-' }}</div>
-        <div><span>Salida:</span> {{ miAsistencia()?.salida || '-' }}</div>
-        <div><span>Horas:</span> {{ miAsistencia()?.horasTotales ?? 0 }} h</div>
-        <div><span>Extra:</span> {{ miAsistencia()?.horasExtra ?? 0 }} h</div>
-      </div>
-    </div>
-  }
-
-@if (esEmpleado()) {
-  <div class="log-header-row">
-    <button class="log-toggle-btn" (click)="abrirLog()">
-      <i class="fa-solid fa-clock-rotate-left"></i> Ver mi historial de fichajes
-    </button>
-  </div>
-} -->
-
 @if (esEmpleado() && mensajeAccion()) {
   <div class="mensaje-accion">{{ mensajeAccion() }}</div>
 }
@@ -74,10 +35,8 @@
 @if (esEmpleado()) {
   <div class="empleado-layout">
 
-    <!-- Columna izquierda: estado + botones rápidos -->
     <div class="empleado-col-main">
 
-      <!-- Tarjeta estado -->
       <div class="estado-card-v2">
         <div class="estado-card-v2-top">
           <div>
@@ -94,7 +53,6 @@
           </div>
         </div>
 
-        <!-- Métricas del día -->
         <div class="estado-metricas-v2">
           <div class="metrica-item">
             <i class="fa-solid fa-arrow-right-to-bracket"></i>
@@ -125,7 +83,6 @@
           </div>
         </div>
 
-        <!-- Botones de acción rápida -->
         <div class="acciones-rapidas">
           <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()"
             (click)="ejecutarFichaje('entrada')">
@@ -145,7 +102,6 @@
           </button>
         </div>
 
-        <!-- Modo de trabajo (solo si puede fichar entrada) -->
         @if (puedeFicharEntrada()) {
           <div class="modo-trabajo-inline">
             <span class="modo-label"><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</span>
@@ -168,10 +124,8 @@
       </div>
     </div>
 
-    <!-- Columna derecha: acciones secundarias -->
     <div class="empleado-col-side">
 
-      <!-- Crear incidencia -->
       @if (estadoActual === 'FINALIZADO') {
         <div class="side-card incidencia-card">
           <div class="side-card-icon amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
@@ -185,7 +139,6 @@
         </div>
       }
 
-      <!-- Ver historial -->
       <div class="side-card">
         <div class="side-card-icon azul"><i class="fa-solid fa-clock-rotate-left"></i></div>
         <div class="side-card-body">
@@ -197,7 +150,6 @@
         </button>
       </div>
 
-      <!-- Resumen últimos registros -->
       @if (misRegistros().length > 0) {
         <div class="side-card ultimos-card">
           <h3 class="ultimos-titulo"><i class="fa-solid fa-calendar-week"></i> Últimos fichajes</h3>
@@ -412,17 +364,6 @@
             <span class="fm-val">{{ miAsistencia()?.horasTotales ?? 0 }}h</span>
           </div>
         </div>
-
-        <!-- @if (puedeFicharEntrada()) {
-          <div class="form-field">
-            <label><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</label>
-            <select class="form-select" [value]="modoTrabajo()" (change)="modoTrabajo.set($any($event.target).value)">
-              <option value="PRESENCIAL"><i class="fa-solid fa-building" style="color: rgb(58, 86, 152);"></i> Presencial</option>
-              <option value="REMOTO"><i class="fa-solid fa-house" style="color: rgb(58, 86, 152);"></i> Remoto</option>
-              <option value="HIBRIDO"><i class="fa-solid fa-building-columns" style="color: rgb(58, 86, 152);"></i> Híbrido</option>
-            </select>
-          </div>
-        } -->
 
         @if (puedeFicharEntrada()) {
   <div class="form-field">

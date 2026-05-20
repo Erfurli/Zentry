@@ -23,7 +23,6 @@ public class EmailService {
 
     private final OkHttpClient client = new OkHttpClient();
 
-    // ─── Envío texto plano ────────────────────────────────────────────────────
     private void enviar(String toEmail, String toNombre, String asunto, String cuerpo) {
         try {
             String credentials = Base64.getEncoder().encodeToString(
@@ -51,7 +50,6 @@ public class EmailService {
         }
     }
 
-    // ─── Envío HTML ───────────────────────────────────────────────────────────
     private void enviarHtml(String toEmail, String toNombre, String asunto, String htmlCuerpo) {
         try {
             String credentials = Base64.getEncoder().encodeToString(
@@ -96,7 +94,6 @@ public class EmailService {
         }
     }
 
-    // ─── Escape JSON ──────────────────────────────────────────────────────────
     private static String escapeJson(String text) {
         if (text == null) return "";
         return text
@@ -107,7 +104,6 @@ public class EmailService {
                 .replace("\t", "\\t");
     }
 
-    // ─── Template base HTML ───────────────────────────────────────────────────
     private String buildEmail(String color, String emoji, String cabecera,
                               String nombre, String titulo, String mensaje,
                               String urlBoton, String textoBoton) {

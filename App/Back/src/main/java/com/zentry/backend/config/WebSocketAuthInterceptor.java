@@ -24,6 +24,13 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Intercepta el mensaje antes de ser enviado por el canal para autenticar la conexión WebSocket.
+     * 
+     * @param message el mensaje transmitido
+     * @param channel el canal de comunicación
+     * @return el mensaje con el usuario autenticado en el header si el token es válido
+     */
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);

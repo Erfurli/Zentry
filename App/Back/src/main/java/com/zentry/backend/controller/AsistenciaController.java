@@ -49,6 +49,12 @@ public class AsistenciaController {
         return LocalDate.now().toString();
     }
 
+    /**
+     * Resuelve el objeto Empleado a partir de la autenticación de Spring Security.
+     * 
+     * @param auth objeto de autenticación del usuario conectado
+     * @return la entidad Empleado resuelta
+     */
     private Empleado resolverEmpleado(Authentication auth) {
         Usuario usuario = usuarioRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
@@ -56,11 +62,26 @@ public class AsistenciaController {
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
     }
 
+    /**
+     * Resuelve el registro de asistencia de hoy para un empleado concreto.
+     * 
+     * @param empleadoId el identificador único del empleado
+     * @return el objeto de Asistencia correspondiente al día de hoy
+     */
     private Asistencia resolverAsistenciaHoy(String empleadoId) {
         return asistenciaRepository.findByEmpleadoIdAndFecha(empleadoId, fechaHoy())
                 .orElseThrow(() -> new RuntimeException("No hay entrada registrada hoy"));
     }
 
+    /**
+     * Calcula las horas trabajadas netas deduciendo el tiempo de descanso si este se realizó.
+     * 
+     * @param entrada hora en formato "HH:mm" de inicio de la jornada
+     * @param salida hora en formato "HH:mm" de fin de la jornada
+     * @param inicioDescanso hora opcional en formato "HH:mm" de inicio de descanso
+     * @param finDescanso hora opcional en formato "HH:mm" de fin de descanso
+     * @return cantidad de horas trabajadas redondeada a dos decimales
+     */
     private double calcularHorasTotales(String entrada, String salida,
                                         String inicioDescanso, String finDescanso) {
         LocalTime tEntrada = LocalTime.parse(entrada, FMT);
@@ -99,6 +120,12 @@ public class AsistenciaController {
         return asistenciaRepository.findAll();
     }
 
+    /**
+     * Obtiene una lista consolidada del estado de asistencia de todos los empleados en una fecha.
+     * 
+     * @param fecha fecha de búsqueda en formato "yyyy-MM-dd" (opcional, si se omite usa el día de hoy)
+     * @return lista de DTOs con la asistencia de los empleados
+     */
     @GetMapping("/vista")
     public List<AsistenciaVistaDTO> getVista(@RequestParam(required = false) String fecha) {
         String fechaBusqueda = fecha != null ? fecha : fechaHoy();

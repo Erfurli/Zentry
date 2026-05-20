@@ -19,8 +19,14 @@ public class ChatController {
 
     private final ChatService chatService;
     private final UsuarioRepository usuarioRepository;
-    private final EmpleadoRepository empleadoRepository; // ← añadida instancia
+    private final EmpleadoRepository empleadoRepository;
 
+    /**
+     * Resuelve el ID interno del usuario basándose en su Principal de Spring Security.
+     * 
+     * @param principal identidad del usuario conectado
+     * @return identificador único del usuario
+     */
     private String getUsuarioId(Principal principal) {
         return usuarioRepository.findByUsername(principal.getName())
                 .map(u -> u.getId())
@@ -31,7 +37,7 @@ public class ChatController {
     public List<UsuarioResumenDTO> getUsuariosParaChat(Authentication authentication) {
         String usernameActual = authentication.getName();
 
-        return empleadoRepository.findAll().stream() // ← instancia, no estático
+        return empleadoRepository.findAll().stream()
                 .filter(emp -> usuarioRepository.findAll().stream()
                         .filter(u -> u.getEmpleadoId().equals(emp.getId()))
                         .findFirst()
@@ -47,6 +53,12 @@ public class ChatController {
                 .toList();
     }
 
+    /**
+     * Obtiene las iniciales de un nombre completo.
+     * 
+     * @param nombre nombre a procesar
+     * @return string de dos caracteres en mayúsculas
+     */
     private String iniciales(String nombre) {
         String[] partes = nombre.trim().split(" ");
         if (partes.length >= 2)
@@ -54,16 +66,35 @@ public class ChatController {
         return nombre.substring(0, Math.min(2, nombre.length())).toUpperCase();
     }
 
+    /**
+     * Obtiene todas las conversaciones activas del usuario solicitante.
+     * 
+     * @param principal identidad del usuario conectado
+     * @return ResponseEntity con la lista de DTOs de conversaciones
+     */
     @GetMapping("/api/chat/conversaciones")
     public ResponseEntity<List<ConversacionDTO>> getConversaciones(Principal principal) {
         return ResponseEntity.ok(chatService.getConversacionesDeUsuario(getUsuarioId(principal)));
     }
 
+    /**
+     * Obtiene el historial de mensajes no eliminados de una conversación específica.
+     * 
+     * @param id identificador de la conversación
+     * @return ResponseEntity con la lista de DTOs de mensajes
+     */
     @GetMapping("/api/chat/conversaciones/{id}/mensajes")
     public ResponseEntity<List<MensajeDTO>> getMensajes(@PathVariable String id) {
         return ResponseEntity.ok(chatService.getMensajes(id));
     }
 
+    /**
+     * Crea un nuevo canal de conversación de grupo.
+     * 
+     * @param req objeto con el nombre del grupo y lista de IDs de participantes
+     * @param principal identidad del creador del grupo
+     * @return ResponseEntity con la conversación de grupo creada
+     */
     @PostMapping("/api/chat/grupos")
     public ResponseEntity<ConversacionDTO> crearGrupo(
             @RequestBody CrearGrupoRequest req, Principal principal) {
@@ -72,6 +103,13 @@ public class ChatController {
         );
     }
 
+    /**
+     * Abre o recupera una conversación individual entre el usuario logueado y otro participante.
+     * 
+     * @param usuarioBId identificador del otro usuario participante
+     * @param principal identidad del usuario logueado
+     * @return ResponseEntity con los detalles de la conversación individual
+     */
     @PostMapping("/api/chat/individual/{usuarioBId}")
     public ResponseEntity<ConversacionDTO> abrirIndividual(
             @PathVariable String usuarioBId, Principal principal) {
@@ -80,11 +118,23 @@ public class ChatController {
         );
     }
 
+    /**
+     * Endpoint WebSocket de STOMP para el envío y redistribución de mensajes en tiempo real.
+     * 
+     * @param req los datos del mensaje a enviar (conversacionId, contenido, respuestaAId)
+     * @param principal identidad del autor
+     */
     @MessageMapping("/chat.enviar")
     public void enviarMensaje(EnviarMensajeRequest req, Principal principal) {
         chatService.enviarMensaje(req, getUsuarioId(principal));
     }
 
+    /**
+     * Endpoint WebSocket de STOMP para añadir o retirar reacciones a un mensaje.
+     * 
+     * @param req los datos de la reacción (mensajeId, emoji)
+     * @param principal identidad del usuario que reacciona
+     */
     @MessageMapping("/chat.reaccion")
     public void toggleReaccion(ReaccionRequest req, Principal principal) {
         chatService.toggleReaccion(req, getUsuarioId(principal));

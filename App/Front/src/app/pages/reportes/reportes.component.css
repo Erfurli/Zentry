@@ -112,7 +112,6 @@
 .kpi-number { font-size: 2.5rem; font-weight: 800; color: #1e293b; }
 .kpi-label  { color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
 
-/* ── Tabla ── */
 .table-container {
   background: white; border-radius: 16px; overflow: hidden;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);

@@ -27,47 +27,55 @@ export class PreferenciasNotificacionesComponent implements OnInit {
   readonly guardado  = signal(false);
 
   readonly preferencias = signal<PreferenciaNotif[]>([
-    {
-      tipo: 'vacaciones',
-      label: 'Vacaciones',
-      descripcion: 'Aprobación, rechazo o cambios en tus solicitudes de vacaciones',
-      icon: 'fa-solid fa-umbrella-beach',
-      inApp: true,
-      email: true,
-    },
-    {
-      tipo: 'ausencias',
-      label: 'Ausencias',
-      descripcion: 'Cambios de estado en tus solicitudes de ausencia',
-      icon: 'fa-solid fa-calendar-xmark',
-      inApp: true,
-      email: false,
-    },
-    {
-      tipo: 'fichaje',
-      label: 'Fichajes',
-      descripcion: 'Incidencias de fichaje aprobadas o rechazadas',
-      icon: 'fa-solid fa-clock',
-      inApp: true,
-      email: false,
-    },
-    {
-      tipo: 'chat',
-      label: 'Mensajes de chat',
-      descripcion: 'Nuevos mensajes en conversaciones donde participas',
-      icon: 'fa-solid fa-comments',
-      inApp: true,
-      email: false,
-    },
-    {
-      tipo: 'sistema',
-      label: 'Sistema',
-      descripcion: 'Avisos generales del sistema y actualizaciones',
-      icon: 'fa-solid fa-bell',
-      inApp: true,
-      email: true,
-    },
-  ]);
+  {
+    tipo: 'vacaciones',
+    label: 'Vacaciones',
+    descripcion: 'Aprobación, rechazo o cambios en tus solicitudes de vacaciones',
+    icon: 'fa-solid fa-umbrella-beach',
+    inApp: true,
+    email: true,
+  },
+  {
+    tipo: 'ausencias',
+    label: 'Ausencias',
+    descripcion: 'Cambios de estado en tus solicitudes de ausencia',
+    icon: 'fa-solid fa-calendar-xmark',
+    inApp: true,
+    email: false,
+  },
+  {
+    tipo: 'fichaje',
+    label: 'Fichajes',
+    descripcion: 'Incidencias de fichaje aprobadas o rechazadas',
+    icon: 'fa-solid fa-clock',
+    inApp: true,
+    email: false,
+  },
+  {
+    tipo: 'chat',
+    label: 'Mensajes de chat',
+    descripcion: 'Nuevos mensajes en conversaciones donde participas',
+    icon: 'fa-solid fa-comments',
+    inApp: true,
+    email: false,
+  },
+  {
+    tipo: 'anuncios',       
+    label: 'Tablón de anuncios',
+    descripcion: 'Nuevos anuncios publicados en el tablón de la empresa',
+    icon: 'fa-solid fa-bullhorn',
+    inApp: true,
+    email: false,
+  },
+  {
+    tipo: 'sistema',
+    label: 'Sistema',
+    descripcion: 'Avisos generales del sistema y actualizaciones',
+    icon: 'fa-solid fa-bell',
+    inApp: true,
+    email: true,
+  },
+]);
 
   ngOnInit(): void {
     this.http.get<Record<string, { inApp: boolean; email: boolean }>>(

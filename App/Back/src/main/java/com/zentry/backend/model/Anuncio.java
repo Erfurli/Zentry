@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Document(collection = "anuncios")
@@ -22,12 +23,30 @@ public class Anuncio {
 
     private String titulo;
     private String contenido;
-    private String categoria;       // IMPORTANTE, GENERAL, EVENTO, URGENTE
+    private String categoria;
     private String autorId;
     private String autorNombre;
+    private String imagenBase64;         // foto del anuncio (admin)
     private LocalDateTime fechaCreacion;
-    private LocalDateTime fechaExpiracion; // null = sin expiración
-    private boolean activo;
-    private boolean destacado;      // se muestra en banner superior
-    private List<String> vistoPor;  // ids de empleados que lo han visto
+    private LocalDateTime fechaExpiracion;
+    private Boolean activo;
+    private Boolean destacado;
+    private List<String> vistoPor;
+    private List<Comentario> comentarios = new ArrayList<>();
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Comentario {
+        private String id;
+        private String autorId;
+        private String autorNombre;
+        private String autorFoto;
+        private String texto;
+        private String respuestaAId;       // id del comentario al que responde
+        private String respuestaAAutor;
+        private String respuestaATexto;
+        private LocalDateTime fecha;
+    }
 }

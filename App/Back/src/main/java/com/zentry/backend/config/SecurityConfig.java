@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/auth/recuperar-password").permitAll()
                         .requestMatchers("/api/auth/resetear-password").permitAll()
+                        .requestMatchers("/api/anuncios/**").authenticated()
 
                         .anyRequest().authenticated()
                 )
