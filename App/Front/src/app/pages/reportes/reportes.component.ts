@@ -92,61 +92,64 @@ export class ReportesComponent implements OnInit {
 
 
   exportarAsistencia(): void {
-    this.cargandoExport.set(true);
-    this.reportesService.getDatosAsistencia({
-      year:         this.filtroYear(),
-      month:        this.filtroMonth() ?? undefined,
-      departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
-    }).subscribe({
-      next: datos => {
-        this.exportService.exportarAsistenciaExcel(datos, `Asistencia ${this.filtroYear()}`);
-        this.cargandoExport.set(false);
-        this.flash('Asistencia exportada correctamente');
-      },
-      error: () => {
-        this.cargandoExport.set(false);
-        this.flash('Error al exportar asistencia');
-      }
-    });
-  }
+  this.cargandoExport.set(true);
+  this.reportesService.getDatosAsistencia({
+    year:         this.filtroYear(),
+    month:        this.filtroMonth() ?? undefined,
+    departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
+  }).subscribe({
+    next: datos => {
+      const mes   = this.filtroMonth() ? `/${this.filtroMonth()}` : '';
+      const depto = this.filtroDepartamento() !== 'Todos' ? ` · ${this.filtroDepartamento()}` : '';
+      this.exportService.exportarReporteAsistencia(
+        datos, `Asistencia ${this.filtroYear()}${mes}${depto}`
+      );
+      this.cargandoExport.set(false);
+      this.flash('Asistencia exportada correctamente');
+    },
+    error: () => { this.cargandoExport.set(false); this.flash('Error al exportar'); }
+  });
+}
 
-  exportarVacaciones(): void {
-    this.cargandoExport.set(true);
-    this.reportesService.getDatosVacaciones({
-      year:         this.filtroYear(),
-      estado:       this.filtroEstado() !== 'Todos' ? this.filtroEstado() : undefined,
-      departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
-    }).subscribe({
-      next: datos => {
-        this.exportService.exportarVacacionesExcel(datos, `Vacaciones ${this.filtroYear()}`);
-        this.cargandoExport.set(false);
-        this.flash('Vacaciones exportadas correctamente');
-      },
-      error: () => {
-        this.cargandoExport.set(false);
-        this.flash('Error al exportar vacaciones');
-      }
-    });
-  }
+exportarVacaciones(): void {
+  this.cargandoExport.set(true);
+  this.reportesService.getDatosVacaciones({
+    year:         this.filtroYear(),
+    estado:       this.filtroEstado() !== 'Todos' ? this.filtroEstado() : undefined,
+    departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
+  }).subscribe({
+    next: datos => {
+      const depto  = this.filtroDepartamento() !== 'Todos' ? ` · ${this.filtroDepartamento()}` : '';
+      const estado = this.filtroEstado()        !== 'Todos' ? ` · ${this.filtroEstado()}`       : '';
+      this.exportService.exportarReporteVacaciones(
+        datos, `Vacaciones ${this.filtroYear()}${estado}${depto}`
+      );
+      this.cargandoExport.set(false);
+      this.flash('Vacaciones exportadas correctamente');
+    },
+    error: () => { this.cargandoExport.set(false); this.flash('Error al exportar'); }
+  });
+}
 
-  exportarAusencias(): void {
-    this.cargandoExport.set(true);
-    this.reportesService.getDatosAusencias({
-      year:         this.filtroYear(),
-      estado:       this.filtroEstado() !== 'Todos' ? this.filtroEstado() : undefined,
-      departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
-    }).subscribe({
-      next: datos => {
-        this.exportService.exportarAusenciasExcel(datos, `Ausencias ${this.filtroYear()}`);
-        this.cargandoExport.set(false);
-        this.flash('Ausencias exportadas correctamente');
-      },
-      error: () => {
-        this.cargandoExport.set(false);
-        this.flash('Error al exportar ausencias');
-      }
-    });
-  }
+exportarAusencias(): void {
+  this.cargandoExport.set(true);
+  this.reportesService.getDatosAusencias({
+    year:         this.filtroYear(),
+    estado:       this.filtroEstado() !== 'Todos' ? this.filtroEstado() : undefined,
+    departamento: this.filtroDepartamento() !== 'Todos' ? this.filtroDepartamento() : undefined,
+  }).subscribe({
+    next: datos => {
+      const depto  = this.filtroDepartamento() !== 'Todos' ? ` · ${this.filtroDepartamento()}` : '';
+      const estado = this.filtroEstado()        !== 'Todos' ? ` · ${this.filtroEstado()}`       : '';
+      this.exportService.exportarReporteAusencias(
+        datos, `Ausencias ${this.filtroYear()}${estado}${depto}`
+      );
+      this.cargandoExport.set(false);
+      this.flash('Ausencias exportadas correctamente');
+    },
+    error: () => { this.cargandoExport.set(false); this.flash('Error al exportar'); }
+  });
+}
 
   private flash(msg: string): void {
     this.mensajeExport.set(msg);
