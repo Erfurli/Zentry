@@ -43,19 +43,31 @@ public class ChatController {
     public List<UsuarioResumenDTO> getUsuariosParaChat(Authentication authentication) {
         String usernameActual = authentication.getName();
 
-        return empleadoRepository.findAll().stream()
-                .filter(emp -> usuarioRepository.findAll().stream()
-                        .filter(u -> u.getEmpleadoId().equals(emp.getId()))
-                        .findFirst()
-                        .map(u -> !u.getUsername().equals(usernameActual))
-                        .orElse(false))
-                .map(emp -> new UsuarioResumenDTO(
-                        emp.getId(),
-                        emp.getNombre(),
-                        iniciales(emp.getNombre()),
-                        emp.getRolEmpresa().name(),
-                        emp.getFoto()
-                ))
+        return usuarioRepository.findAll().stream()
+                .filter(u -> !u.getUsername().equals(usernameActual))
+                .map(u -> {
+                    String nombre = u.getUsername();
+                    String rol = u.getRolSistema() != null ? u.getRolSistema().name() : "";
+                    String foto = null;
+
+                    if (u.getEmpleadoId() != null) {
+                        var empOpt = empleadoRepository.findById(u.getEmpleadoId());
+                        if (empOpt.isPresent()) {
+                            var emp = empOpt.get();
+                            nombre = emp.getNombre();
+                            rol = emp.getRolEmpresa() != null ? emp.getRolEmpresa().name() : rol;
+                            foto = emp.getFoto();
+                        }
+                    }
+
+                    return new UsuarioResumenDTO(
+                            u.getId(),              // <- BIEN: usuarioId
+                            nombre,
+                            iniciales(nombre),
+                            rol,
+                            foto
+                    );
+                })
                 .toList();
     }
 

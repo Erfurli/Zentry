@@ -70,9 +70,9 @@
                 <button class="accion-btn exportar" (click)="abrirModalExportar(empleado)" title="Exportar datos">
                   <i class="fa-solid fa-file-export"></i>
                 </button>
-                <button class="accion-btn eliminar" title="Eliminar">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
+                <button class="accion-btn eliminar" (click)="abrirModalEliminar(empleado)" title="Eliminar">
+  <i class="fa-solid fa-trash"></i>
+</button>
               </td>
             </tr>
           }
@@ -208,6 +208,23 @@
         </button>
       </div>
 
+    </div>
+  </div>
+}
+@if (modalEliminarAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModalEliminar()">
+    <div class="modal-eliminar-card" (click)="$event.stopPropagation()">
+      <div class="modal-eliminar-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <h2>Eliminar empleado</h2>
+      <p>¿Estás seguro de que quieres eliminar a <strong>{{ empleadoEliminando()?.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+      <div class="modal-eliminar-footer">
+        <button class="exportar-btn-cancelar" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button class="eliminar-btn-confirmar" (click)="confirmarEliminar()">
+          <i class="fa-solid fa-trash"></i> Eliminar
+        </button>
+      </div>
     </div>
   </div>
 }

@@ -507,6 +507,24 @@
   transform: none;
 }
 
+
+.export-btn {
+  padding: 0.75rem 1.5rem;
+  background: var(--zentry-button);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+
+.export-btn:hover { background: var(--zentry-primary-dark); }
+
+
 @media (max-width: 600px) {
   .form-row { grid-template-columns: 1fr; }
   .modal-card { border-radius: 16px; }

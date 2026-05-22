@@ -1,101 +1,95 @@
 [{
   "_id": {
-    "$oid": "69fa345af2674390079d886c"
+    "$oid": "6a104edb15ea9f6ab895f1e0"
   },
   "nombre": "General",
   "tipo": "GRUPO",
   "participantes": [
-    "1",
-    "2",
-    "3",
-    "4",
-    "69f5d9181f3e181574ac58dc",
-    "69f61b4f23f95db0a18f7825"
+    "6a1032ba880f420383a8f24c",
+    "6a103573880f420383a8f24e",
+    "6a1044b821ef9578b9b460e1",
+    "6a104b8239feb14069e9e66a"
   ],
-  "creadorId": "1",
+  "creadorId": "6a1032ba880f420383a8f24c",
   "creadaEn": {
-    "$date": "2026-05-05T18:18:02.795Z"
+    "$date": "2026-05-22T12:40:59.178Z"
   },
   "_class": "com.zentry.backend.entity.Conversacion"
 },
 {
   "_id": {
-    "$oid": "69fa345af2674390079d886d"
+    "$oid": "6a104edb15ea9f6ab895f1e1"
   },
   "nombre": "Jefes",
   "tipo": "JEFES",
   "participantes": [
-    "3",
-    "4"
+    "6a1032ba880f420383a8f24c",
+    "6a1044b821ef9578b9b460e1"
   ],
-  "creadorId": "3",
+  "creadorId": "6a1032ba880f420383a8f24c",
   "creadaEn": {
-    "$date": "2026-05-05T18:18:02.978Z"
+    "$date": "2026-05-22T12:40:59.228Z"
   },
   "_class": "com.zentry.backend.entity.Conversacion"
 },
 {
   "_id": {
-    "$oid": "69fa345bf2674390079d886e"
+    "$oid": "6a104edb15ea9f6ab895f1e2"
   },
-  "nombre": "Depto: IT",
+  "nombre": "Depto: RRHH",
   "tipo": "DEPARTAMENTO",
   "participantes": [
-    "2",
-    "3",
-    "4",
-    "69f61b4f23f95db0a18f7825"
+    "6a1032ba880f420383a8f24c",
+    "6a1044b821ef9578b9b460e1"
   ],
-  "creadorId": "2",
+  "creadorId": "6a1032ba880f420383a8f24c",
   "creadaEn": {
-    "$date": "2026-05-05T18:18:03.014Z"
+    "$date": "2026-05-22T12:40:59.245Z"
   },
   "_class": "com.zentry.backend.entity.Conversacion"
 },
 {
   "_id": {
-    "$oid": "69fa34fee4aa5194c064a03d"
-  },
-  "nombre": "prueba",
-  "tipo": "GRUPO",
-  "participantes": [
-    "1",
-    "4",
-    "2"
-  ],
-  "creadorId": "2",
-  "creadaEn": {
-    "$date": "2026-05-05T18:20:46.319Z"
-  },
-  "_class": "com.zentry.backend.entity.Conversacion"
-},
-{
-  "_id": {
-    "$oid": "69fa35942747a09f569c8889"
+    "$oid": "6a104ee815ea9f6ab895f1e3"
   },
   "tipo": "INDIVIDUAL",
   "participantes": [
-    "2",
-    "4"
+    "6a1044b821ef9578b9b460e1",
+    "6a1032ba880f420383a8f24c"
   ],
-  "creadorId": "2",
+  "creadorId": "6a1044b821ef9578b9b460e1",
   "creadaEn": {
-    "$date": "2026-05-05T18:23:16.167Z"
+    "$date": "2026-05-22T12:41:12.099Z"
   },
   "_class": "com.zentry.backend.entity.Conversacion"
 },
 {
   "_id": {
-    "$oid": "6a01ffc4d30378479212f2f0"
+    "$oid": "6a104fd940f18a6d247ff80e"
   },
   "tipo": "INDIVIDUAL",
   "participantes": [
-    "1",
-    "2"
+    "6a104b8239feb14069e9e66a",
+    "6a103573880f420383a8f24e"
   ],
-  "creadorId": "1",
+  "creadorId": "6a104b8239feb14069e9e66a",
   "creadaEn": {
-    "$date": "2026-05-11T16:11:48.139Z"
+    "$date": "2026-05-22T12:45:13.802Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
+},
+{
+  "_id": {
+    "$oid": "6a1051e940f18a6d247ff81c"
+  },
+  "tipo": "INDIVIDUAL",
+  "participantes": [
+    "6a1032ba880f420383a8f24c",
+    "6a104b8239feb14069e9e66a"
+  ],
+  "creadorId": "6a1032ba880f420383a8f24c",
+  "creadaEn": {
+    "$date": "2026-05-22T12:54:01.566Z"
   },
   "_class": "com.zentry.backend.entity.Conversacion"
 }]

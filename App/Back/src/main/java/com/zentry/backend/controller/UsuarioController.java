@@ -54,7 +54,11 @@ public class UsuarioController {
     @PostMapping
     public Usuario crear(@RequestBody Usuario usuario) {
         usuario.setId(null);
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        String password = (usuario.getPassword() != null && !usuario.getPassword().isBlank())
+                ? usuario.getPassword()
+                : usuario.getUsername();
+        usuario.setPassword(passwordEncoder.encode(password));
+        usuario.setMustChangePassword(true);
         return usuarioRepository.save(usuario);
     }
 
@@ -158,6 +162,21 @@ public class UsuarioController {
                 .filter(u -> empleadoId.equals(u.getEmpleadoId()))
                 .findFirst()
                 .map(u -> ResponseEntity.ok(Map.of("id", u.getId(), "username", u.getUsername())))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/mi-password")
+    public ResponseEntity<Void> cambiarMiPassword(
+            @RequestBody Map<String, String> body,
+            org.springframework.security.core.Authentication authentication) {
+        String username = authentication.getName();
+        return usuarioRepository.findByUsername(username)
+                .map(usuario -> {
+                    usuario.setPassword(passwordEncoder.encode(body.get("password")));
+                    usuario.setMustChangePassword(false);
+                    usuarioRepository.save(usuario);
+                    return ResponseEntity.ok().<Void>build();
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 

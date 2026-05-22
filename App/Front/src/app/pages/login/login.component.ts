@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, LoginResponse } from '../../services/auth.service';
@@ -13,7 +13,7 @@ import { environment } from '../../../enviroments/enviroment';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private authService = inject(AuthService);
@@ -34,6 +34,19 @@ export class LoginComponent {
     password: ['', Validators.required],
   });
 
+  ngOnInit(): void {
+    const user = this.authService.getCurrentUser();
+    if (user?.mustChangePassword) {
+      this.router.navigate(['/cambiar-password'], { replaceUrl: true });
+    } else if (user && !user.mustChangePassword) {
+      if (user.companyRole === 'RRHH') {
+        this.router.navigate(['/admin-dashboard'], { replaceUrl: true });
+      } else {
+        this.router.navigate(['/dashboard'], { replaceUrl: true });
+      }
+    }
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -45,29 +58,24 @@ export class LoginComponent {
 
     const { username, password } = this.form.getRawValue();
 
-    this.authService
-      .login({
-        username: username!,
-        password: password!,
-      })
-      .subscribe({
-        next: (response: LoginResponse) => {
-          this.loading = false;
-          this.authService.saveSession(response);
+    this.authService.login({ username: username!, password: password! }).subscribe({
+      next: (response: LoginResponse) => {
+        this.loading = false;
+        this.authService.saveSession(response);
 
-          if (response.mustChangePassword) {
-            this.router.navigate(['/cambiar-password']);
-          } else if (response.companyRole === 'RRHH') {
-            this.router.navigate(['/admin-dashboard']);
-          } else {
-            this.router.navigate(['/dashboard']);
-          }
-        },
-        error: () => {
-          this.loading = false;
-          this.error = 'Usuario o contraseña incorrectos.';
-        },
-      });
+        if (response.mustChangePassword) {
+          this.router.navigate(['/cambiar-password'], { replaceUrl: true });
+        } else if (response.companyRole === 'RRHH') {
+          this.router.navigate(['/admin-dashboard'], { replaceUrl: true });
+        } else {
+          this.router.navigate(['/dashboard'], { replaceUrl: true });
+        }
+      },
+      error: () => {
+        this.loading = false;
+        this.error = 'Usuario o contraseña incorrectos.';
+      },
+    });
   }
 
   togglePassword(): void {

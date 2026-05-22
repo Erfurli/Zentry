@@ -39,13 +39,14 @@
       </select>
 
       @if (!isEmpleado) {
-        <input type="text" class="filter-search" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
+        <input type="text" class="filter-select" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
+        <button class="export-btn" type="button" (click)="exportar()">
+          <i class="fa-solid fa-download"></i> Exportar
+        </button>
       }
     </div>
 
-    <button class="export-btn" (click)="exportar()">
-  <i class="fa-solid fa-download"></i> Exportar
-</button>
+
   </div>
 
   <div class="kpi-grid">

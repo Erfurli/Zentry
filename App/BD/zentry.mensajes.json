@@ -1,162 +1,195 @@
 [{
   "_id": {
-    "$oid": "69fa35762747a09f569c8887"
+    "$oid": "6a104f9440f18a6d247ff807"
   },
-  "conversacionId": "69fa34fee4aa5194c064a03d",
-  "autorId": "2",
-  "contenido": "meow",
+  "conversacionId": "6a104ee815ea9f6ab895f1e3",
+  "autorId": "6a1032ba880f420383a8f24c",
+  "contenido": "oye no me apetece ir a currar hoy",
   "enviadoEn": {
-    "$date": "2026-05-05T18:22:46.417Z"
+    "$date": "2026-05-22T12:44:04.404Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "69fa35822747a09f569c8888"
+    "$oid": "6a104fa240f18a6d247ff809"
   },
-  "conversacionId": "69fa34fee4aa5194c064a03d",
-  "autorId": "2",
-  "contenido": "meooow",
-  "respuestaAId": "69fa35762747a09f569c8887",
-  "respuestaAContenido": "meow",
-  "respuestaAAutorId": "2",
+  "conversacionId": "6a104ee815ea9f6ab895f1e3",
+  "autorId": "6a1044b821ef9578b9b460e1",
+  "contenido": "y si no vamos",
   "enviadoEn": {
-    "$date": "2026-05-05T18:22:58.523Z"
+    "$date": "2026-05-22T12:44:18.286Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "69fa35992747a09f569c888a"
+    "$oid": "6a104fb340f18a6d247ff80b"
   },
-  "conversacionId": "69fa35942747a09f569c8889",
-  "autorId": "2",
-  "contenido": ":P",
+  "conversacionId": "6a104ee815ea9f6ab895f1e3",
+  "autorId": "6a1032ba880f420383a8f24c",
+  "contenido": "me renta gracias",
   "enviadoEn": {
-    "$date": "2026-05-05T18:23:21.386Z"
+    "$date": "2026-05-22T12:44:35.794Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "69fa35ca2747a09f569c888f"
+    "$oid": "6a10501240f18a6d247ff80f"
   },
-  "conversacionId": "69fa34fee4aa5194c064a03d",
-  "autorId": "1",
-  "contenido": "wiwiwiwi",
+  "conversacionId": "6a104fd940f18a6d247ff80e",
+  "autorId": "6a103573880f420383a8f24e",
+  "contenido": "qué tal han ido los exámenes?",
   "enviadoEn": {
-    "$date": "2026-05-05T18:24:10.385Z"
+    "$date": "2026-05-22T12:46:10.807Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "69fa35df2747a09f569c8891"
+    "$oid": "6a10503240f18a6d247ff811"
   },
-  "conversacionId": "69fa34fee4aa5194c064a03d",
-  "autorId": "2",
-  "contenido": "locura",
-  "respuestaAId": "69fa35ca2747a09f569c888f",
-  "respuestaAContenido": "wiwiwiwi",
-  "respuestaAAutorId": "1",
+  "conversacionId": "6a104fd940f18a6d247ff80e",
+  "autorId": "6a104b8239feb14069e9e66a",
+  "contenido": "eres COMPLETAMENTE CONSCIENTE de que voy a suspender a todos verdad",
   "enviadoEn": {
-    "$date": "2026-05-05T18:24:31.972Z"
+    "$date": "2026-05-22T12:46:42.798Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "6a01ff84d30378479212f2ef"
+    "$oid": "6a10504840f18a6d247ff813"
   },
-  "conversacionId": "69fa34fee4aa5194c064a03d",
-  "autorId": "1",
-  "contenido": "aaaaaaa",
+  "conversacionId": "6a104fd940f18a6d247ff80e",
+  "autorId": "6a103573880f420383a8f24e",
+  "contenido": "qué feo eso oye...",
   "enviadoEn": {
-    "$date": "2026-05-11T16:10:44.209Z"
+    "$date": "2026-05-22T12:47:04.379Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "6a01ffcbd30378479212f2f1"
+    "$oid": "6a10508c40f18a6d247ff815"
   },
-  "conversacionId": "6a01ffc4d30378479212f2f0",
-  "autorId": "1",
-  "contenido": "pruebaprueba",
+  "conversacionId": "6a104fd940f18a6d247ff80e",
+  "autorId": "6a104b8239feb14069e9e66a",
+  "contenido": "🧙🏼",
   "enviadoEn": {
-    "$date": "2026-05-11T16:11:55.656Z"
+    "$date": "2026-05-22T12:48:12.532Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "6a0204ffd30378479212f2f5"
+    "$oid": "6a10520f40f18a6d247ff81d"
   },
-  "conversacionId": "69fa34fee4aa5194c064a03d",
-  "autorId": "1",
-  "contenido": "a",
+  "conversacionId": "6a1051e940f18a6d247ff81c",
+  "autorId": "6a1032ba880f420383a8f24c",
+  "contenido": "Pablo me explicas porqué el día 21 trabajaste 2 horas y te piraste sin decir nada?",
   "enviadoEn": {
-    "$date": "2026-05-11T16:34:07.349Z"
+    "$date": "2026-05-22T12:54:39.406Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "6a02050ed30378479212f2f6"
+    "$oid": "6a10521040f18a6d247ff81f"
   },
-  "conversacionId": "6a01ffc4d30378479212f2f0",
-  "autorId": "1",
-  "contenido": "aaa",
+  "conversacionId": "6a1051e940f18a6d247ff81c",
+  "autorId": "6a1032ba880f420383a8f24c",
+  "contenido": "(ꐦ¬_¬)",
   "enviadoEn": {
-    "$date": "2026-05-11T16:34:22.460Z"
+    "$date": "2026-05-22T12:54:40.311Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "6a0209d7a1140cfdac9bdae9"
+    "$oid": "6a10523040f18a6d247ff821"
   },
-  "conversacionId": "6a01ffc4d30378479212f2f0",
-  "autorId": "1",
-  "contenido": "holi!",
+  "conversacionId": "6a1051e940f18a6d247ff81c",
+  "autorId": "6a104b8239feb14069e9e66a",
+  "contenido": "déjame",
   "enviadoEn": {
-    "$date": "2026-05-11T16:54:47.114Z"
+    "$date": "2026-05-22T12:55:12.233Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "6a020b2fa1140cfdac9bdaec"
+    "$oid": "6a10523240f18a6d247ff823"
   },
-  "conversacionId": "6a01ffc4d30378479212f2f0",
-  "autorId": "1",
-  "contenido": "meow",
+  "conversacionId": "6a1051e940f18a6d247ff81c",
+  "autorId": "6a104b8239feb14069e9e66a",
+  "contenido": "panoli",
   "enviadoEn": {
-    "$date": "2026-05-11T17:00:31.525Z"
+    "$date": "2026-05-22T12:55:14.100Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 },
 {
   "_id": {
-    "$oid": "6a020b76ad73b7ab7fa37841"
+    "$oid": "6a10524f40f18a6d247ff825"
   },
-  "conversacionId": "6a01ffc4d30378479212f2f0",
-  "autorId": "1",
-  "contenido": "AÑAÑA",
+  "conversacionId": "6a104edb15ea9f6ab895f1e2",
+  "autorId": "6a1044b821ef9578b9b460e1",
+  "contenido": "en qué momento hemos decidido contratar a esos dos",
   "enviadoEn": {
-    "$date": "2026-05-11T17:01:42.283Z"
+    "$date": "2026-05-22T12:55:43.964Z"
   },
   "eliminado": false,
+  "fijado": false,
+  "menciones": [],
+  "_class": "com.zentry.backend.entity.Mensaje"
+},
+{
+  "_id": {
+    "$oid": "6a10525e40f18a6d247ff827"
+  },
+  "conversacionId": "6a104edb15ea9f6ab895f1e2",
+  "autorId": "6a1032ba880f420383a8f24c",
+  "contenido": "a mi qué me cuentas twin",
+  "enviadoEn": {
+    "$date": "2026-05-22T12:55:58.675Z"
+  },
+  "eliminado": false,
+  "fijado": false,
+  "menciones": [],
   "_class": "com.zentry.backend.entity.Mensaje"
 }]

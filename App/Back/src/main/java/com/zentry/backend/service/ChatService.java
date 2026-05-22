@@ -166,13 +166,20 @@ public class ChatService {
      * @return la conversación individual resuelta en formato DTO
      */
     public ConversacionDTO abrirConversacionIndividual(String usuarioAId, String usuarioBId) {
+        if (usuarioAId.equals(usuarioBId)) {
+            throw new RuntimeException("No puedes abrir una conversación contigo mismo");
+        }
+
         List<Conversacion> existentes = conversacionRepo.findByParticipantesContaining(usuarioAId)
                 .stream()
                 .filter(c -> c.getTipo() == TipoConversacion.INDIVIDUAL
+                        && c.getParticipantes().size() == 2
                         && c.getParticipantes().contains(usuarioBId))
                 .toList();
 
-        if (!existentes.isEmpty()) return toConversacionDTO(existentes.get(0), usuarioAId);
+        if (!existentes.isEmpty()) {
+            return toConversacionDTO(existentes.get(0), usuarioAId);
+        }
 
         Conversacion conv = new Conversacion();
         conv.setTipo(TipoConversacion.INDIVIDUAL);

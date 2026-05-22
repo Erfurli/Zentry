@@ -67,9 +67,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   private globalSub: any;
 
   readonly conversacionesFiltradas = computed(() => {
-    const q = this.filtroBusqueda().toLowerCase();
-    return this.conversaciones().filter(c => !q || c.nombre?.toLowerCase().includes(q));
+  const q = this.filtroBusqueda().trim().toLowerCase();
+
+  return this.conversaciones().filter(c => {
+    if (!q) return true;
+    return this.getNombreConversacion(c).toLowerCase().includes(q);
   });
+});
 
   readonly conversacionesPorTipo = computed(() => {
     const convs = this.conversacionesFiltradas().slice().sort((a, b) => {
@@ -317,7 +321,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       .map(([emoji, ids]) => ({ emoji, count: ids.length }));
   }
 
-  esMio(msg: MensajeDTO): boolean { return msg.autorId === this.usuarioActualId(); }
+  esMio(msg: MensajeDTO): boolean {
+  return String(msg.autorId) === String(this.usuarioActualId());
+}
 
   verPerfil(p: UsuarioResumen): void { this.modalPerfil.set(p); }
 
@@ -333,14 +339,25 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   abrirModalNuevoGrupo(): void {
-    this.chatService.getEmpleadosParaChat().subscribe({ next: e => this.empleadosDisponibles.set(e) });
-    this.modalNuevoGrupo.set(true);
-  }
+  this.chatService.getEmpleadosParaChat().subscribe({
+    next: empleados => {
+      const filtrados = empleados.filter(e => e.id !== this.usuarioActualId());
+      this.empleadosDisponibles.set(filtrados);
+      this.modalNuevoGrupo.set(true);
+    }
+  });
+}
 
   abrirModalMensajeDirecto(): void {
-    this.chatService.getEmpleadosParaChat().subscribe({ next: e => this.empleadosDisponibles.set(e) });
-    this.modalMensajeDirecto.set(true);
-  }
+  this.chatService.getEmpleadosParaChat().subscribe({
+    next: empleados => {
+      this.empleadosDisponibles.set(
+        empleados.filter(e => e.id !== this.usuarioActualId())
+      );
+      this.modalMensajeDirecto.set(true);
+    }
+  });
+}
 
   crearGrupo(): void {
     const nombre = this.nuevoGrupoNombre().trim();
@@ -400,10 +417,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getNombreConversacion(conv: ConversacionDTO): string {
-    if (conv.nombre) return conv.nombre;
-    const otro = conv.participantes.find(p => p.id !== this.usuarioActualId());
-    return otro?.nombre ?? 'Conversación';
+  if (conv.tipo === 'INDIVIDUAL') {
+    return this.getOtroParticipante(conv)?.nombre ?? 'Conversación';
   }
+  return conv.nombre || 'Conversación';
+}
 
   getInicialesConversacion(conv: ConversacionDTO): string {
     const nombre = this.getNombreConversacion(conv);
@@ -416,13 +434,15 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getFotoConversacion(conv: ConversacionDTO): string | null {
-    if (conv.tipo !== 'INDIVIDUAL') return null;
-    return conv.participantes.find(p => p.id !== this.usuarioActualId())?.foto ?? null;
-  }
+  if (conv.tipo !== 'INDIVIDUAL') return null;
+  return this.getOtroParticipante(conv)?.foto ?? null;
+}
 
   getOtroParticipante(conv: ConversacionDTO): UsuarioResumen | null {
-    return conv.participantes.find(p => p.id !== this.usuarioActualId()) ?? null;
-  }
+  return conv.participantes.find(
+    p => String(p.id) !== String(this.usuarioActualId())
+  ) ?? null;
+}
 
   renderContenidoConMenciones(contenido: string): string {
     const conv = this.conversacionActiva();

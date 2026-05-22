@@ -9,13 +9,9 @@
     </div>
 
     <div class="header-actions">
-      @if (esEmpleado()) {
-        <button class="action-btn entrada" (click)="modalFichajeAbierto.set(true)">
-          <i class="fa-solid fa-clock"></i> Fichar / Gestionar jornada
-        </button>
-      }
+      
 
-      @if (!esEmpleado()) {
+      @if (esAdmin()) {
         <div class="vista-toggle">
           <button class="toggle-btn-vista" [class.active]="!vistaGrafico()" (click)="activarVistaLista()" title="Vista lista">
             <i class="fa-solid fa-list"></i>
@@ -28,148 +24,148 @@
     </div>
   </div>
 
-@if (esEmpleado() && mensajeAccion()) {
-  <div class="mensaje-accion">{{ mensajeAccion() }}</div>
-}
+  @if (puedeVerVistaPersonal() && mensajeAccion()) {
+    <div class="mensaje-accion">{{ mensajeAccion() }}</div>
+  }
 
-@if (esEmpleado()) {
-  <div class="empleado-layout">
+  @if (puedeVerVistaPersonal()) {
+    <div class="empleado-layout">
 
-    <div class="empleado-col-main">
+      <div class="empleado-col-main">
 
-      <div class="estado-card-v2">
-        <div class="estado-card-v2-top">
-          <div>
-            <div class="estado-titulo">Mi estado actual</div>
-            <div class="estado-valor">{{ labelEstado() }}</div>
+        <div class="estado-card-v2">
+          <div class="estado-card-v2-top">
+            <div>
+              <div class="estado-titulo">Mi estado actual</div>
+              <div class="estado-valor">{{ labelEstado() }}</div>
+            </div>
+            <div class="estado-chip-grande" [ngClass]="estadoActual?.toLowerCase() ?? 'no_fichado'">
+              @switch (estadoActual) {
+                @case ('TRABAJANDO') { <i class="fa-solid fa-briefcase"></i> }
+                @case ('EN_DESCANSO') { <i class="fa-solid fa-mug-hot"></i> }
+                @case ('FINALIZADO') { <i class="fa-solid fa-circle-check"></i> }
+                @default { <i class="fa-solid fa-user-clock"></i> }
+              }
+            </div>
           </div>
-          <div class="estado-chip-grande" [ngClass]="estadoActual?.toLowerCase() ?? 'no_fichado'">
-            @switch (estadoActual) {
-              @case ('TRABAJANDO')   { <i class="fa-solid fa-briefcase"></i> }
-              @case ('EN_DESCANSO') { <i class="fa-solid fa-mug-hot"></i> }
-              @case ('FINALIZADO')  { <i class="fa-solid fa-circle-check"></i> }
-              @default              { <i class="fa-solid fa-user-clock"></i> }
-            }
+
+          <div class="estado-metricas-v2">
+            <div class="metrica-item">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              <span class="metrica-label">Entrada</span>
+              <span class="metrica-val">{{ miAsistencia()?.entrada || '–' }}</span>
+            </div>
+            <div class="metrica-item">
+              <i class="fa-solid fa-mug-hot"></i>
+              <span class="metrica-label">Descanso</span>
+              <span class="metrica-val">
+                {{ miAsistencia()?.inicioDescanso || '–' }} / {{ miAsistencia()?.finDescanso || '–' }}
+              </span>
+            </div>
+            <div class="metrica-item">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span class="metrica-label">Salida</span>
+              <span class="metrica-val">{{ miAsistencia()?.salida || '–' }}</span>
+            </div>
+            <div class="metrica-item destaca">
+              <i class="fa-regular fa-clock"></i>
+              <span class="metrica-label">Horas hoy</span>
+              <span class="metrica-val">{{ miAsistencia()?.horasTotales ?? 0 }}h</span>
+            </div>
+            <div class="metrica-item">
+              <i class="fa-solid fa-plus"></i>
+              <span class="metrica-label">Horas extra</span>
+              <span class="metrica-val">{{ miAsistencia()?.horasExtra ?? 0 }}h</span>
+            </div>
           </div>
+
+          <div class="acciones-rapidas">
+            <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()"
+              (click)="ejecutarFichaje('entrada')">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
+            </button>
+            <button class="fichaje-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()"
+              (click)="ejecutarFichaje('descanso')">
+              <i class="fa-solid fa-mug-hot"></i> Iniciar descanso
+            </button>
+            <button class="fichaje-btn vuelta" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()"
+              (click)="ejecutarFichaje('vuelta')">
+              <i class="fa-solid fa-rotate-left"></i> Volver del descanso
+            </button>
+            <button class="fichaje-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()"
+              (click)="ejecutarFichaje('salida')">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
+            </button>
+          </div>
+
+          @if (puedeFicharEntrada()) {
+            <div class="modo-trabajo-inline">
+              <span class="modo-label"><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</span>
+              <div class="modo-selector">
+                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'"
+                  (click)="modoTrabajo.set('PRESENCIAL')">
+                  <i class="fa-solid fa-building"></i><span>Presencial</span>
+                </button>
+                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'"
+                  (click)="modoTrabajo.set('REMOTO')">
+                  <i class="fa-solid fa-house"></i><span>Remoto</span>
+                </button>
+                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'"
+                  (click)="modoTrabajo.set('HIBRIDO')">
+                  <i class="fa-solid fa-random"></i><span>Híbrido</span>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="empleado-col-side">
+
+        @if (estadoActual === 'FINALIZADO') {
+          <div class="side-card incidencia-card">
+            <div class="side-card-icon amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="side-card-body">
+              <h3>¿Olvidaste fichar algo?</h3>
+              <p>Crea una incidencia y RRHH la revisará.</p>
+            </div>
+            <button class="incidencia-empleado-btn" (click)="abrirIncidenciaEmpleado()">
+              Crear incidencia
+            </button>
+          </div>
+        }
+
+        <div class="side-card">
+          <div class="side-card-icon azul"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          <div class="side-card-body">
+            <h3>Historial de fichajes</h3>
+            <p>Consulta todos tus fichajes.</p>
+          </div>
+          <button class="log-toggle-btn" (click)="abrirLog()">
+            <i class="fa-solid fa-clock-rotate-left"></i> Ver historial
+          </button>
         </div>
 
-        <div class="estado-metricas-v2">
-          <div class="metrica-item">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i>
-            <span class="metrica-label">Entrada</span>
-            <span class="metrica-val">{{ miAsistencia()?.entrada || '–' }}</span>
-          </div>
-          <div class="metrica-item">
-            <i class="fa-solid fa-mug-hot"></i>
-            <span class="metrica-label">Descanso</span>
-            <span class="metrica-val">
-              {{ miAsistencia()?.inicioDescanso || '–' }} / {{ miAsistencia()?.finDescanso || '–' }}
-            </span>
-          </div>
-          <div class="metrica-item">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-            <span class="metrica-label">Salida</span>
-            <span class="metrica-val">{{ miAsistencia()?.salida || '–' }}</span>
-          </div>
-          <div class="metrica-item destaca">
-            <i class="fa-regular fa-clock"></i>
-            <span class="metrica-label">Horas hoy</span>
-            <span class="metrica-val">{{ miAsistencia()?.horasTotales ?? 0 }}h</span>
-          </div>
-          <div class="metrica-item">
-            <i class="fa-solid fa-plus"></i>
-            <span class="metrica-label">Horas extra</span>
-            <span class="metrica-val">{{ miAsistencia()?.horasExtra ?? 0 }}h</span>
-          </div>
-        </div>
-
-        <div class="acciones-rapidas">
-          <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()"
-            (click)="ejecutarFichaje('entrada')">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
-          </button>
-          <button class="fichaje-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()"
-            (click)="ejecutarFichaje('descanso')">
-            <i class="fa-solid fa-mug-hot"></i> Iniciar descanso
-          </button>
-          <button class="fichaje-btn vuelta" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()"
-            (click)="ejecutarFichaje('vuelta')">
-            <i class="fa-solid fa-rotate-left"></i> Volver del descanso
-          </button>
-          <button class="fichaje-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()"
-            (click)="ejecutarFichaje('salida')">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
-          </button>
-        </div>
-
-        @if (puedeFicharEntrada()) {
-          <div class="modo-trabajo-inline">
-            <span class="modo-label"><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</span>
-            <div class="modo-selector">
-              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'"
-                (click)="modoTrabajo.set('PRESENCIAL')">
-                <i class="fa-solid fa-building"></i><span>Presencial</span>
-              </button>
-              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'"
-                (click)="modoTrabajo.set('REMOTO')">
-                <i class="fa-solid fa-house"></i><span>Remoto</span>
-              </button>
-              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'"
-                (click)="modoTrabajo.set('HIBRIDO')">
-                <i class="fa-solid fa-random"></i><span>Híbrido</span>
-              </button>
+        @if (misRegistros().length > 0) {
+          <div class="side-card ultimos-card">
+            <h3 class="ultimos-titulo"><i class="fa-solid fa-calendar-week"></i> Últimos fichajes</h3>
+            <div class="ultimos-lista">
+              @for (r of misRegistros().slice(0, 5); track r.fecha) {
+                <div class="ultimo-item">
+                  <span class="ultimo-fecha">{{ r.fecha }}</span>
+                  <span class="ultimo-horas">{{ r.horasTotales ?? 0 }}h</span>
+                  <span class="estado-badge" [ngClass]="r.estado?.toLowerCase()">{{ r.estado }}</span>
+                </div>
+              }
             </div>
           </div>
         }
+
       </div>
     </div>
+  }
 
-    <div class="empleado-col-side">
-
-      @if (estadoActual === 'FINALIZADO') {
-        <div class="side-card incidencia-card">
-          <div class="side-card-icon amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
-          <div class="side-card-body">
-            <h3>¿Olvidaste fichar algo?</h3>
-            <p>Crea una incidencia y RRHH la revisará.</p>
-          </div>
-          <button class="incidencia-empleado-btn" (click)="abrirIncidenciaEmpleado()">
-            Crear incidencia
-          </button>
-        </div>
-      }
-
-      <div class="side-card">
-        <div class="side-card-icon azul"><i class="fa-solid fa-clock-rotate-left"></i></div>
-        <div class="side-card-body">
-          <h3>Historial de fichajes</h3>
-          <p>Consulta todos tus fichajes.</p>
-        </div>
-        <button class="log-toggle-btn" (click)="abrirLog()">
-          <i class="fa-solid fa-clock-rotate-left"></i> Ver historial
-        </button>
-      </div>
-
-      @if (misRegistros().length > 0) {
-        <div class="side-card ultimos-card">
-          <h3 class="ultimos-titulo"><i class="fa-solid fa-calendar-week"></i> Últimos fichajes</h3>
-          <div class="ultimos-lista">
-            @for (r of misRegistros().slice(0, 5); track r.fecha) {
-              <div class="ultimo-item">
-                <span class="ultimo-fecha">{{ r.fecha }}</span>
-                <span class="ultimo-horas">{{ r.horasTotales ?? 0 }}h</span>
-                <span class="estado-badge" [ngClass]="r.estado?.toLowerCase()">{{ r.estado }}</span>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-    </div>
-  </div>
-}
-
-  @if (!esEmpleado()) {
+  @if (esAdmin()) {
     <div class="filters-section">
       <div class="filters">
         <input type="date" class="filter-date" [value]="fechaSeleccionada()" (change)="onFechaChange($event)" />
@@ -179,6 +175,7 @@
           <option value="IT">IT</option>
           <option value="Ventas">Ventas</option>
         </select>
+
         @if (!vistaGrafico()) {
           <select class="filter-select" [value]="filtroEstado()" (change)="onEstadoChange($event)">
             <option value="Todos">Todos los estados</option>
@@ -188,12 +185,12 @@
             <option value="Ausente">Ausentes</option>
           </select>
         }
-        @if (!esEmpleado()) {
-          <input type="text" class="filter-search" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
-        }
+
+        <input type="text" class="filter-select" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
+
         <button class="export-btn" type="button" (click)="exportar()">
-  <i class="fa-solid fa-download"></i> Exportar
-</button>
+          <i class="fa-solid fa-download"></i> Exportar
+        </button>
       </div>
     </div>
 
@@ -412,10 +409,10 @@
         <div class="fichaje-estado-visual">
           <div class="fichaje-estado-chip" [ngClass]="estadoActual?.toLowerCase() ?? 'no_fichado'">
             @switch (estadoActual) {
-              @case ('TRABAJANDO')   { <i class="fa-solid fa-briefcase"></i> }
+              @case ('TRABAJANDO') { <i class="fa-solid fa-briefcase"></i> }
               @case ('EN_DESCANSO') { <i class="fa-solid fa-mug-hot"></i> }
-              @case ('FINALIZADO')  { <i class="fa-solid fa-check-circle"></i> }
-              @default              { <i class="fa-solid fa-user-clock"></i> }
+              @case ('FINALIZADO') { <i class="fa-solid fa-check-circle"></i> }
+              @default { <i class="fa-solid fa-user-clock"></i> }
             }
             {{ labelEstado() }}
           </div>
@@ -441,24 +438,24 @@
         </div>
 
         @if (puedeFicharEntrada()) {
-  <div class="form-field">
-    <label><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</label>
-    <div class="modo-selector">
-      <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'" (click)="modoTrabajo.set('PRESENCIAL')">
-        <i class="fa-solid fa-building"></i>
-        <span>Presencial</span>
-      </button>
-      <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'" (click)="modoTrabajo.set('REMOTO')">
-        <i class="fa-solid fa-house"></i>
-        <span>Remoto</span>
-      </button>
-      <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'" (click)="modoTrabajo.set('HIBRIDO')">
-        <i class="fa-solid fa-random"></i>
-        <span>Híbrido</span>
-      </button>
-    </div>
-  </div>
-}
+          <div class="form-field">
+            <label><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</label>
+            <div class="modo-selector">
+              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'" (click)="modoTrabajo.set('PRESENCIAL')">
+                <i class="fa-solid fa-building"></i>
+                <span>Presencial</span>
+              </button>
+              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'" (click)="modoTrabajo.set('REMOTO')">
+                <i class="fa-solid fa-house"></i>
+                <span>Remoto</span>
+              </button>
+              <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'" (click)="modoTrabajo.set('HIBRIDO')">
+                <i class="fa-solid fa-random"></i>
+                <span>Híbrido</span>
+              </button>
+            </div>
+          </div>
+        }
 
         @if (mensajeAccion()) {
           <div class="alert-success"><i class="fa-solid fa-check"></i> {{ mensajeAccion() }}</div>
@@ -598,29 +595,30 @@
       <div class="log-filtros">
         <div class="form-field">
           <label>Modo de trabajo</label>
-  <div class="modo-selector" style="gap: 0.5rem">
-    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'Todos'"
-      (click)="filtroModo.set('Todos'); cargarMisRegistros()">
-      <i class="fa-solid fa-list"></i>
-      <span>Todos</span>
-    </button>
-    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'PRESENCIAL'"
-      (click)="filtroModo.set('PRESENCIAL'); cargarMisRegistros()">
-      <i class="fa-solid fa-building"></i>
-      <span>Presencial</span>
-    </button>
-    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'REMOTO'"
-      (click)="filtroModo.set('REMOTO'); cargarMisRegistros()">
-      <i class="fa-solid fa-house"></i>
-      <span>Remoto</span>
-    </button>
-    <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'HIBRIDO'"
-      (click)="filtroModo.set('HIBRIDO'); cargarMisRegistros()">
-      <i class="fa-solid fa-random"></i>
-      <span>Híbrido</span>
-    </button>
-  </div>
+          <div class="modo-selector" style="gap: 0.5rem">
+            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'Todos'"
+              (click)="filtroModo.set('Todos'); cargarMisRegistros()">
+              <i class="fa-solid fa-list"></i>
+              <span>Todos</span>
+            </button>
+            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'PRESENCIAL'"
+              (click)="filtroModo.set('PRESENCIAL'); cargarMisRegistros()">
+              <i class="fa-solid fa-building"></i>
+              <span>Presencial</span>
+            </button>
+            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'REMOTO'"
+              (click)="filtroModo.set('REMOTO'); cargarMisRegistros()">
+              <i class="fa-solid fa-house"></i>
+              <span>Remoto</span>
+            </button>
+            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'HIBRIDO'"
+              (click)="filtroModo.set('HIBRIDO'); cargarMisRegistros()">
+              <i class="fa-solid fa-random"></i>
+              <span>Híbrido</span>
+            </button>
+          </div>
         </div>
+
         <div class="form-field">
           <label>Incidencias</label>
           <select class="form-select" [value]="filtroIncidencia()" (change)="onFiltroIncidenciaChange($event)">
@@ -629,6 +627,7 @@
             <option value="sin">Sin incidencia</option>
           </select>
         </div>
+
         <div class="log-resumen">
           <span class="log-stat verde">
             <i class="fa-solid fa-check"></i>

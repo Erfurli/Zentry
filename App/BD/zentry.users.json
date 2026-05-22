@@ -1,60 +1,48 @@
 [{
-  "_id": "1",
-  "empleadoId": "1",
-  "username": "ana",
-  "password": "$2a$10$0TnY4FdbIQoaZ0cVYx4VV.5jmKQqZsowvjfZ195ollz6IGSdNO2/i",
-  "rolSistema": "USER",
-  "activo": true,
-  "mustChangePassword": false,
-  "_class": "com.zentry.backend.model.Usuario"
-},
-{
-  "_id": "2",
-  "empleadoId": "2",
-  "username": "paula",
-  "password": "$2a$12$oEN32FGPeLDUGdQsa0Fq0Oq3QcEtrUTGhx/eD4.dlcb/qItR160Zy",
+  "_id": {
+    "$oid": "6a1032ba880f420383a8f24c"
+  },
+  "empleadoId": "6a102fdd93681acb9d5515ad",
+  "username": "paula.burdalo",
+  "password": "$2a$10$0gabKDBSyd1jWJEkvkZ/uOMVOoF5sMmSthULpRHE6GtlvM6B8LnkK",
   "rolSistema": "ADMIN",
   "activo": true,
   "mustChangePassword": false,
   "_class": "com.zentry.backend.model.Usuario"
 },
 {
-  "_id": "3",
-  "empleadoId": "3",
-  "username": "carlos",
-  "password": "$2a$10$ARmPjR3i6y93hoMgCOkRjukWBWDVUahcwKjX9knL004Xc4gbJqbpa",
+  "_id": {
+    "$oid": "6a103573880f420383a8f24e"
+  },
+  "empleadoId": "6a103564880f420383a8f24d",
+  "username": "mari.luz",
+  "password": "$2a$10$GXFK.wKJF5Ug0w/86Orva.DBZBgL7pF6uwCIk8pQyyM.mdOEKLuZa",
   "rolSistema": "USER",
   "activo": true,
-  "mustChangePassword": true,
+  "mustChangePassword": false,
   "_class": "com.zentry.backend.model.Usuario"
 },
 {
-  "_id": "4",
-  "empleadoId": "4",
-  "username": "ivan",
-  "password": "$2a$12$yMJ2DAGLRiaKZri9vNTgE.Y8Ctrir9sZEMBjNR8zMej462cFPxMUS",
+  "_id": {
+    "$oid": "6a1044b821ef9578b9b460e1"
+  },
+  "empleadoId": "6a1044a321ef9578b9b460e0",
+  "username": "ivan.izquierdo",
+  "password": "$2a$10$Qj0TxnrvkyWpZ.X2KcfMau8P6kF1zmQhJGIBBt9ZTQUz/gYIPTZSK",
   "rolSistema": "ADMIN",
-  "activo": true
-},
-{
-  "_id": {
-    "$oid": "69f5d9181f3e181574ac58dc"
-  },
-  "empleadoId": "69f5d8f21f3e181574ac58db",
-  "username": "empleado.prueba",
-  "password": "$2a$10$Y4jwaHxlr0Y6KT4FenZOI.wyhpZ6mdrdHtNbtqVMDHisOT0NbA8X6",
-  "rolSistema": "USER",
   "activo": true,
+  "mustChangePassword": false,
   "_class": "com.zentry.backend.model.Usuario"
 },
 {
   "_id": {
-    "$oid": "69f61b4f23f95db0a18f7825"
+    "$oid": "6a104b8239feb14069e9e66a"
   },
-  "empleadoId": "69f61b3f23f95db0a18f7824",
-  "username": "empleado.email",
-  "password": "$2a$10$HLyD3WgdMwkTdL0eHtDU1.YcEND3JS13ZKFhCkOti4JDZkZZEkUTC",
+  "empleadoId": "6a104b7539feb14069e9e669",
+  "username": "pablo.martin",
+  "password": "$2a$10$kgkNCpNAQ9RVmi1ZIkqBuOzUrNDykHDjtRB.HqrRYVaR8mQ29Lf42",
   "rolSistema": "USER",
   "activo": true,
+  "mustChangePassword": false,
   "_class": "com.zentry.backend.model.Usuario"
 }]

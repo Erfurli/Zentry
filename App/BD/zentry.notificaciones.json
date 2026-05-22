@@ -1,810 +1,585 @@
 [{
   "_id": {
-    "$oid": "69f8dba92d33e33a61a72187"
+    "$oid": "6a10472a21ef9578b9b460f1"
   },
-  "usuarioDestinatarioId": "1",
-  "titulo": "Nueva solicitud de vacaciones",
-  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a102fdd93681acb9d5515ad",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "Oye que no me apetece ir hoy a currar",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:21.103Z"
+    "$date": "2026-05-22T12:08:10.402Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dba92d33e33a61a72188"
+    "$oid": "6a1048ac21ef9578b9b460f5"
   },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Nueva solicitud de vacaciones",
-  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
-  "tipo": "vacaciones",
-  "leida": true,
-  "ruta": "/vacaciones",
-  "fecha": {
-    "$date": "2026-05-04T17:47:21.169Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "69f8dba92d33e33a61a72189"
-  },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Nueva solicitud de vacaciones",
-  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a102fdd93681acb9d5515ad",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "a",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:21.170Z"
+    "$date": "2026-05-22T12:14:36.936Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dba92d33e33a61a7218a"
+    "$oid": "6a104a8539feb14069e9e666"
   },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Nueva solicitud de vacaciones",
-  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "aa",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:21.171Z"
+    "$date": "2026-05-22T12:22:29.215Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dba92d33e33a61a7218b"
+    "$oid": "6a104a8b39feb14069e9e668"
   },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Nueva solicitud de vacaciones",
-  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "oa",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:21.172Z"
+    "$date": "2026-05-22T12:22:35.381Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dba92d33e33a61a7218c"
+    "$oid": "6a104c0e66c8fceeb6079f27"
   },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Nueva solicitud de vacaciones",
-  "mensaje": "Ana López ha solicitado vacaciones del 2026-06-11 al 2026-06-16",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "JOER",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:21.174Z"
+    "$date": "2026-05-22T12:29:02.126Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dbcd2d33e33a61a7218d"
+    "$oid": "6a104c1966c8fceeb6079f29"
   },
-  "usuarioDestinatarioId": "1",
-  "titulo": "Vacaciones aprobadas",
-  "mensaje": "Tu solicitud de vacaciones del 2026-06-11 al 2026-06-16 ha sido aprobada por paula",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "BASYA",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:57.936Z"
+    "$date": "2026-05-22T12:29:13.503Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dbcd2d33e33a61a7218e"
+    "$oid": "6a104d671d81dade54717ede"
   },
-  "usuarioDestinatarioId": "1",
-  "titulo": "Vacaciones aprobadas",
-  "mensaje": "paula ha aprobado las vacaciones de Ana López",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "bruh",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:57.939Z"
+    "$date": "2026-05-22T12:34:47.714Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dbcd2d33e33a61a7218f"
+    "$oid": "6a104d6f1d81dade54717ee0"
   },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Vacaciones aprobadas",
-  "mensaje": "paula ha aprobado las vacaciones de Ana López",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "es loco",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:57.940Z"
+    "$date": "2026-05-22T12:34:55.526Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dbcd2d33e33a61a72190"
+    "$oid": "6a104eeb15ea9f6ab895f1e5"
   },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Vacaciones aprobadas",
-  "mensaje": "paula ha aprobado las vacaciones de Ana López",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "POR FIN",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:57.940Z"
+    "$date": "2026-05-22T12:41:15.877Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dbcd2d33e33a61a72191"
+    "$oid": "6a104ef415ea9f6ab895f1e7"
   },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Vacaciones aprobadas",
-  "mensaje": "paula ha aprobado las vacaciones de Ana López",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "MEU DEUS",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:57.941Z"
+    "$date": "2026-05-22T12:41:24.023Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dbcd2d33e33a61a72192"
+    "$oid": "6a104f0a15ea9f6ab895f1e9"
   },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Vacaciones aprobadas",
-  "mensaje": "paula ha aprobado las vacaciones de Ana López",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "Oye que no me apetece ir al curro hoy",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:57.942Z"
+    "$date": "2026-05-22T12:41:46.807Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8dbcd2d33e33a61a72193"
+    "$oid": "6a104f1c15ea9f6ab895f1eb"
   },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Vacaciones aprobadas",
-  "mensaje": "paula ha aprobado las vacaciones de Ana López",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "Bro sigo en mi cama tú te crees que voy a ir",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T17:47:57.942Z"
+    "$date": "2026-05-22T12:42:04.809Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8e3822d33e33a61a72194"
+    "$oid": "6a104f2015ea9f6ab895f1ed"
   },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Vacaciones rechazadas",
-  "mensaje": "Tu solicitud de vacaciones del 2026-05-23 al 2026-05-30 ha sido rechazada por paula",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "Durete",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T18:20:50.359Z"
+    "$date": "2026-05-22T12:42:08.462Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8e3822d33e33a61a72195"
+    "$oid": "6a104f9440f18a6d247ff808"
   },
-  "usuarioDestinatarioId": "1",
-  "titulo": "Vacaciones rechazadas",
-  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "oye no me apetece ir a currar hoy",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T18:20:50.361Z"
+    "$date": "2026-05-22T12:44:04.456Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8e3822d33e33a61a72196"
+    "$oid": "6a104fa240f18a6d247ff80a"
   },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Vacaciones rechazadas",
-  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "y si no vamos",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T18:20:50.362Z"
+    "$date": "2026-05-22T12:44:18.298Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8e3822d33e33a61a72197"
+    "$oid": "6a104fb340f18a6d247ff80c"
   },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Vacaciones rechazadas",
-  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "me renta gracias",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T18:20:50.363Z"
+    "$date": "2026-05-22T12:44:35.814Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8e3822d33e33a61a72198"
+    "$oid": "6a10501240f18a6d247ff810"
   },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Vacaciones rechazadas",
-  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a104b8239feb14069e9e66a",
+  "titulo": "Nuevo mensaje de Mari Luz Elola Rubio",
+  "mensaje": "qué tal han ido los exámenes?",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T18:20:50.363Z"
+    "$date": "2026-05-22T12:46:10.831Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8e3822d33e33a61a72199"
+    "$oid": "6a10503240f18a6d247ff812"
   },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Vacaciones rechazadas",
-  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a103573880f420383a8f24e",
+  "titulo": "Nuevo mensaje de Pablo Martín Ruiz",
+  "mensaje": "eres COMPLETAMENTE CONSCIENTE de que voy a suspender a todos verdad",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T18:20:50.364Z"
+    "$date": "2026-05-22T12:46:42.842Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "69f8e3822d33e33a61a7219a"
+    "$oid": "6a10504840f18a6d247ff814"
   },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Vacaciones rechazadas",
-  "mensaje": "paula ha rechazado las vacaciones de Paula Búrdalo",
-  "tipo": "vacaciones",
+  "usuarioDestinatarioId": "6a104b8239feb14069e9e66a",
+  "titulo": "Nuevo mensaje de Mari Luz Elola Rubio",
+  "mensaje": "qué feo eso oye...",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/vacaciones",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-04T18:20:50.364Z"
+    "$date": "2026-05-22T12:47:04.395Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a021fce457389d46f675e11"
+    "$oid": "6a10508c40f18a6d247ff816"
   },
-  "usuarioDestinatarioId": "1",
+  "usuarioDestinatarioId": "6a103573880f420383a8f24e",
+  "titulo": "Nuevo mensaje de Pablo Martín Ruiz",
+  "mensaje": "🧙🏼",
+  "tipo": "chat",
+  "leida": false,
+  "ruta": "/chat",
+  "fecha": {
+    "$date": "2026-05-22T12:48:12.593Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a10509340f18a6d247ff818"
+  },
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
   "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "mensaje": "Pablo Martín Ruiz ha fichado entrada a las 14:48",
   "tipo": "entrada",
   "leida": false,
   "ruta": "/asistencia",
   "fecha": {
-    "$date": "2026-05-11T18:28:30.332Z"
+    "$date": "2026-05-22T12:48:19.480Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a021fce457389d46f675e12"
+    "$oid": "6a10509340f18a6d247ff819"
   },
-  "usuarioDestinatarioId": "2",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
   "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
+  "mensaje": "Pablo Martín Ruiz ha fichado entrada a las 14:48",
   "tipo": "entrada",
   "leida": false,
   "ruta": "/asistencia",
   "fecha": {
-    "$date": "2026-05-11T18:28:30.355Z"
+    "$date": "2026-05-22T12:48:19.603Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a021fce457389d46f675e13"
+    "$oid": "6a10509540f18a6d247ff81a"
   },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-11T18:28:30.359Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a021fce457389d46f675e14"
-  },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-11T18:28:30.361Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a021fce457389d46f675e15"
-  },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-11T18:28:30.362Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a021fce457389d46f675e16"
-  },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 20:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-11T18:28:30.364Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a059faefe0845bd9fdf7b94"
-  },
-  "usuarioDestinatarioId": "1",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:10:54.133Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a059faefe0845bd9fdf7b95"
-  },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:10:54.144Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a059faefe0845bd9fdf7b96"
-  },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:10:54.145Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a059faefe0845bd9fdf7b97"
-  },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:10:54.146Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a059faefe0845bd9fdf7b98"
-  },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:10:54.147Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a059faefe0845bd9fdf7b99"
-  },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:10",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:10:54.148Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a05a3cb73a5bdf3808d6d7e"
-  },
-  "usuarioDestinatarioId": "1",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:28:27.786Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a05a3cb73a5bdf3808d6d7f"
-  },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:28:27.789Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a05a3cb73a5bdf3808d6d80"
-  },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:28:27.790Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a05a3cb73a5bdf3808d6d81"
-  },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:28:27.791Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a05a3cb73a5bdf3808d6d82"
-  },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:28:27.791Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a05a3cb73a5bdf3808d6d83"
-  },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Pauli Búrdalo ha fichado entrada a las 12:28",
-  "tipo": "entrada",
-  "leida": false,
-  "ruta": "/asistencia",
-  "fecha": {
-    "$date": "2026-05-14T10:28:27.794Z"
-  },
-  "_class": "com.zentry.backend.model.Notificacion"
-},
-{
-  "_id": {
-    "$oid": "6a05a3fe73a5bdf3808d6d84"
-  },
-  "usuarioDestinatarioId": "1",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
   "titulo": "Fichaje de salida",
-  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "mensaje": "Pablo Martín Ruiz ha fichado salida a las 14:48 (0.0h trabajadas)",
   "tipo": "salida",
   "leida": false,
   "ruta": "/asistencia",
   "fecha": {
-    "$date": "2026-05-14T10:29:18.652Z"
+    "$date": "2026-05-22T12:48:21.555Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a3fe73a5bdf3808d6d85"
+    "$oid": "6a10509540f18a6d247ff81b"
   },
-  "usuarioDestinatarioId": "2",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
   "titulo": "Fichaje de salida",
-  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
+  "mensaje": "Pablo Martín Ruiz ha fichado salida a las 14:48 (0.0h trabajadas)",
   "tipo": "salida",
   "leida": false,
   "ruta": "/asistencia",
   "fecha": {
-    "$date": "2026-05-14T10:29:18.653Z"
+    "$date": "2026-05-22T12:48:21.638Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a3fe73a5bdf3808d6d86"
+    "$oid": "6a10520f40f18a6d247ff81e"
   },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Fichaje de salida",
-  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
-  "tipo": "salida",
+  "usuarioDestinatarioId": "6a104b8239feb14069e9e66a",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "Pablo me explicas porqué el día 21 trabajaste 2 horas y te piraste sin decir nad...",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-14T10:29:18.653Z"
+    "$date": "2026-05-22T12:54:39.415Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a3fe73a5bdf3808d6d87"
+    "$oid": "6a10521040f18a6d247ff820"
   },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Fichaje de salida",
-  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
-  "tipo": "salida",
+  "usuarioDestinatarioId": "6a104b8239feb14069e9e66a",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "(ꐦ¬_¬)",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-14T10:29:18.654Z"
+    "$date": "2026-05-22T12:54:40.324Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a3fe73a5bdf3808d6d88"
+    "$oid": "6a10523040f18a6d247ff822"
   },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Fichaje de salida",
-  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
-  "tipo": "salida",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Pablo Martín Ruiz",
+  "mensaje": "déjame",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-14T10:29:18.654Z"
+    "$date": "2026-05-22T12:55:12.269Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a3fe73a5bdf3808d6d89"
+    "$oid": "6a10523240f18a6d247ff824"
   },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Fichaje de salida",
-  "mensaje": "Pauli Búrdalo ha fichado salida a las 12:29 (0.0h trabajadas)",
-  "tipo": "salida",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Pablo Martín Ruiz",
+  "mensaje": "panoli",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-14T10:29:18.655Z"
+    "$date": "2026-05-22T12:55:14.141Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a43973a5bdf3808d6d8b"
+    "$oid": "6a10524f40f18a6d247ff826"
   },
-  "usuarioDestinatarioId": "1",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Ana López ha fichado entrada a las 12:30",
-  "tipo": "entrada",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nuevo mensaje de Iván Izquierdo Castillo",
+  "mensaje": "en qué momento hemos decidido contratar a esos dos",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-14T10:30:17.514Z"
+    "$date": "2026-05-22T12:55:43.973Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a43973a5bdf3808d6d8c"
+    "$oid": "6a10525e40f18a6d247ff828"
   },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Ana López ha fichado entrada a las 12:30",
-  "tipo": "entrada",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nuevo mensaje de Paula Búrdalo Sánchez",
+  "mensaje": "a mi qué me cuentas twin",
+  "tipo": "chat",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/chat",
   "fecha": {
-    "$date": "2026-05-14T10:30:17.515Z"
+    "$date": "2026-05-22T12:55:58.690Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a43973a5bdf3808d6d8d"
+    "$oid": "6a10528a40f18a6d247ff82a"
   },
-  "usuarioDestinatarioId": "3",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Ana López ha fichado entrada a las 12:30",
-  "tipo": "entrada",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Pablo Martín Ruiz ha solicitado vacaciones del 2026-06-01 al 2026-06-08 (8 días, saldo restante: 14)",
+  "tipo": "vacaciones",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/vacaciones",
   "fecha": {
-    "$date": "2026-05-14T10:30:17.515Z"
+    "$date": "2026-05-22T12:56:42.504Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a43973a5bdf3808d6d8e"
+    "$oid": "6a10528a40f18a6d247ff82b"
   },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Ana López ha fichado entrada a las 12:30",
-  "tipo": "entrada",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Pablo Martín Ruiz ha solicitado vacaciones del 2026-06-01 al 2026-06-08 (8 días, saldo restante: 14)",
+  "tipo": "vacaciones",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/vacaciones",
   "fecha": {
-    "$date": "2026-05-14T10:30:17.516Z"
+    "$date": "2026-05-22T12:56:42.660Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a43973a5bdf3808d6d8f"
+    "$oid": "6a1052a140f18a6d247ff82c"
   },
-  "usuarioDestinatarioId": "69f5d9181f3e181574ac58dc",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Ana López ha fichado entrada a las 12:30",
-  "tipo": "entrada",
+  "usuarioDestinatarioId": "6a104b8239feb14069e9e66a",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "Tu solicitud de vacaciones del 2026-06-01 al 2026-06-08 ha sido aprobada por paula.burdalo",
+  "tipo": "vacaciones",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/vacaciones",
   "fecha": {
-    "$date": "2026-05-14T10:30:17.516Z"
+    "$date": "2026-05-22T12:57:05.524Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05a43973a5bdf3808d6d90"
+    "$oid": "6a1052a140f18a6d247ff82d"
   },
-  "usuarioDestinatarioId": "69f61b4f23f95db0a18f7825",
-  "titulo": "Fichaje de entrada",
-  "mensaje": "Ana López ha fichado entrada a las 12:30",
-  "tipo": "entrada",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula.burdalo ha aprobado las vacaciones de Pablo Martín Ruiz",
+  "tipo": "vacaciones",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/vacaciones",
   "fecha": {
-    "$date": "2026-05-14T10:30:17.517Z"
+    "$date": "2026-05-22T12:57:05.577Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05aee86475c4b9e1bcdce5"
+    "$oid": "6a1052a140f18a6d247ff82e"
   },
-  "usuarioDestinatarioId": "2",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Vacaciones aprobadas",
+  "mensaje": "paula.burdalo ha aprobado las vacaciones de Pablo Martín Ruiz",
+  "tipo": "vacaciones",
+  "leida": false,
+  "ruta": "/vacaciones",
+  "fecha": {
+    "$date": "2026-05-22T12:57:05.630Z"
+  },
+  "_class": "com.zentry.backend.model.Notificacion"
+},
+{
+  "_id": {
+    "$oid": "6a1052f840f18a6d247ff830"
+  },
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
   "titulo": "Nueva solicitud de ausencia",
-  "mensaje": "Ana López ha solicitado una ausencia por \"Asunto Personal\" del 2026-05-15 al 2026-05-15",
-  "tipo": "ausencia",
+  "mensaje": "Pablo Martín Ruiz ha solicitado una ausencia por \"Asunto Personal\" del 2026-05-25 al 2026-05-27",
+  "tipo": "ausencias",
   "leida": false,
   "ruta": "/ausencias",
   "fecha": {
-    "$date": "2026-05-14T11:15:52.740Z"
+    "$date": "2026-05-22T12:58:32.785Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05aee86475c4b9e1bcdce6"
+    "$oid": "6a1052f840f18a6d247ff831"
   },
-  "usuarioDestinatarioId": "4",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
   "titulo": "Nueva solicitud de ausencia",
-  "mensaje": "Ana López ha solicitado una ausencia por \"Asunto Personal\" del 2026-05-15 al 2026-05-15",
-  "tipo": "ausencia",
+  "mensaje": "Pablo Martín Ruiz ha solicitado una ausencia por \"Asunto Personal\" del 2026-05-25 al 2026-05-27",
+  "tipo": "ausencias",
   "leida": false,
   "ruta": "/ausencias",
   "fecha": {
-    "$date": "2026-05-14T11:15:52.745Z"
+    "$date": "2026-05-22T12:58:32.931Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05b6673d54364805623176"
+    "$oid": "6a10531940f18a6d247ff833"
   },
-  "usuarioDestinatarioId": "2",
-  "titulo": "Fichaje de salida",
-  "mensaje": "Ana López ha fichado salida a las 13:47 (1.28h trabajadas)",
-  "tipo": "salida",
+  "usuarioDestinatarioId": "6a1032ba880f420383a8f24c",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Mari Luz Elola Rubio ha solicitado vacaciones del 2026-06-01 al 2026-06-08 (8 días, saldo restante: 14)",
+  "tipo": "vacaciones",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/vacaciones",
   "fecha": {
-    "$date": "2026-05-14T11:47:51.078Z"
+    "$date": "2026-05-22T12:59:05.794Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 },
 {
   "_id": {
-    "$oid": "6a05b6673d54364805623177"
+    "$oid": "6a10531940f18a6d247ff834"
   },
-  "usuarioDestinatarioId": "4",
-  "titulo": "Fichaje de salida",
-  "mensaje": "Ana López ha fichado salida a las 13:47 (1.28h trabajadas)",
-  "tipo": "salida",
+  "usuarioDestinatarioId": "6a1044b821ef9578b9b460e1",
+  "titulo": "Nueva solicitud de vacaciones",
+  "mensaje": "Mari Luz Elola Rubio ha solicitado vacaciones del 2026-06-01 al 2026-06-08 (8 días, saldo restante: 14)",
+  "tipo": "vacaciones",
   "leida": false,
-  "ruta": "/asistencia",
+  "ruta": "/vacaciones",
   "fecha": {
-    "$date": "2026-05-14T11:47:51.092Z"
+    "$date": "2026-05-22T12:59:05.919Z"
   },
   "_class": "com.zentry.backend.model.Notificacion"
 }]

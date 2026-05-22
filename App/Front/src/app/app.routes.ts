@@ -8,6 +8,7 @@ import { ReportesComponent } from './pages/reportes/reportes.component';
 import { EmpleadosComponent } from './pages/empleados/empleados.component';
 import { AusenciasComponent } from './pages/ausencias/ausencias.component';
 import { authGuard } from './guards/auth.guard';
+import { changePasswordGuard } from './guards/change-password.guard';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { UsuariosComponent } from './pages/usuarios/usuarios.component';
 import { CambiarPasswordComponent } from './pages/cambiar-password/cambiar-password.component';
@@ -27,84 +28,19 @@ export const routes: Routes = [
     component: AppLayoutComponent,
     canActivate: [authGuard],
     children: [
-      {
-        path: 'dashboard',
-        component: HomeDashboardComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'asistencia',
-        component: AsistenciaComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'vacaciones',
-        component: VacacionesComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'ausencias',
-        component: AusenciasComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'admin-dashboard',
-        component: AdminDashboardComponent,
-        canActivate: [authGuard],
-        data: { roles: ['RRHH'] },
-      },
-      {
-        path: 'reportes',
-        component: ReportesComponent,
-        canActivate: [authGuard],
-        data: { roles: ['RRHH'] },
-      },
-      {
-        path: 'empleados',
-        component: EmpleadosComponent,
-        canActivate: [authGuard],
-        data: { roles: ['RRHH', 'MANDO'] },
-      },
-      {
-        path: 'usuarios',
-        component: UsuariosComponent,
-        canActivate: [authGuard],
-        data: { roles: ['RRHH'] },
-      },
-      {
-        path: 'chat',
-        component: ChatComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'perfil',
-        component: PerfilComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'anuncios',
-        component: TablonAnunciosComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'preferencias-notificaciones',
-        component: PreferenciasNotificacionesComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
-      {
-        path: 'anuncios/:id',
-        component: AnuncioDetalleComponent,
-        canActivate: [authGuard],
-        data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] },
-      },
+      { path: 'dashboard', component: HomeDashboardComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'asistencia', component: AsistenciaComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'vacaciones', component: VacacionesComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'ausencias', component: AusenciasComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH'] } },
+      { path: 'reportes', component: ReportesComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH'] } },
+      { path: 'empleados', component: EmpleadosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH', 'MANDO'] } },
+      { path: 'usuarios', component: UsuariosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH'] } },
+      { path: 'chat', component: ChatComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'anuncios', component: TablonAnunciosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'preferencias-notificaciones', component: PreferenciasNotificacionesComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
+      { path: 'anuncios/:id', component: AnuncioDetalleComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

@@ -65,11 +65,11 @@
             <div class="meta-stats">
               <span><i class="fa-regular fa-eye"></i> {{ anuncio()!.vistoPor?.length ?? 0 }} leídos</span>
               <span><i class="fa-regular fa-comment"></i> {{ anuncio()!.comentarios?.length ?? 0 }} comentarios</span>
-              @if (anuncio()!.fechaExpiracion) {
-                <span class="expira">
-                  <i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncio()!.fechaExpiracion!) }}
-                </span>
-              }
+              @if (mostrarExpiracion()) {
+  <span class="expira">
+    <i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncio()!.fechaExpiracion!) }}
+  </span>
+}
             </div>
           </div>
         </div>

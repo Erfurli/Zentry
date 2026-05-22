@@ -74,6 +74,7 @@ public class AuthController {
         return ResponseEntity.ok(
                 LoginResponse.builder()
                         .token(token)
+                        .userId(usuario.getId())
                         .username(usuario.getUsername())
                         .systemRole(usuario.getRolSistema().name())
                         .companyRole(empleado.getRolEmpresa().name())

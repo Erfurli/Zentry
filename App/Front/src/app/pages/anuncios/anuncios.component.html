@@ -1,5 +1,4 @@
 <div class="tablon-container">
-
   <div class="tablon-header">
     <div class="tablon-title">
       <i class="fa-solid fa-bullhorn"></i>
@@ -16,7 +15,6 @@
       </button>
     }
   </div>
-
 
   @if (cargando()) {
     <div class="tablon-loading">
@@ -61,20 +59,19 @@
               <div class="anuncio-meta">
                 <span><i class="fa-regular fa-user"></i> {{ anuncio.autorNombre }}</span>
                 <span><i class="fa-regular fa-calendar"></i> {{ formatearFecha(anuncio.fechaCreacion!) }}</span>
-                @if (anuncio.fechaExpiracion) {
-                  <span class="expira"><i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncio.fechaExpiracion) }}</span>
+                @if (mostrarExpiracion(anuncio)) {
+                  <span class="expira">
+                    <i class="fa-regular fa-clock"></i> Expira: {{ formatearFecha(anuncio.fechaExpiracion!) }}
+                  </span>
                 }
               </div>
 
               @if (esAdmin()) {
                 <div class="anuncio-acciones-admin" (click)="$event.stopPropagation()">
-                  <button class="btn-accion editar" (click)="editarAnuncio(anuncio)">
+                  <button class="btn-accion editar" (click)="editarAnuncio(anuncio); $event.stopPropagation()">
                     <i class="fa-solid fa-pen"></i>
                   </button>
-                  <button class="btn-accion archivar" (click)="archivarAnuncio(anuncio)">
-                    <i class="fa-solid fa-archive"></i>
-                  </button>
-                  <button class="btn-accion eliminar" (click)="eliminarAnuncio(anuncio)">
+                  <button class="btn-accion eliminar" (click)="eliminarAnuncio(anuncio); $event.stopPropagation()">
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </div>
@@ -85,6 +82,7 @@
       </div>
     }
   }
+
   @if (mostrarFormulario()) {
     <div class="modal-overlay" (click)="cerrarFormulario()">
       <div class="modal-form" (click)="$event.stopPropagation()">
@@ -102,7 +100,7 @@
           <div class="form-row">
             <div class="form-group">
               <label>Categoría *</label>
-              <select [(ngModel)]="form.categoria">
+              <select [(ngModel)]="form.categoria" (change)="onCategoriaChange()">
                 <option value="GENERAL">General</option>
                 <option value="IMPORTANTE">Importante</option>
                 <option value="EVENTO">Evento</option>
@@ -112,7 +110,14 @@
 
             <div class="form-group">
               <label>Fecha de expiración</label>
-              <input type="datetime-local" [(ngModel)]="form.fechaExpiracion" />
+              <input
+                type="datetime-local"
+                [(ngModel)]="form.fechaExpiracion"
+                [disabled]="esUrgente()"
+              />
+              @if (esUrgente()) {
+                <small class="texto-ayuda">Los anuncios urgentes no llevan expiración.</small>
+              }
             </div>
           </div>
 
@@ -145,5 +150,4 @@
       </div>
     </div>
   }
-
 </div>

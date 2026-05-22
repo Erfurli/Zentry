@@ -145,4 +145,29 @@ export class UsuariosComponent implements OnInit {
     });
     this.cerrarModal();
   }
+
+  readonly modalEliminarAbierto = signal(false);
+readonly usuarioEliminando = signal<Usuario | undefined>(undefined);
+
+abrirModalEliminar(usuario: Usuario): void {
+  this.usuarioEliminando.set(usuario);
+  this.modalEliminarAbierto.set(true);
+}
+
+cerrarModalEliminar(): void {
+  this.modalEliminarAbierto.set(false);
+  this.usuarioEliminando.set(undefined);
+}
+
+confirmarEliminar(): void {
+  const u = this.usuarioEliminando();
+  if (!u) return;
+  this.usuariosService.eliminar(u.id).subscribe({
+    next: () => {
+      this.usuarios.update(lista => lista.filter(x => x.id !== u.id));
+      this.cerrarModalEliminar();
+    },
+    error: err => console.error('Error eliminando usuario', err)
+  });
+}
 }

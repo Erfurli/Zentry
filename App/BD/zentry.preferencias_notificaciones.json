@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "6a1053a640f18a6d247ff835"
+  },
+  "usuarioId": "6a1032ba880f420383a8f24c",
+  "preferencias": {
+    "vacaciones": {
+      "inApp": true,
+      "email": true
+    },
+    "ausencias": {
+      "inApp": true,
+      "email": false
+    },
+    "fichaje": {
+      "inApp": true,
+      "email": false
+    },
+    "chat": {
+      "inApp": false,
+      "email": false
+    },
+    "anuncios": {
+      "inApp": true,
+      "email": false
+    },
+    "sistema": {
+      "inApp": true,
+      "email": true
+    }
+  },
+  "_class": "com.zentry.backend.entity.PreferenciaNotificacion"
+}]

@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "6a103f6721ef9578b9b460dc"
+  },
+  "empleadoId": "6a103564880f420383a8f24d",
+  "fechaInicio": "2026-05-19",
+  "fechaFin": "2026-05-19",
+  "dias": 1,
+  "tipo": "Enfermedad",
+  "estado": "Justificada",
+  "motivo": "Ayyy achús achús :(",
+  "fechaSolicitud": "2026-05-22",
+  "_class": "com.zentry.backend.model.Ausencia"
+},
+{
+  "_id": {
+    "$oid": "6a1052f840f18a6d247ff82f"
+  },
+  "empleadoId": "6a104b7539feb14069e9e669",
+  "fechaInicio": "2026-05-25",
+  "fechaFin": "2026-05-27",
+  "dias": 3,
+  "tipo": "Asunto Personal",
+  "estado": "Pendiente",
+  "motivo": "no me apetece ir",
+  "fechaSolicitud": "2026-05-22",
+  "_class": "com.zentry.backend.model.Ausencia"
+}]

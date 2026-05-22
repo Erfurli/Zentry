@@ -486,6 +486,34 @@
 .btn-guardar:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
 .btn-guardar:disabled { opacity: 0.5; cursor: not-allowed; }
 
+.anuncios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.anuncio-card {
+  display: flex;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1.5px solid #e2e8f0;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+  background: #fff;
+  position: relative;
+}
+
+.anuncio-body {
+  flex: 1;
+  padding: 0.7rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
 @media (max-width: 640px) {
   .form-row { grid-template-columns: 1fr; }
   .modal-content { padding: 1.25rem; }

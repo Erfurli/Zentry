@@ -36,52 +36,36 @@ export class CambiarPasswordComponent {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || this.passwordsNoCoinciden) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.loading = true;
-    this.error = '';
-
-    const empleadoId = this.authService.getEmpleadoId();
-    const nuevaPassword = this.form.getRawValue().nuevaPassword!;
-
-    this.http.get<any[]>(`${environment.apiUrl}/usuarios`).subscribe({
-      next: usuarios => {
-        const usuario = usuarios.find(u => u.empleadoId === empleadoId);
-        if (!usuario) {
-          this.loading = false;
-          this.error = 'No se encontró el usuario.';
-          return;
-        }
-
-        this.http.patch(`${environment.apiUrl}/usuarios/${usuario.id}/cambiar-password`, {
-          password: nuevaPassword
-        }).subscribe({
-          next: () => {
-            this.loading = false;
-            const session = this.authService.getCurrentUser();
-            if (session) {
-              this.authService.saveSession({ ...session, mustChangePassword: false });
-            }
-            const companyRole = this.authService.getCompanyRole();
-            if (companyRole === 'RRHH') {
-              this.router.navigate(['/admin-dashboard']);
-            } else {
-              this.router.navigate(['/dashboard']);
-            }
-          },
-          error: () => {
-            this.loading = false;
-            this.error = 'No se pudo cambiar la contraseña.';
-          }
-        });
-      },
-      error: () => {
-        this.loading = false;
-        this.error = 'Error al obtener datos del usuario.';
-      }
-    });
+  if (this.form.invalid || this.passwordsNoCoinciden) {
+    this.form.markAllAsTouched();
+    return;
   }
+
+  this.loading = true;
+  this.error = '';
+
+  const nuevaPassword = this.form.getRawValue().nuevaPassword!;
+
+  this.http.patch(`${environment.apiUrl}/usuarios/mi-password`, {
+    password: nuevaPassword
+  }).subscribe({
+    next: () => {
+      this.loading = false;
+      const session = this.authService.getCurrentUser();
+      if (session) {
+        this.authService.saveSession({ ...session, mustChangePassword: false });
+      }
+      const companyRole = this.authService.getCompanyRole();
+      if (companyRole === 'RRHH') {
+        this.router.navigate(['/admin-dashboard'], { replaceUrl: true });
+      } else {
+        this.router.navigate(['/dashboard'], { replaceUrl: true });
+      }
+    },
+    error: () => {
+      this.loading = false;
+      this.error = 'No se pudo cambiar la contraseña.';
+    }
+  });
+}
 }

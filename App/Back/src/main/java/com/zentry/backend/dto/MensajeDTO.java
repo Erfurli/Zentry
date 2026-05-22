@@ -24,7 +24,8 @@ public class MensajeDTO {
     private LocalDateTime enviadoEn;
     private String foto;
 
-    public void setAutorFoto(String s) {
+    public void setAutorFoto(String foto) {
+        this.foto = foto;
     }
 
     private LocalDateTime editadoEn;

@@ -51,7 +51,8 @@ export class UsuarioModalComponent implements OnInit {
       });
       this.formulario.controls.password.clearValidators();
     } else {
-      this.formulario.controls.password.setValidators([Validators.required, Validators.minLength(6)]);
+      this.formulario.controls.password.clearValidators();
+this.formulario.controls.password.updateValueAndValidity();
     }
     this.formulario.controls.password.updateValueAndValidity();
   }

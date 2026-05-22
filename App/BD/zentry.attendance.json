@@ -1,60 +1,225 @@
 [{
-  "_id": "1",
-  "empleadoId": "1",
-  "fecha": "2026-04-21",
-  "entrada": "08:30",
-  "salida": "17:04",
-  "horas": 8.5,
-  "modo": "Presencial"
-},
-{
-  "_id": "2",
-  "empleadoId": "2",
-  "fecha": "2026-04-21",
+  "_id": {
+    "$oid": "6a103de743801d1a100b3236"
+  },
+  "empleadoId": "6a102fdd93681acb9d5515ad",
+  "fecha": "2026-05-21",
   "entrada": "09:00",
-  "salida": "18:15",
-  "horas": 9.25,
-  "modo": "Teletrabajo"
-},
-{
-  "_id": "3",
-  "empleadoId": "3",
-  "fecha": "2026-04-21",
-  "entrada": "09:15",
-  "salida": "17:40",
-  "horas": 8.25,
-  "modo": "Presencial"
-},
-{
-  "_id": "4",
-  "empleadoId": "4",
-  "fecha": "2026-04-21",
-  "entrada": "08:45",
-  "salida": "17:20",
-  "horas": 8.35,
-  "modo": "Presencial"
-},
-{
-  "_id": "5",
-  "empleadoId": "5",
-  "fecha": "2026-04-21",
-  "entrada": "08:58",
-  "salida": "17:10",
-  "horas": 8.2,
-  "modo": "Teletrabajo"
+  "salida": "18:00",
+  "inicioDescanso": "14:00",
+  "finDescanso": "15:00",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 1,
+  "_class": "com.zentry.backend.model.Asistencia"
 },
 {
   "_id": {
-    "$oid": "6a05a43973a5bdf3808d6d8a"
+    "$oid": "6a103e3a43801d1a100b3237"
   },
-  "empleadoId": "1",
-  "fecha": "2026-05-14",
-  "entrada": "12:30",
-  "salida": "13:47",
-  "inicioDescanso": "13:47",
-  "finDescanso": "13:47",
+  "empleadoId": "6a102fdd93681acb9d5515ad",
+  "fecha": "2026-05-20",
+  "entrada": "09:00",
+  "salida": "17:00",
+  "inicioDescanso": "14:00",
+  "finDescanso": "15:00",
   "estado": "FINALIZADO",
-  "horasTotales": 1.28,
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a103e6f21ef9578b9b460d2"
+  },
+  "empleadoId": "6a102fdd93681acb9d5515ad",
+  "fecha": "2026-05-22",
+  "entrada": "09:00",
+  "salida": "19:00",
+  "inicioDescanso": "14:30",
+  "finDescanso": "15:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 2,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a103ede21ef9578b9b460d7"
+  },
+  "empleadoId": "6a103564880f420383a8f24d",
+  "fecha": "2026-05-22",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "13:30",
+  "finDescanso": "14:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a103f3f43801d1a100b3240"
+  },
+  "empleadoId": "6a103564880f420383a8f24d",
+  "fecha": "2026-05-21",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "13:30",
+  "finDescanso": "14:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a103f4443801d1a100b3241"
+  },
+  "empleadoId": "6a103564880f420383a8f24d",
+  "fecha": "2026-05-20",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "13:30",
+  "finDescanso": "14:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a103f4d43801d1a100b3242"
+  },
+  "empleadoId": "6a103564880f420383a8f24d",
+  "fecha": "2026-05-18",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "13:30",
+  "finDescanso": "14:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a10452221ef9578b9b460e8"
+  },
+  "empleadoId": "6a1044a321ef9578b9b460e0",
+  "fecha": "2026-05-22",
+  "entrada": "09:00",
+  "salida": "17:00",
+  "inicioDescanso": "13:59",
+  "finDescanso": "14:59",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a10468343801d1a100b3247"
+  },
+  "empleadoId": "6a1044a321ef9578b9b460e0",
+  "fecha": "2026-05-21",
+  "entrada": "08:00",
+  "salida": "18:00",
+  "inicioDescanso": "14:00",
+  "finDescanso": "15:00",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 2,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a10468e43801d1a100b3248"
+  },
+  "empleadoId": "6a1044a321ef9578b9b460e0",
+  "fecha": "2026-05-20",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "14:00",
+  "finDescanso": "15:00",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a10469743801d1a100b3249"
+  },
+  "empleadoId": "6a1044a321ef9578b9b460e0",
+  "fecha": "2026-05-19",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "14:00",
+  "finDescanso": "15:00",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a10509340f18a6d247ff817"
+  },
+  "empleadoId": "6a104b7539feb14069e9e669",
+  "fecha": "2026-05-21",
+  "entrada": "10:00",
+  "salida": "12:00",
+  "inicioDescanso": "10:30",
+  "finDescanso": "11:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 2,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a1051a343801d1a100b325d"
+  },
+  "empleadoId": "6a104b7539feb14069e9e669",
+  "fecha": "2026-05-22",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "13:30",
+  "finDescanso": "14:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a1051b943801d1a100b325e"
+  },
+  "empleadoId": "6a104b7539feb14069e9e669",
+  "fecha": "2026-05-20",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "13:30",
+  "finDescanso": "14:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a1051cc43801d1a100b325f"
+  },
+  "empleadoId": "6a104b7539feb14069e9e669",
+  "fecha": "2026-05-19",
+  "entrada": "08:00",
+  "salida": "16:00",
+  "inicioDescanso": "14:30",
+  "finDescanso": "15:30",
+  "estado": "FINALIZADO",
+  "horasTotales": 8,
   "horasExtra": 0,
   "_class": "com.zentry.backend.model.Asistencia"
 }]

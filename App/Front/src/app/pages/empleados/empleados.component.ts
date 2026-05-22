@@ -68,6 +68,41 @@ export class EmpleadosComponent implements OnInit {
     return this.usuarios().find(u => u.empleadoId === empleadoId);
   }
 
+  readonly modalEliminarAbierto = signal(false);
+readonly empleadoEliminando = signal<Empleado | undefined>(undefined);
+
+abrirModalEliminar(empleado: Empleado): void {
+  this.empleadoEliminando.set(empleado);
+  this.modalEliminarAbierto.set(true);
+}
+
+cerrarModalEliminar(): void {
+  this.modalEliminarAbierto.set(false);
+  this.empleadoEliminando.set(undefined);
+}
+
+confirmarEliminar(): void {
+  const empleado = this.empleadoEliminando();
+  if (!empleado) return;
+  this.empleadosService.eliminarEmpleado(empleado.id).subscribe({
+    next: () => {
+      this.empleados.update(lista => lista.filter(e => e.id !== empleado.id));
+      this.cerrarModalEliminar();
+    },
+    error: err => console.error('Error eliminando empleado', err)
+  });
+}
+
+  eliminarEmpleado(id: string): void {
+  if (!confirm('¿Estás seguro de que quieres eliminar este empleado?')) return;
+  this.empleadosService.eliminarEmpleado(id).subscribe({
+    next: () => {
+      this.empleados.update(lista => lista.filter(e => e.id !== id));
+    },
+    error: err => console.error('Error eliminando empleado', err)
+  });
+}
+
   abrirModalEditar(empleado: Empleado): void {
     this.empleadoEditando.set(empleado);
     this.modalAbierto.set(true);

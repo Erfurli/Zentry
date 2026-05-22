@@ -1,27 +1,18 @@
 [{
   "_id": {
-    "$oid": "69fa35bc2747a09f569c888d"
+    "$oid": "6a104f2415ea9f6ab895f1ee"
   },
-  "mensajeId": "69fa35822747a09f569c8888",
-  "usuarioId": "4",
+  "mensajeId": "6a104f1c15ea9f6ab895f1ea",
+  "usuarioId": "6a1044b821ef9578b9b460e1",
   "emoji": "🔥",
   "_class": "com.zentry.backend.entity.Reaccion"
 },
 {
   "_id": {
-    "$oid": "69fa35bd2747a09f569c888e"
+    "$oid": "6a104fc040f18a6d247ff80d"
   },
-  "mensajeId": "69fa35822747a09f569c8888",
-  "usuarioId": "4",
-  "emoji": "😮",
-  "_class": "com.zentry.backend.entity.Reaccion"
-},
-{
-  "_id": {
-    "$oid": "69fa35cc2747a09f569c8890"
-  },
-  "mensajeId": "69fa35822747a09f569c8888",
-  "usuarioId": "1",
-  "emoji": "😮",
+  "mensajeId": "6a104fb340f18a6d247ff80b",
+  "usuarioId": "6a1044b821ef9578b9b460e1",
+  "emoji": "🔥",
   "_class": "com.zentry.backend.entity.Reaccion"
 }]
