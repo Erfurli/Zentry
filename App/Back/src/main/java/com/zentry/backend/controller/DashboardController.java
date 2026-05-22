@@ -28,7 +28,6 @@ public class DashboardController {
     private final VacacionesRepository vacacionesRepository;
     private final AusenciaRepository ausenciaRepository;
 
-
     @GetMapping("/home")
     public ResponseEntity<HomeDashboardResponse> getHome(Authentication authentication) {
         String username = authentication.getName();
@@ -58,6 +57,7 @@ public class DashboardController {
                         .status(v.getEstado())
                         .fechaInicio(v.getFechaInicio())
                         .fechaFin(v.getFechaFin())
+                        .dias(v.getDias() != null ? v.getDias() : 0)
                         .build())
                 .toList();
 
@@ -97,9 +97,7 @@ public class DashboardController {
     @GetMapping("/admin")
     public ResponseEntity<?> getAdmin() {
         String hoy = LocalDate.now().toString();
-
         long totalEmpleados = empleadoRepository.findByActivo(true).size();
-
         List<Asistencia> asistenciasHoy = asistenciaRepository.findByFecha(hoy);
 
         long presentes = asistenciasHoy.stream()
@@ -134,5 +132,4 @@ public class DashboardController {
                 "incidenciasPendientes", 0
         ));
     }
-
 }

@@ -316,4 +316,29 @@ public class VacacionesController {
         return ResponseEntity.ok(resultado);
     }
 
+    @GetMapping("/mis-vacaciones")
+    public ResponseEntity<List<VacacionesVistaDTO>> getMisVacaciones(Authentication authentication) {
+        Usuario usuario = usuarioRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Empleado emp = empleadoRepository.findById(usuario.getEmpleadoId()).orElse(null);
+
+        List<VacacionesVistaDTO> resultado = vacacionesRepository.findAll().stream()
+                .filter(v -> v.getEmpleadoId().equals(usuario.getEmpleadoId()))
+                .map(v -> new VacacionesVistaDTO(
+                        v.getId(),
+                        v.getEmpleadoId(),
+                        emp != null ? emp.getNombre() : "Mi Nombre",
+                        emp != null ? emp.getDepartamento() : "-",
+                        v.getFechaInicio(),
+                        v.getFechaFin(),
+                        v.getDias(),
+                        v.getEstado(),
+                        "Vacaciones anuales"
+                ))
+                .toList();
+
+        return ResponseEntity.ok(resultado);
+    }
+
 }

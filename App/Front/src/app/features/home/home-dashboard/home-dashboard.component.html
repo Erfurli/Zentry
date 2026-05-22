@@ -10,12 +10,13 @@
       <p>{{ error() }}</p>
     </div>
   } @else if (summary()) {
-
     <div class="bienvenida-card">
       <div class="bienvenida-left">
-        <div class="bienvenida-avatar">{{ summary()!.userName.substring(0,1) }}</div>
+        <div class="bienvenida-avatar">
+          {{ summary()!.userName.substring(0, 1) }}
+        </div>
         <div>
-          <h1>¡Hola, {{ summary()!.userName.split(' ')[0] }}!</h1>
+          <h1>¡Hola, {{ summary()!.userName.split(" ")[0] }}!</h1>
           <p class="bienvenida-fecha">{{ fechaActual() }}</p>
         </div>
       </div>
@@ -56,24 +57,31 @@
       <div class="kpi-card naranja">
         <div class="kpi-icon"><i class="fa-solid fa-plane-departure"></i></div>
         <div class="kpi-info">
-          <span class="kpi-valor">{{ summary()!.upcomingVacations.length }}</span>
-          <span class="kpi-label">Próximas vacaciones</span>
+          <span class="kpi-valor">{{ totalDiasProximos() }}</span>
+          <span class="kpi-label">Días próximos</span>
         </div>
       </div>
     </div>
 
     <div class="main-grid">
-
       <div class="card fichaje-card">
         <div class="card-header">
           <i class="fa-solid fa-fingerprint"></i>
           <h2>Fichaje rápido</h2>
         </div>
         <div class="fichaje-botones">
-          <button class="fichaje-btn entrada" (click)="ficharEntrada()" [disabled]="fichando()">
+          <button
+            class="fichaje-btn entrada"
+            (click)="ficharEntrada()"
+            [disabled]="fichando()"
+          >
             <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
           </button>
-          <button class="fichaje-btn salida" (click)="ficharSalida()" [disabled]="fichando()">
+          <button
+            class="fichaje-btn salida"
+            (click)="ficharSalida()"
+            [disabled]="fichando()"
+          >
             <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
           </button>
         </div>
@@ -98,15 +106,22 @@
         </div>
         @if (summary()!.upcomingVacations.length > 0) {
           <div class="proximas-lista">
-            @for (vac of summary()!.upcomingVacations.slice(0,3); track vac.dates) {
+            @for (
+              vac of summary()!.upcomingVacations.slice(0, 3);
+              track vac.fechaInicio
+            ) {
               <div class="proxima-item">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span class="proxima-fechas">
-                  {{ vac.fechaInicio && vac.fechaFin
+                  {{
+                    vac.fechaInicio && vac.fechaFin
                       ? formatearFechaVacacion(vac.fechaInicio, vac.fechaFin)
-                      : vac.dates }}
+                      : vac.dates
+                  }}
                 </span>
-                <span class="proxima-badge" [class]="getBadgeClass(vac.status)">{{ vac.status }}</span>
+                <span class="proxima-badge" [class]="getBadgeClass(vac.status)">
+                  {{ vac.status }}
+                </span>
               </div>
             }
           </div>
@@ -124,16 +139,28 @@
           <h2>Acciones rápidas</h2>
         </div>
         <div class="acciones-lista">
-          <a routerLink="/vacaciones" [queryParams]="{nuevo: 'true'}" class="accion-item">
-            <div class="accion-icon verde"><i class="fa-solid fa-umbrella-beach"></i></div>
+          <a
+            routerLink="/vacaciones"
+            [queryParams]="{ nuevo: 'true' }"
+            class="accion-item"
+          >
+            <div class="accion-icon verde">
+              <i class="fa-solid fa-umbrella-beach"></i>
+            </div>
             <div class="accion-info">
               <span class="accion-titulo">Solicitar vacaciones</span>
               <span class="accion-desc">Pide tus días libres</span>
             </div>
             <i class="fa-solid fa-chevron-right accion-arrow"></i>
           </a>
-          <a routerLink="/ausencias" [queryParams]="{nuevo: 'true'}" class="accion-item">
-            <div class="accion-icon naranja"><i class="fa-solid fa-calendar-xmark"></i></div>
+          <a
+            routerLink="/ausencias"
+            [queryParams]="{ nuevo: 'true' }"
+            class="accion-item"
+          >
+            <div class="accion-icon naranja">
+              <i class="fa-solid fa-calendar-xmark"></i>
+            </div>
             <div class="accion-info">
               <span class="accion-titulo">Solicitar ausencia</span>
               <span class="accion-desc">Permiso, baja médica...</span>
@@ -141,7 +168,9 @@
             <i class="fa-solid fa-chevron-right accion-arrow"></i>
           </a>
           <a routerLink="/asistencia" class="accion-item">
-            <div class="accion-icon azul"><i class="fa-solid fa-clock"></i></div>
+            <div class="accion-icon azul">
+              <i class="fa-solid fa-clock"></i>
+            </div>
             <div class="accion-info">
               <span class="accion-titulo">Ver asistencia</span>
               <span class="accion-desc">Historial de fichajes</span>
@@ -149,7 +178,9 @@
             <i class="fa-solid fa-chevron-right accion-arrow"></i>
           </a>
           <a routerLink="/chat" class="accion-item">
-            <div class="accion-icon morado"><i class="fa-solid fa-comments"></i></div>
+            <div class="accion-icon morado">
+              <i class="fa-solid fa-comments"></i>
+            </div>
             <div class="accion-info">
               <span class="accion-titulo">Abrir chat</span>
               <span class="accion-desc">Mensajes internos</span>
@@ -158,12 +189,10 @@
           </a>
         </div>
       </div>
-
     </div>
 
     <div class="tablon-row">
       <app-tablon-anuncios></app-tablon-anuncios>
     </div>
-
   }
 </div>

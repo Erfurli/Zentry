@@ -73,15 +73,20 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   });
 
   readonly solicitudesDelMes = computed(() => {
-    const mes       = this.mesActual();
-    const primerDia = new Date(mes.getFullYear(), mes.getMonth(), 1);
-    const ultimoDia = new Date(mes.getFullYear(), mes.getMonth() + 1, 0, 23, 59, 59);
-    return this.solicitudesFiltradas().filter(s => {
-      const inicio = new Date(s.fechaInicio);
-      const fin    = new Date(s.fechaFin);
-      return inicio <= ultimoDia && fin >= primerDia;
-    });
+  const mesSeleccionado = this.mesActual();
+  const anioFiltro = mesSeleccionado.getFullYear();
+  const mesFiltro = mesSeleccionado.getMonth();
+
+  return this.solicitudesFiltradas().filter(s => {
+    const inicio = new Date(s.fechaInicio + 'T00:00:00');
+    const fin = new Date(s.fechaFin + 'T00:00:00');
+
+    const primerDiaMes = new Date(anioFiltro, mesFiltro, 1, 0, 0, 0);
+    const ultimoDiaMes = new Date(anioFiltro, mesFiltro + 1, 0, 23, 59, 59);
+
+    return inicio <= ultimoDiaMes && fin >= primerDiaMes;
   });
+});
 
   readonly totalAprobadas       = computed(() => this.solicitudes().filter(s => s.estado === 'Aprobada').length);
   readonly totalPendientes      = computed(() => this.solicitudes().filter(s => s.estado === 'Pendiente').length);
@@ -139,15 +144,20 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   }
 
   cargarVacaciones(): void {
-    const peticion = this.isEmpleado
-      ? this.vacacionesService.getMisVacaciones()
-      : this.vacacionesService.getVacacionesVista();
+  const peticion = this.isEmpleado
+    ? this.vacacionesService.getMisVacaciones()
+    : this.vacacionesService.getVacacionesVista();
 
-    peticion.subscribe({
-      next: data => this.solicitudes.set(data),
-      error: err  => console.error('Error cargando vacaciones', err)
-    });
-  }
+  peticion.subscribe({
+    next: data => {
+      this.solicitudes.set(data);
+      setTimeout(() => {
+        if (this.calendar) this.calendar.updateTodaysDate();
+      }, 0);
+    },
+    error: err => console.error('Error cargando vacaciones', err)
+  });
+}
 
   getNombreMes(): string {
     const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
@@ -222,18 +232,49 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   }
 
   onDragStarted(solicitud: VacacionesVista): void {
-    this.solicitudArrastrada.set(solicitud);
+  this.solicitudArrastrada.set(solicitud);
+}
+
+onDropped(event: CdkDragDrop<VacacionesVista[]>): void {
+  const drop = event.dropPoint;
+  const elems = document.elementsFromPoint(drop.x, drop.y);
+  const celda = elems.find(el => el.classList.contains('mat-calendar-body-cell'));
+
+  if (celda) {
+    const label = celda.getAttribute('aria-label');
+    if (label) {
+      const fechaMatch = celda.querySelector('.mat-calendar-body-cell-content')?.textContent?.trim();
+      if (fechaMatch) {
+        const mes  = this.mesActual();
+        const dia  = parseInt(fechaMatch, 10);
+        const fecha = new Date(mes.getFullYear(), mes.getMonth(), dia);
+        const iso   = fecha.toISOString().split('T')[0];
+
+        const s = this.solicitudArrastrada();
+        if (!s) return;
+
+        const duracion = new Date(s.fechaFin).getTime() - new Date(s.fechaInicio).getTime();
+        const finDate  = new Date(fecha.getTime() + duracion);
+        const isoFin   = finDate.toISOString().split('T')[0];
+
+        this.nuevaFechaInicio  = iso;
+        this.nuevaFechaFin     = isoFin;
+        this.mensajeSugerencia = '';
+        this.errorSugerencia   = '';
+        this.modalSugerenciaAbierto.set(true);
+        return;
+      }
+    }
   }
 
-  onDropped(event: CdkDragDrop<VacacionesVista[]>): void {
-    const s = this.solicitudArrastrada();
-    if (!s) return;
-    this.nuevaFechaInicio  = s.fechaInicio;
-    this.nuevaFechaFin     = s.fechaFin;
-    this.mensajeSugerencia = '';
-    this.errorSugerencia   = '';
-    this.modalSugerenciaAbierto.set(true);
-  }
+  const s = this.solicitudArrastrada();
+  if (!s) return;
+  this.nuevaFechaInicio  = s.fechaInicio;
+  this.nuevaFechaFin     = s.fechaFin;
+  this.mensajeSugerencia = '';
+  this.errorSugerencia   = '';
+  this.modalSugerenciaAbierto.set(true);
+}
 
   cerrarModalSugerencia(): void {
     this.modalSugerenciaAbierto.set(false);
@@ -279,8 +320,8 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
   dateClass: MatCalendarCellClassFunction<Date> = (date) => {
     if (this.festivosService.esFestivo(date, this.festivos())) return 'dia-festivo';
     for (const s of this.solicitudesFiltradas()) {
-      const inicio = new Date(s.fechaInicio);
-      const fin    = new Date(s.fechaFin);
+      const inicio = new Date(s.fechaInicio + 'T00:00:00');
+const fin = new Date(s.fechaFin + 'T00:00:00');
       inicio.setHours(0, 0, 0, 0);
       fin.setHours(23, 59, 59, 999);
       if (date >= inicio && date <= fin) {
@@ -291,4 +332,6 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
     }
     return '';
   };
+
+  readonly listaCalendarioVacia: VacacionesVista[] = [];
 }

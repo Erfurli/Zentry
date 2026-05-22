@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DashboardService, DashboardSummary } from '../../../services/dashboard.service';
@@ -23,6 +23,12 @@ export class HomeDashboardComponent implements OnInit {
   readonly mensajeFichaje = signal('');
   readonly horaActual     = signal(this.getHora());
   readonly fechaActual    = signal(this.getFecha());
+
+  readonly totalDiasProximos = computed(() => {
+    const s = this.summary();
+    if (!s || !s.upcomingVacations) return 0;
+    return s.upcomingVacations.reduce((acc, vac) => acc + (vac.dias || 0), 0);
+  });
 
   ngOnInit(): void {
     this.dashboardService.getHomeSummary().subscribe({

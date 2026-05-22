@@ -10,6 +10,7 @@ export interface DashboardSummary {
     status: string;
     fechaInicio: string;
     fechaFin: string;
+    dias: number;
   }[];
   todayHours: number;
   userName: string;

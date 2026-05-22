@@ -24,7 +24,8 @@ public class HomeDashboardResponse {
     public static class VacationItem {
         private String dates;
         private String status;
-        private String fechaInicio; // añadir
-        private String fechaFin;    // añadir
+        private String fechaInicio;
+        private String fechaFin;
+        private Integer dias;
     }
 }
