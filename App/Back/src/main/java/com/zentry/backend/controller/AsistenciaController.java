@@ -302,7 +302,8 @@ public class AsistenciaController {
     @PatchMapping("/{id}/corregir")
     public ResponseEntity<Map<String, Object>> corregirAsistencia(
             @PathVariable String id,
-            @RequestBody Map<String, String> cambios) {
+            @RequestBody Map<String, String> cambios,
+            Authentication auth) {
 
         Asistencia asistencia = asistenciaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
@@ -323,6 +324,20 @@ public class AsistenciaController {
         }
 
         asistenciaRepository.save(asistencia);
+
+        final String empleadoId = asistencia.getEmpleadoId();
+        usuarioRepository.findAll().stream()
+                .filter(u -> empleadoId.equals(u.getEmpleadoId()))
+                .findFirst()
+                .ifPresent(u -> notificacionService.crear(
+                        u.getId(),
+                        "Registro de asistencia corregido",
+                        "Un administrador ha corregido tu registro del " + asistencia.getFecha()
+                                + ". Entrada: " + (asistencia.getEntrada() != null ? asistencia.getEntrada() : "–")
+                                + " | Salida: " + (asistencia.getSalida() != null ? asistencia.getSalida() : "–"),
+                        "fichaje",
+                        "/asistencia"
+                ));
 
         return ResponseEntity.ok(Map.of("mensaje", "Registro corregido correctamente"));
     }

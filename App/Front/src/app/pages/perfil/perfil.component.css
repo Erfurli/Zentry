@@ -281,6 +281,94 @@
 
 .cal-dia:hover { filter: brightness(0.95); }
 
+.perfil-hero-acciones {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.btn-chat-perfil {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--zentry-primary);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-chat-perfil:hover:not(:disabled) { opacity: 0.88; }
+.btn-chat-perfil:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.dato-privado {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.privado-aviso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+  gap: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.privado-aviso i { font-size: 2rem; opacity: 0.5; }
+.privado-aviso p { margin: 0; font-size: 0.9rem; }
+
+body.tema-oscuro .perfil-hero,
+body.tema-oscuro .perfil-card {
+  background: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .perfil-hero-info h1,
+body.tema-oscuro .card-header h2,
+body.tema-oscuro .dato-valor,
+body.tema-oscuro .cal-mes-label,
+body.tema-oscuro .vac-num {
+  color: #f1f5f9 !important;
+}
+
+body.tema-oscuro .dato-label,
+body.tema-oscuro .perfil-depto,
+body.tema-oscuro .vac-label,
+body.tema-oscuro .leyenda-item,
+body.tema-oscuro .cal-head,
+body.tema-oscuro .cal-dia {
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .dato-item { border-color: #334155 !important; }
+
+body.tema-oscuro .dato-privado,
+body.tema-oscuro .privado-aviso { background: #0f172a !important; }
+
+body.tema-oscuro .vac-item { background: #0f172a !important; }
+body.tema-oscuro .vac-fechas { color: #cbd5e1 !important; }
+
+body.tema-oscuro .cal-nav-btn {
+  background: #334155 !important;
+  color: #94a3b8 !important;
+}
+
+body.tema-oscuro .empty-msg { color: #64748b !important; }
+
 @media (max-width: 768px) {
   .perfil-grid { grid-template-columns: 1fr; }
   .perfil-hero { flex-direction: column; text-align: center; }

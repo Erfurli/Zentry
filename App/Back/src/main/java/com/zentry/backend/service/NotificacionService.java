@@ -44,17 +44,24 @@ public class NotificacionService {
      * @param ruta ruta interna de redireccionamiento de la aplicación al pulsar el aviso
      */
     public void crear(String usuarioDestinatarioId, String titulo, String mensaje,
-                      String tipo, String ruta) {
+                       String tipo, String ruta) {
 
         PreferenciaNotificacion prefs = preferenciasRepository
                 .findByUsuarioId(usuarioDestinatarioId).orElse(null);
 
         boolean inApp = true;
-        boolean email = false;
+        boolean email = true;
 
         if (prefs != null && prefs.getPreferencias() != null) {
+            String tipoNormalizado = normalizarTipo(tipo);
+
             PreferenciaNotificacion.TipoPreferencia tipoPref =
-                    prefs.getPreferencias().get(tipo);
+                    prefs.getPreferencias().get(tipoNormalizado);
+
+            if (tipoPref == null) {
+                tipoPref = prefs.getPreferencias().get(tipo);
+            }
+
             if (tipoPref != null) {
                 inApp = tipoPref.isInApp();
                 email = tipoPref.isEmail();
@@ -79,6 +86,15 @@ public class NotificacionService {
         }
     }
 
+    private String normalizarTipo(String tipo) {
+        return switch (tipo) {
+            case "entrada", "salida", "incidencia", "fichaje" -> "fichaje";
+            case "ausencia", "ausencias"  -> "ausencias";
+            case "vacaciones"-> "vacaciones";
+            case "chat"      -> "chat";
+            default          -> tipo;
+        };
+    }
     /**
      * Envia una alerta interna a todos los usuarios con rol de administrador en el sistema.
      * 
@@ -102,12 +118,14 @@ public class NotificacionService {
                 .orElse(null);
         if (empleado == null || empleado.getEmail() == null) return;
 
-        switch (tipo) {
+        String tipoNorm = normalizarTipo(tipo);
+
+        switch (tipoNorm) {
             case "vacaciones" -> emailService.enviarNotificacionVacaciones(
                     empleado.getEmail(), empleado.getNombre(), titulo, mensaje);
-            case "ausencia"   -> emailService.enviarNotificacionAusencia(
+            case "ausencias"  -> emailService.enviarNotificacionAusencia(
                     empleado.getEmail(), empleado.getNombre(), titulo, mensaje);
-            case "entrada", "salida", "incidencia" -> emailService.enviarNotificacionFichaje(
+            case "fichaje"    -> emailService.enviarNotificacionFichaje(
                     empleado.getEmail(), empleado.getNombre(), titulo, mensaje);
             case "chat"       -> emailService.enviarNotificacionChat(
                     empleado.getEmail(), empleado.getNombre(), titulo, mensaje);

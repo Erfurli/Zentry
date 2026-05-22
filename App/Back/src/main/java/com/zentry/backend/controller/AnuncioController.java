@@ -6,6 +6,7 @@ import com.zentry.backend.model.Usuario;
 import com.zentry.backend.repository.AnuncioRepository;
 import com.zentry.backend.repository.UsuarioRepository;
 import com.zentry.backend.repository.EmpleadoRepository;
+import com.zentry.backend.service.NotificacionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class AnuncioController {
     private final AnuncioRepository anuncioRepository;
     private final UsuarioRepository usuarioRepository;
     private final EmpleadoRepository empleadoRepository;
+    private final NotificacionService notificacionService ;
 
     /**
      * Obtiene todos los anuncios activos que no han expirado.
@@ -80,7 +82,21 @@ public class AnuncioController {
         anuncio.setActivo(true);
         anuncio.setVistoPor(new ArrayList<>());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(anuncioRepository.save(anuncio));
+        Anuncio guardado = anuncioRepository.save(anuncio);
+
+        usuarioRepository.findAll().forEach(u ->
+                notificacionService.crear(
+                        u.getId(),
+                        "Nuevo anuncio: " + anuncio.getTitulo(),
+                        anuncio.getContenido().length() > 100
+                                ? anuncio.getContenido().substring(0, 100) + "..."
+                                : anuncio.getContenido(),
+                        "anuncios",
+                        "/anuncios"
+                )
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(guardado);
     }
 
     /**

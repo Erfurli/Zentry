@@ -151,4 +151,14 @@ public class UsuarioController {
         usuarioRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/usuarios/por-empleado/{empleadoId}")
+    public ResponseEntity<Map<String, String>> getUsuarioPorEmpleado(@PathVariable String empleadoId) {
+        return usuarioRepository.findAll().stream()
+                .filter(u -> empleadoId.equals(u.getEmpleadoId()))
+                .findFirst()
+                .map(u -> ResponseEntity.ok(Map.of("id", u.getId(), "username", u.getUsername())))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

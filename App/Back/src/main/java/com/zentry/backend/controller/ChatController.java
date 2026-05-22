@@ -1,17 +1,22 @@
 package com.zentry.backend.controller;
 
 import com.zentry.backend.dto.*;
+import com.zentry.backend.entity.Mensaje;
 import com.zentry.backend.repository.EmpleadoRepository;
+import com.zentry.backend.repository.MensajeRepository;
 import com.zentry.backend.repository.UsuarioRepository;
 import com.zentry.backend.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +25,7 @@ public class ChatController {
     private final ChatService chatService;
     private final UsuarioRepository usuarioRepository;
     private final EmpleadoRepository empleadoRepository;
+    private final MensajeRepository mensajeRepository;
 
     /**
      * Resuelve el ID interno del usuario basándose en su Principal de Spring Security.
@@ -138,5 +144,37 @@ public class ChatController {
     @MessageMapping("/chat.reaccion")
     public void toggleReaccion(ReaccionRequest req, Principal principal) {
         chatService.toggleReaccion(req, getUsuarioId(principal));
+    }
+
+    @MessageMapping("/chat.editar")
+    public void editarMensaje(@Payload Map<String, String> payload, Principal principal) {
+        String mensajeId = payload.get("mensajeId");
+        String contenido = payload.get("contenido");
+        String uid = getUsuarioId(principal);
+
+        mensajeRepository.findById(mensajeId).ifPresent(m -> {
+            if (!m.getAutorId().equals(uid)) return;
+            m.setContenido(contenido);
+            m.setEditadoEn(LocalDateTime.now());
+            Mensaje guardado = mensajeRepository.save(m);
+            MensajeDTO dto = chatService.toMensajeDTOPublico(guardado);
+            //messagingTemplate.convertAndSend("/topic/conversacion/" + m.getConversacionId(), dto);
+        });
+    }
+
+    @MessageMapping("/chat.fijar")
+    public void fijarMensaje(@Payload Map<String, String> payload, Principal principal) {
+        String mensajeId = payload.get("mensajeId");
+        mensajeRepository.findById(mensajeId).ifPresent(m -> {
+            m.setFijado(!m.isFijado());
+            Mensaje guardado = mensajeRepository.save(m);
+            MensajeDTO dto = chatService.toMensajeDTOPublico(guardado);
+            //messagingTemplate.convertAndSend("/topic/conversacion/" + m.getConversacionId(), dto);
+        });
+    }
+
+    @GetMapping("/api/chat/conversaciones/{id}/fijados")
+    public ResponseEntity<List<MensajeDTO>> getFijados(@PathVariable String id) {
+        return ResponseEntity.ok(chatService.getMensajesFijados(id));
     }
 }

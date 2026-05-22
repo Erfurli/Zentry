@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "mensajes")
 @Data
@@ -28,4 +30,8 @@ public class Mensaje {
     private String respuestaAAutorId;
     private LocalDateTime enviadoEn;
     private boolean eliminado = false;
+    private LocalDateTime editadoEn;
+    private boolean fijado = false;
+    private List<String> menciones = new ArrayList<>();
+
 }

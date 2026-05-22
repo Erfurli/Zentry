@@ -26,7 +26,9 @@ export interface MensajeDTO {
   respuestaAAutor?: string;
   reacciones: Record<string, string[]>;
   enviadoEn: string;
-  autorFoto?: string;
+  editadoEn?: string;
+  fijado?: boolean;
+  menciones?: string[];
 }
 
 export interface ConversacionDTO {
@@ -95,16 +97,16 @@ export class ChatService {
   }
 
   enviarMensaje(
-    conversacionId: string,
-    contenido: string,
-    respuestaAId?: string,
-  ): void {
-    this.stompClient?.publish({
-      destination: '/app/chat.enviar',
-      body: JSON.stringify({ conversacionId, contenido, respuestaAId }),
-    });
-
-  }
+  conversacionId: string,
+  contenido: string,
+  respuestaAId?: string,
+  menciones?: string[]
+): void {
+  this.stompClient?.publish({
+    destination: '/app/chat.enviar',
+    body: JSON.stringify({ conversacionId, contenido, respuestaAId, menciones })
+  });
+}
 
   incrementarNoLeidos(conversacionId: string): void {
   this.conversaciones.update(list =>
@@ -164,4 +166,22 @@ export class ChatService {
   resetNoLeidasGlobal(): void {
     this.noLeidasGlobal.set(0);
   }
+
+  editarMensaje(mensajeId: string, contenido: string): void {
+  this.stompClient?.publish({
+    destination: '/app/chat.editar',
+    body: JSON.stringify({ mensajeId, contenido })
+  });
+}
+
+fijarMensaje(mensajeId: string): void {
+  this.stompClient?.publish({
+    destination: '/app/chat.fijar',
+    body: JSON.stringify({ mensajeId })
+  });
+}
+
+getMensajesFijados(conversacionId: string) {
+  return this.http.get<MensajeDTO[]>(`${this.API}/chat/conversaciones/${conversacionId}/fijados`);
+}
 }

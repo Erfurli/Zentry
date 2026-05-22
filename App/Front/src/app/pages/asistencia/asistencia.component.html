@@ -317,6 +317,81 @@
   }
 </div>
 
+@if (modalIncidenciaAbierto()) {
+  <div class="modal-backdrop" (click)="modalIncidenciaAbierto.set(false)">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon" style="background:#f59e0b">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </div>
+        <div class="modal-header-copy">
+          <h2>Corregir incidencia</h2>
+          <p>Modifica los datos de asistencia del empleado</p>
+        </div>
+        <button class="close-btn" (click)="modalIncidenciaAbierto.set(false)">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        @if (!incidenciaAsistenciaId()) {
+          <div class="alert-error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Este empleado no tiene registro de asistencia para el día seleccionado.
+          </div>
+        }
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label><i class="fa-solid fa-calendar"></i> Fecha</label>
+            <input type="date" class="form-input" [value]="incidenciaFecha()" disabled />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada</label>
+            <input type="time" class="form-input" [value]="incidenciaEntrada()"
+              (change)="incidenciaEntrada.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-mug-hot"></i> Inicio descanso</label>
+            <input type="time" class="form-input" [value]="incidenciaInicioDesc()"
+              (change)="incidenciaInicioDesc.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-rotate-left"></i> Fin descanso</label>
+            <input type="time" class="form-input" [value]="incidenciaFinDesc()"
+              (change)="incidenciaFinDesc.set($any($event.target).value)" />
+          </div>
+          <div class="form-field">
+            <label><i class="fa-solid fa-arrow-right-from-bracket"></i> Salida</label>
+            <input type="time" class="form-input" [value]="incidenciaSalida()"
+              (change)="incidenciaSalida.set($any($event.target).value)" />
+          </div>
+        </div>
+
+        @if (mensajeIncidencia()) {
+          <div class="alert-success">
+            <i class="fa-solid fa-check"></i> {{ mensajeIncidencia() }}
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button class="secondary-btn" (click)="modalIncidenciaAbierto.set(false)">
+          Cancelar
+        </button>
+        <button class="primary-btn"
+          [disabled]="guardandoIncidencia() || !incidenciaAsistenciaId()"
+          (click)="guardarIncidencia()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ guardandoIncidencia() ? 'Guardando...' : 'Guardar cambios' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
 @if (modalFichajeAbierto()) {
   <div class="modal-backdrop" (click)="modalFichajeAbierto.set(false)">
     <div class="modal-panel" (click)="$event.stopPropagation()">

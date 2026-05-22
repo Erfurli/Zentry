@@ -1,34 +1,62 @@
 <div class="perfil-page">
-
   <div class="perfil-hero">
     <div class="perfil-avatar-wrapper">
       <div class="perfil-avatar">
         @if (fotoPreview()) {
-          <img [src]="fotoPreview()!" alt="Foto de perfil" class="perfil-foto" />
+          <img
+            [src]="fotoPreview()!"
+            alt="Foto de perfil"
+            class="perfil-foto"
+          />
         } @else {
           <span class="perfil-iniciales">{{ getIniciales() }}</span>
         }
         @if (cargandoFoto()) {
-          <div class="foto-loading"><i class="fa-solid fa-spinner fa-spin"></i></div>
+          <div class="foto-loading">
+            <i class="fa-solid fa-spinner fa-spin"></i>
+          </div>
         }
       </div>
-      <label class="foto-btn" title="Cambiar foto">
-        <i class="fa-solid fa-camera"></i>
-        <input type="file" accept="image/*" (change)="onFotoSeleccionada($event)" hidden />
-      </label>
+      @if (esPropioP()) {
+        <label class="foto-btn" title="Cambiar foto">
+          <i class="fa-solid fa-camera"></i>
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onFotoSeleccionada($event)"
+            hidden
+          />
+        </label>
+      }
     </div>
 
     <div class="perfil-hero-info">
-      <h1>{{ empleado()?.nombre ?? 'Mi perfil' }}</h1>
+      <h1>{{ empleado()?.nombre ?? "Perfil" }}</h1>
       <span class="perfil-rol-badge">{{ empleado()?.rolEmpresa }}</span>
       <span class="perfil-depto">
-        <i class="fa-solid fa-building"></i> {{ empleado()?.departamento ?? '—' }}
+        <i class="fa-solid fa-building"></i>
+        {{ empleado()?.departamento ?? "—" }}
       </span>
+    </div>
+
+    <div class="perfil-hero-acciones">
+      @if (!esPropioP()) {
+        <button
+          class="btn-chat-perfil"
+          (click)="abrirChat()"
+          [disabled]="abriendo()"
+        >
+          @if (abriendo()) {
+            <i class="fa-solid fa-spinner fa-spin"></i> Abriendo...
+          } @else {
+            <i class="fa-solid fa-comment"></i> Enviar mensaje
+          }
+        </button>
+      }
     </div>
   </div>
 
   <div class="perfil-grid">
-
     <div class="perfil-card">
       <div class="card-header">
         <i class="fa-solid fa-id-card"></i>
@@ -36,114 +64,152 @@
       </div>
       <div class="datos-lista">
         <div class="dato-item">
-          <span class="dato-label">Email</span>
-          <span class="dato-valor">{{ empleado()?.email ?? '—' }}</span>
-        </div>
-        <div class="dato-item">
-          <span class="dato-label">Teléfono</span>
-          <span class="dato-valor">{{ empleado()?.telefono ?? '—' }}</span>
-        </div>
-        <div class="dato-item">
-          <span class="dato-label">DNI</span>
-          <span class="dato-valor">{{ empleado()?.dni ?? '—' }}</span>
-        </div>
-        <div class="dato-item">
-          <span class="dato-label">Fecha de alta</span>
-          <span class="dato-valor">{{ empleado()?.fechaAlta ?? '—' }}</span>
-        </div>
-        <div class="dato-item">
           <span class="dato-label">Departamento</span>
-          <span class="dato-valor">{{ empleado()?.departamento ?? '—' }}</span>
+          <span class="dato-valor">{{ empleado()?.departamento ?? "—" }}</span>
         </div>
         <div class="dato-item">
           <span class="dato-label">Puesto</span>
-          <span class="dato-valor">{{ empleado()?.rolEmpresa ?? '—' }}</span>
+          <span class="dato-valor">{{
+            empleado()?.puesto ?? empleado()?.rolEmpresa ?? "—"
+          }}</span>
         </div>
-      </div>
-    </div>
+        <div class="dato-item">
+          <span class="dato-label">Fecha de alta</span>
+          <span class="dato-valor">{{ empleado()?.fechaAlta ?? "—" }}</span>
+        </div>
 
-    <div class="perfil-card">
-      <div class="card-header">
-        <i class="fa-solid fa-umbrella-beach"></i>
-        <h2>Resumen vacaciones</h2>
-      </div>
-      <div class="vac-stats">
-        <div class="vac-stat aprobada">
-          <span class="vac-num">{{ diasAprobados() }}</span>
-          <span class="vac-label">Días aprobados</span>
-        </div>
-        <div class="vac-stat pendiente">
-          <span class="vac-num">{{ diasPendientes() }}</span>
-          <span class="vac-label">Días pendientes</span>
-        </div>
-        <div class="vac-stat disponible">
-          <span class="vac-num">{{ 23 - diasAprobados() }}</span>
-          <span class="vac-label">Días disponibles</span>
-        </div>
-      </div>
-
-      <div class="vac-lista">
-        @for (v of vacaciones(); track v.id) {
-          <div class="vac-item" [class]="v.estado.toLowerCase()">
-            <div class="vac-fechas">
-              <span>{{ v.fechaInicio }}</span>
-              <i class="fa-solid fa-arrow-right"></i>
-              <span>{{ v.fechaFin }}</span>
-            </div>
-            <div class="vac-meta">
-              <span class="vac-dias">{{ v.dias }} días</span>
-              <span class="vac-badge" [class]="v.estado.toLowerCase()">{{ v.estado }}</span>
-            </div>
+        @if (puedeVerInfo()) {
+          <div class="dato-item">
+            <span class="dato-label">Email</span>
+            <span class="dato-valor">{{ empleado()?.email ?? "—" }}</span>
           </div>
-        }
-        @if (vacaciones().length === 0) {
-          <p class="empty-msg">No tienes solicitudes de vacaciones.</p>
-        }
-      </div>
-    </div>
-
-    <div class="perfil-card perfil-card-full">
-      <div class="card-header">
-        <i class="fa-solid fa-calendar-days"></i>
-        <h2>Mi calendario</h2>
-        <div class="cal-nav">
-          <button class="cal-nav-btn" (click)="mesAnterior()">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
-          <span class="cal-mes-label">{{ getNombreMes() }}</span>
-          <button class="cal-nav-btn" (click)="mesSiguiente()">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="cal-leyenda">
-        <span class="leyenda-item"><span class="leyenda-dot aprobada"></span>Vacaciones aprobadas</span>
-        <span class="leyenda-item"><span class="leyenda-dot pendiente"></span>Pendientes</span>
-        <span class="leyenda-item"><span class="leyenda-dot festivo"></span>Festivo</span>
-        <span class="leyenda-item"><span class="leyenda-dot hoy"></span>Hoy</span>
-      </div>
-
-      <div class="cal-grid">
-        <div class="cal-head">L</div>
-        <div class="cal-head">M</div>
-        <div class="cal-head">X</div>
-        <div class="cal-head">J</div>
-        <div class="cal-head">V</div>
-        <div class="cal-head finde">S</div>
-        <div class="cal-head finde">D</div>
-
-        @for (i of [].constructor(primerDiaSemana()); track $index) {
-          <div class="cal-dia vacio"></div>
-        }
-
-        @for (dia of diasEnMes(); track dia.getDate()) {
-          <div class="cal-dia {{ getClaseDia(dia) }}" [title]="getTooltipDia(dia)">
-            <span class="cal-num">{{ dia.getDate() }}</span>
+          <div class="dato-item">
+            <span class="dato-label">Teléfono</span>
+            <span class="dato-valor">{{ empleado()?.telefono ?? "—" }}</span>
+          </div>
+          <div class="dato-item">
+            <span class="dato-label">DNI</span>
+            <span class="dato-valor">{{ empleado()?.dni ?? "—" }}</span>
+          </div>
+        } @else {
+          <div class="dato-privado">
+            <i class="fa-solid fa-lock"></i>
+            <span>Información privada</span>
           </div>
         }
       </div>
     </div>
 
+    @if (puedeVerInfo()) {
+      <div class="perfil-card">
+        <div class="card-header">
+          <i class="fa-solid fa-umbrella-beach"></i>
+          <h2>Resumen vacaciones</h2>
+        </div>
+        <div class="vac-stats">
+          <div class="vac-stat aprobada">
+            <span class="vac-num">{{ diasAprobados() }}</span>
+            <span class="vac-label">Días aprobados</span>
+          </div>
+          <div class="vac-stat pendiente">
+            <span class="vac-num">{{ diasPendientes() }}</span>
+            <span class="vac-label">Días pendientes</span>
+          </div>
+          <div class="vac-stat disponible">
+            <span class="vac-num">{{ 22 - diasAprobados() }}</span>
+            <span class="vac-label">Días disponibles</span>
+          </div>
+        </div>
+
+        <div class="vac-lista">
+          @for (v of vacaciones(); track v.id) {
+            <div class="vac-item">
+              <div class="vac-fechas">
+                <span>{{ v.fechaInicio }}</span>
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>{{ v.fechaFin }}</span>
+              </div>
+              <div class="vac-meta">
+                <span class="vac-dias">{{ v.dias }} días</span>
+                <span class="vac-badge" [class]="v.estado.toLowerCase()">{{
+                  v.estado
+                }}</span>
+              </div>
+            </div>
+          }
+          @if (vacaciones().length === 0) {
+            <p class="empty-msg">No hay solicitudes de vacaciones.</p>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="perfil-card perfil-card-privada">
+        <div class="card-header">
+          <i class="fa-solid fa-umbrella-beach"></i>
+          <h2>Vacaciones</h2>
+        </div>
+        <div class="privado-aviso">
+          <i class="fa-solid fa-lock"></i>
+          <p>Esta información es privada</p>
+        </div>
+      </div>
+    }
+
+    @if (puedeVerInfo()) {
+      <div class="perfil-card perfil-card-full">
+        <div class="card-header">
+          <i class="fa-solid fa-calendar-days"></i>
+          <h2>Calendario</h2>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" (click)="mesAnterior()">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <span class="cal-mes-label">{{ getNombreMes() }}</span>
+            <button class="cal-nav-btn" (click)="mesSiguiente()">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="cal-leyenda">
+          <span class="leyenda-item"
+            ><span class="leyenda-dot aprobada"></span>Vacaciones
+            aprobadas</span
+          >
+          <span class="leyenda-item"
+            ><span class="leyenda-dot pendiente"></span>Pendientes</span
+          >
+          <span class="leyenda-item"
+            ><span class="leyenda-dot festivo"></span>Festivo</span
+          >
+          <span class="leyenda-item"
+            ><span class="leyenda-dot hoy"></span>Hoy</span
+          >
+        </div>
+
+        <div class="cal-grid">
+          <div class="cal-head">L</div>
+          <div class="cal-head">M</div>
+          <div class="cal-head">X</div>
+          <div class="cal-head">J</div>
+          <div class="cal-head">V</div>
+          <div class="cal-head finde">S</div>
+          <div class="cal-head finde">D</div>
+
+          @for (i of [].constructor(primerDiaSemana()); track $index) {
+            <div class="cal-dia vacio"></div>
+          }
+
+          @for (dia of diasEnMes(); track dia.getDate()) {
+            <div
+              class="cal-dia {{ getClaseDia(dia) }}"
+              [title]="getTooltipDia(dia)"
+            >
+              <span class="cal-num">{{ dia.getDate() }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
   </div>
 </div>

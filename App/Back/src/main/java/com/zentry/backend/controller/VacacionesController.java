@@ -9,6 +9,7 @@ import com.zentry.backend.repository.UsuarioRepository;
 import com.zentry.backend.repository.VacacionesRepository;
 import com.zentry.backend.service.EmailService;
 import com.zentry.backend.service.NotificacionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -289,6 +290,30 @@ public class VacacionesController {
                 "usados",     diasUsados,
                 "disponible", saldoDisponible
         ));
+    }
+
+
+    @GetMapping("/empleado/{empleadoId}")
+    public ResponseEntity<List<VacacionesVistaDTO>> getVacacionesDeEmpleado(
+            @PathVariable String empleadoId, Authentication auth) {
+        boolean isAdmin = auth.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+        if (!isAdmin) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        List<VacacionesVistaDTO> resultado = vacacionesRepository
+                .findByEmpleadoId(empleadoId).stream()
+                .map(v -> {
+                    Empleado emp = empleadoRepository.findById(v.getEmpleadoId()).orElse(null);
+                    return new VacacionesVistaDTO(
+                            v.getId(), v.getEmpleadoId(),
+                            emp != null ? emp.getNombre() : "—",
+                            emp != null ? emp.getDepartamento() : "—",
+                            v.getFechaInicio(), v.getFechaFin(),
+                            v.getDias(), v.getEstado(), "Vacaciones anuales"
+                    );
+                }).toList();
+
+        return ResponseEntity.ok(resultado);
     }
 
 }

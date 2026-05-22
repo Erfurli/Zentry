@@ -26,4 +26,8 @@ public class MensajeDTO {
 
     public void setAutorFoto(String s) {
     }
+
+    private LocalDateTime editadoEn;
+    private boolean fijado;
+    private List<String> menciones;
 }

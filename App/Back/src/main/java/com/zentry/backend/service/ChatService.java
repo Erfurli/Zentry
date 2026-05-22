@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import com.zentry.backend.service.NotificacionService;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -27,6 +28,7 @@ public class ChatService {
     private final ReaccionRepository reaccionRepo;
     private final UsuarioRepository usuarioRepo;
     private final EmpleadoRepository empleadoRepo;
+    private final NotificacionService notificacionService;
 
     /**
      * Obtiene el histórico de conversaciones de las cuales es partícipe un usuario.
@@ -81,6 +83,11 @@ public class ChatService {
 
         messagingTemplate.convertAndSend("/topic/conversacion/" + conv.getId(), dto);
 
+        String autorNombreFinal = resolverNombre(autorId);
+        String contenidoCorto = req.getContenido().length() > 80
+                ? req.getContenido().substring(0, 80) + "..."
+                : req.getContenido();
+
         conv.getParticipantes().stream()
                 .filter(uid -> !uid.equals(autorId))
                 .forEach(uid -> {
@@ -90,6 +97,13 @@ public class ChatService {
                                     "/queue/chat-notif",
                                     dto
                             )
+                    );
+                    notificacionService.crear(
+                            uid,
+                            "Nuevo mensaje de " + autorNombreFinal,
+                            contenidoCorto,
+                            "chat",
+                            "/chat"
                     );
                 });
 
@@ -193,6 +207,9 @@ public class ChatService {
         dto.setRespuestaAContenido(m.getRespuestaAContenido());
         dto.setRespuestaAAutor(respuestaAAutor);
         dto.setAutorFoto(resolverFoto(m.getAutorId()));
+        dto.setEditadoEn(m.getEditadoEn());
+        dto.setFijado(m.isFijado());
+        dto.setMenciones(m.getMenciones());
         return dto;
     }
 
@@ -277,4 +294,16 @@ public class ChatService {
         }
         return nombre.substring(0, Math.min(2, nombre.length())).toUpperCase();
     }
+    public List<MensajeDTO> getMensajesFijados(String conversacionId) {
+        return mensajeRepo.findByConversacionIdAndEliminadoFalseOrderByEnviadoEnAsc(conversacionId)
+                .stream()
+                .filter(Mensaje::isFijado)
+                .map(this::toMensajeDTO)
+                .toList();
+    }
+
+    public MensajeDTO toMensajeDTOPublico(Mensaje m) {
+        return toMensajeDTO(m);
+    }
+
 }

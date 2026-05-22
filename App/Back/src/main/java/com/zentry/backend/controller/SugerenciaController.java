@@ -4,8 +4,9 @@ import com.zentry.backend.model.SugerenciaVacaciones;
 import com.zentry.backend.model.Vacaciones;
 import com.zentry.backend.repository.SugerenciaRepository;
 import com.zentry.backend.repository.VacacionesRepository;
-import com.zentry.backend.service.EmailService;
 import com.zentry.backend.repository.EmpleadoRepository;
+import com.zentry.backend.repository.UsuarioRepository;
+import com.zentry.backend.service.NotificacionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,8 @@ public class SugerenciaController {
     private final SugerenciaRepository sugerenciaRepository;
     private final VacacionesRepository vacacionesRepository;
     private final EmpleadoRepository empleadoRepository;
-    private final EmailService emailService;
+    private final UsuarioRepository usuarioRepository;
+    private final NotificacionService notificacionService;
 
     @GetMapping("/empleado/{empleadoId}")
     public List<SugerenciaVacaciones> getByEmpleado(@PathVariable String empleadoId) {
@@ -41,9 +43,11 @@ public class SugerenciaController {
             @RequestBody Map<String, String> body,
             Authentication authentication) {
 
-        String vacacionesId = body.get("vacacionesId");
+        String vacacionesId     = body.get("vacacionesId");
         String nuevaFechaInicio = body.get("nuevaFechaInicio");
-        String nuevaFechaFin = body.get("nuevaFechaFin");
+        String nuevaFechaFin    = body.get("nuevaFechaFin");
+        String mensajeSugerencia = body.getOrDefault("mensaje",
+                "Se ha sugerido un cambio de fechas para tus vacaciones.");
 
         Vacaciones vacaciones = vacacionesRepository.findById(vacacionesId)
                 .orElseThrow(() -> new RuntimeException("Vacaciones no encontradas"));
@@ -62,19 +66,23 @@ public class SugerenciaController {
                 .nuevosDias((int) dias)
                 .estado("Pendiente")
                 .fechaCreacion(LocalDate.now().toString())
-                .mensaje(body.getOrDefault("mensaje", "Se ha sugerido un cambio de fechas para tus vacaciones."))
+                .mensaje(mensajeSugerencia)
                 .build();
 
         SugerenciaVacaciones guardada = sugerenciaRepository.save(sugerencia);
 
-        empleadoRepository.findById(vacaciones.getEmpleadoId()).ifPresent(emp -> {
-            emailService.enviarSugerenciaVacaciones(
-                    emp.getEmail(),
-                    emp.getNombre(),
-                    nuevaFechaInicio,
-                    nuevaFechaFin
-            );
-        });
+        usuarioRepository.findAll().stream()
+                .filter(u -> vacaciones.getEmpleadoId().equals(u.getEmpleadoId()))
+                .findFirst()
+                .ifPresent(u -> notificacionService.crear(
+                        u.getId(),
+                        "Sugerencia de cambio de vacaciones",
+                        "Se han sugerido nuevas fechas para tus vacaciones: "
+                                + nuevaFechaInicio + " al " + nuevaFechaFin
+                                + ". " + mensajeSugerencia,
+                        "vacaciones",
+                        "/vacaciones"
+                ));
 
         return ResponseEntity.ok(guardada);
     }

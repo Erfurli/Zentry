@@ -1,9 +1,7 @@
 <div class="chat-layout" (click)="cerrarMenus()">
   <aside class="chat-sidebar">
     <div class="sidebar-header">
-      <h2>
-        Mensajes
-      </h2>
+      <h2>Mensajes</h2>
       <div class="sidebar-header-btns">
         <button
           class="nuevo-grupo-btn"
@@ -69,13 +67,26 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
-  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
-    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
-  } @else {
-    {{ getInicialesConversacion(conv) }}
-  }
-</div>
+            <div
+              class="sidebar-avatar"
+              [class]="
+                conv.tipo === 'INDIVIDUAL'
+                  ? 'individual'
+                  : conv.tipo === 'DEPARTAMENTO'
+                    ? 'depto'
+                    : 'grupo'
+              "
+            >
+              @if (conv.tipo === "INDIVIDUAL" && getFotoConversacion(conv)) {
+                <img
+                  [src]="getFotoConversacion(conv)!"
+                  class="avatar-foto"
+                  alt=""
+                />
+              } @else {
+                {{ getInicialesConversacion(conv) }}
+              }
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -112,13 +123,26 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
-  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
-    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
-  } @else {
-    {{ getInicialesConversacion(conv) }}
-  }
-</div>
+            <div
+              class="sidebar-avatar"
+              [class]="
+                conv.tipo === 'INDIVIDUAL'
+                  ? 'individual'
+                  : conv.tipo === 'DEPARTAMENTO'
+                    ? 'depto'
+                    : 'grupo'
+              "
+            >
+              @if (conv.tipo === "INDIVIDUAL" && getFotoConversacion(conv)) {
+                <img
+                  [src]="getFotoConversacion(conv)!"
+                  class="avatar-foto"
+                  alt=""
+                />
+              } @else {
+                {{ getInicialesConversacion(conv) }}
+              }
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -155,13 +179,26 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
-  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
-    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
-  } @else {
-    {{ getInicialesConversacion(conv) }}
-  }
-</div>
+            <div
+              class="sidebar-avatar"
+              [class]="
+                conv.tipo === 'INDIVIDUAL'
+                  ? 'individual'
+                  : conv.tipo === 'DEPARTAMENTO'
+                    ? 'depto'
+                    : 'grupo'
+              "
+            >
+              @if (conv.tipo === "INDIVIDUAL" && getFotoConversacion(conv)) {
+                <img
+                  [src]="getFotoConversacion(conv)!"
+                  class="avatar-foto"
+                  alt=""
+                />
+              } @else {
+                {{ getInicialesConversacion(conv) }}
+              }
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -198,13 +235,26 @@
             [class.tiene-noLeidos]="(conv.noLeidos ?? 0) > 0"
             (click)="seleccionarConversacion(conv)"
           >
-            <div class="sidebar-avatar" [class]="conv.tipo === 'INDIVIDUAL' ? 'individual' : conv.tipo === 'DEPARTAMENTO' ? 'depto' : 'grupo'">
-  @if (conv.tipo === 'INDIVIDUAL' && getFotoConversacion(conv)) {
-    <img [src]="getFotoConversacion(conv)!" class="avatar-foto" alt="" />
-  } @else {
-    {{ getInicialesConversacion(conv) }}
-  }
-</div>
+            <div
+              class="sidebar-avatar"
+              [class]="
+                conv.tipo === 'INDIVIDUAL'
+                  ? 'individual'
+                  : conv.tipo === 'DEPARTAMENTO'
+                    ? 'depto'
+                    : 'grupo'
+              "
+            >
+              @if (conv.tipo === "INDIVIDUAL" && getFotoConversacion(conv)) {
+                <img
+                  [src]="getFotoConversacion(conv)!"
+                  class="avatar-foto"
+                  alt=""
+                />
+              } @else {
+                {{ getInicialesConversacion(conv) }}
+              }
+            </div>
             <div class="sidebar-info">
               <div class="sidebar-nombre-row">
                 <span class="sidebar-nombre">{{
@@ -243,43 +293,88 @@
       </div>
     } @else {
       <div class="chat-header">
-  <div class="chat-header-info">
-    <div class="chat-avatar-header">
-      @if (conversacionActiva()!.tipo === 'INDIVIDUAL' && getFotoConversacion(conversacionActiva()!)) {
-        <img [src]="getFotoConversacion(conversacionActiva()!)!" class="avatar-foto" alt="" />
-      } @else {
-        {{ getInicialesConversacion(conversacionActiva()!) }}
-      }
-    </div>
-    <div>
-      <h3>{{ getNombreConversacion(conversacionActiva()!) }}</h3>
-      @if (conversacionActiva()!.tipo !== 'INDIVIDUAL') {
-        <span class="chat-participantes-count">
-          {{ conversacionActiva()!.participantes.length }} participantes
-        </span>
-      } @else {
-        <span class="chat-participantes-count">
-          {{ getOtroParticipante(conversacionActiva()!)?.rolEmpresa ?? '' }}
-        </span>
-      }
-    </div>
-  </div>
-  <div class="chat-header-acciones">
-    @if (conversacionActiva()!.tipo !== 'INDIVIDUAL') {
-      @for (p of conversacionActiva()!.participantes.slice(0, 4); track p.id) {
-        @if (p.id !== usuarioActualId()) {
-          <div class="avatar-mini" (click)="verPerfil(p)" title="{{ p.nombre }}">
-            @if (p.foto) {
-              <img [src]="p.foto" class="avatar-foto" alt="" />
+        <div class="chat-header-info">
+          <div class="chat-avatar-header">
+            @if (
+              conversacionActiva()!.tipo === "INDIVIDUAL" &&
+              getFotoConversacion(conversacionActiva()!)
+            ) {
+              <img
+                [src]="getFotoConversacion(conversacionActiva()!)!"
+                class="avatar-foto"
+                alt=""
+              />
             } @else {
-              {{ p.iniciales }}
+              {{ getInicialesConversacion(conversacionActiva()!) }}
             }
           </div>
-        }
+          <div>
+            <h3>{{ getNombreConversacion(conversacionActiva()!) }}</h3>
+            @if (conversacionActiva()!.tipo !== "INDIVIDUAL") {
+              <span class="chat-participantes-count"
+                >{{
+                  conversacionActiva()!.participantes.length
+                }}
+                participantes</span
+              >
+            } @else {
+              <span class="chat-participantes-count">{{
+                getOtroParticipante(conversacionActiva()!)?.rolEmpresa ?? ""
+              }}</span>
+            }
+          </div>
+        </div>
+        <div class="chat-header-acciones">
+          <button
+            class="btn-fijados"
+            (click)="toggleFijados()"
+            [class.activo]="mostrarFijados()"
+            title="Mensajes fijados"
+          >
+            <i class="fa-solid fa-thumbtack"></i>
+            @if (mensajesFijados().length > 0) {
+              <span class="badge-fijados">{{ mensajesFijados().length }}</span>
+            }
+          </button>
+          @if (conversacionActiva()!.tipo !== "INDIVIDUAL") {
+            @for (
+              p of conversacionActiva()!.participantes.slice(0, 4);
+              track p.id
+            ) {
+              @if (p.id !== usuarioActualId()) {
+                <div
+                  class="avatar-mini"
+                  (click)="verPerfil(p)"
+                  title="{{ p.nombre }}"
+                >
+                  @if (p.foto) {
+                    <img [src]="p.foto" class="avatar-foto" alt="" />
+                  } @else {
+                    {{ p.iniciales }}
+                  }
+                </div>
+              }
+            }
+          }
+        </div>
+      </div>
+
+      @if (mostrarFijados() && mensajesFijados().length > 0) {
+        <div class="panel-fijados">
+          <div class="panel-fijados-titulo">
+            <i class="fa-solid fa-thumbtack"></i> Mensajes fijados
+          </div>
+          @for (f of mensajesFijados(); track f.id) {
+            <div class="fijado-item">
+              <div class="fijado-autor">{{ f.autorNombre }}</div>
+              <div class="fijado-texto">
+                {{ f.contenido | slice: 0 : 80
+                }}{{ f.contenido.length > 80 ? "…" : "" }}
+              </div>
+            </div>
+          }
+        </div>
       }
-    }
-  </div>
-</div>
 
       <div class="chat-mensajes" #mensajesContainer>
         @for (msg of mensajes(); track msg.id) {
@@ -320,13 +415,27 @@
               <div
                 class="mensaje-burbuja"
                 [class.mio]="esMio(msg)"
+                [class.mencionado]="esMencionado(msg)"
+                [class.fijado-burbuja]="msg.fijado"
                 (click)="$event.stopPropagation()"
               >
                 @if (!esMio(msg)) {
                   <span class="msg-autor-nombre">{{ msg.autorNombre }}</span>
                 }
-                <p class="msg-texto">{{ msg.contenido }}</p>
-                <span class="msg-hora">{{ formatHora(msg.enviadoEn) }}</span>
+                <p
+                  class="msg-texto"
+                  [innerHTML]="renderContenidoConMenciones(msg.contenido)"
+                ></p>
+                <div class="msg-footer">
+                  <span class="msg-hora">{{ formatHora(msg.enviadoEn) }}</span>
+                  @if (msg.editadoEn) {
+                    <span class="msg-editado">editado</span>
+                  }
+                  @if (msg.fijado) {
+                    <i class="fa-solid fa-thumbtack msg-pin-icon"></i>
+                  }
+                </div>
+
                 <div class="msg-acciones" (click)="$event.stopPropagation()">
                   <button
                     class="msg-accion-btn"
@@ -342,6 +451,25 @@
                   >
                     <i class="fa-solid fa-reply"></i>
                   </button>
+                  <button
+                    class="msg-accion-btn"
+                    (click)="fijar(msg)"
+                    title="{{ msg.fijado ? 'Desfijar' : 'Fijar' }}"
+                  >
+                    <i
+                      class="fa-solid fa-thumbtack"
+                      [class.activo]="msg.fijado"
+                    ></i>
+                  </button>
+                  @if (esMio(msg)) {
+                    <button
+                      class="msg-accion-btn"
+                      (click)="iniciarEdicion(msg)"
+                      title="Editar"
+                    >
+                      <i class="fa-solid fa-pen"></i>
+                    </button>
+                  }
                   @if (
                     !esMio(msg) && conversacionActiva()!.tipo !== "INDIVIDUAL"
                   ) {
@@ -361,6 +489,7 @@
                     </button>
                   }
                 </div>
+
                 @if (mensajeConReaccionAbierto() === msg.id) {
                   <div class="emoji-picker" (click)="$event.stopPropagation()">
                     @for (emoji of EMOJIS; track emoji) {
@@ -375,6 +504,7 @@
                   </div>
                 }
               </div>
+
               @if (reaccionesResumidas(msg).length > 0) {
                 <div class="reacciones-lista">
                   @for (r of reaccionesResumidas(msg); track r.emoji) {
@@ -413,27 +543,68 @@
         </div>
       }
 
-      <div class="chat-input-area">
-        <textarea
-          class="chat-input"
-          placeholder="Escribe un mensaje... (Enter para enviar)"
-          [value]="textoMensaje()"
-          (input)="textoMensaje.set($any($event.target).value)"
-          (keydown)="onKeyDown($event)"
-          rows="1"
-        ></textarea>
-        <button
-          class="chat-send-btn"
-          (click)="enviar()"
-          [disabled]="!textoMensaje().trim()"
-        >
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
+@if (mencionSugerencias().length > 0) {
+  <div class="menciones-dropdown" (click)="$event.stopPropagation()">
+    @for (m of mencionSugerencias(); track m.id; let i = $index) {
+      <div class="mencion-opcion" [class.activo]="mencionIndice() === i" (click)="seleccionarMencion(m)">
+        <div class="mencion-avatar">
+          @if (m.foto) { <img [src]="m.foto" class="avatar-foto" alt="" /> }
+          @else { {{ m.iniciales }} }
+        </div>
+        <span class="mencion-nombre">{{ m.nombre }}</span>
       </div>
+    }
+  </div>
+}
+
+@if (mensajeEditando()) {
+  <div class="reply-bar editando">
+    <div class="reply-bar-info">
+      <i class="fa-solid fa-pen"></i>
+      <span>Editando mensaje</span>
+      <span class="reply-bar-texto">{{ mensajeEditando()!.contenido | slice:0:50 }}</span>
+    </div>
+    <button class="reply-bar-cerrar" (click)="cancelarEdicion()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+}
+
+@if (mensajeRespondiendo() && !mensajeEditando()) {
+  <div class="reply-bar">
+    <div class="reply-bar-info">
+      <i class="fa-solid fa-reply"></i>
+      <span>Respondiendo a <strong>{{ mensajeRespondiendo()!.autorNombre }}</strong></span>
+      <span class="reply-bar-texto">{{ mensajeRespondiendo()!.contenido | slice:0:60 }}</span>
+    </div>
+    <button class="reply-bar-cerrar" (click)="mensajeRespondiendo.set(null)">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+}
+
+<div class="chat-input-area">
+  <textarea
+    #inputRef
+    class="chat-input"
+    [placeholder]="mensajeEditando() ? 'Edita el mensaje...' : 'Escribe un mensaje... @ para mencionar'"
+    [value]="textoMensaje()"
+    (input)="onInput($event)"
+    (keydown)="onKeyDown($event)"
+    rows="1">
+  </textarea>
+  @if (mensajeEditando()) {
+    <button class="chat-cancel-btn" (click)="cancelarEdicion()" title="Cancelar edición">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  }
+  <button class="chat-send-btn" (click)="enviar()" [disabled]="!textoMensaje().trim()">
+    <i class="fa-solid fa-paper-plane"></i>
+  </button>
+</div>
     }
   </main>
 </div>
-
 
 @if (modalPerfil()) {
   <div class="modal-overlay" (click)="modalPerfil.set(null)">

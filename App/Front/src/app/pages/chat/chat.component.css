@@ -1076,6 +1076,192 @@
   border-radius: 50%;
 }
 
+.btn-fijados {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 0.9rem;
+  transition: all 0.15s;
+}
+
+.btn-fijados.activo,
+.btn-fijados:hover { background: #dbeafe; color: var(--zentry-primary); }
+
+.badge-fijados {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--zentry-primary);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-fijados {
+  background: #eff6ff;
+  border-bottom: 1px solid #bfdbfe;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.panel-fijados-titulo {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--zentry-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.fijado-item {
+  background: white;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  border-left: 3px solid var(--zentry-primary);
+}
+
+.fijado-autor { font-size: 0.75rem; font-weight: 700; color: var(--zentry-primary); }
+.fijado-texto { font-size: 0.85rem; color: #374151; }
+
+.fijado-burbuja { border: 1px solid #bfdbfe !important; }
+
+.msg-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: flex-end;
+  margin-top: 0.2rem;
+}
+
+.msg-editado {
+  font-size: 0.68rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.msg-pin-icon {
+  font-size: 0.68rem;
+  opacity: 0.7;
+  color: var(--zentry-primary);
+}
+
+.msg-accion-btn .fa-thumbtack.activo { color: var(--zentry-primary); }
+
+.menciones-dropdown {
+  position: absolute;
+  bottom: 80px;
+  left: 1.5rem;
+  right: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  z-index: 50;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mencion-opcion {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.mencion-opcion:hover,
+.mencion-opcion.activo { background: #eff6ff; }
+
+.mencion-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--zentry-primary);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.mencion-nombre { font-size: 0.88rem; font-weight: 600; color: #1e293b; }
+
+.mencion {
+  color: var(--zentry-primary);
+  font-weight: 700;
+  background: #dbeafe;
+  border-radius: 4px;
+  padding: 0 3px;
+}
+
+.mensaje-burbuja.mencionado {
+  border-left: 3px solid #f59e0b !important;
+  background: #fffbeb !important;
+}
+
+.mensaje-burbuja.mio.mencionado { background: #1e3a5f !important; }
+
+.reply-bar.editando {
+  border-top-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.chat-cancel-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.chat-cancel-btn:hover { background: #fee2e2; color: #ef4444; }
+
+.chat-main { position: relative; }
+
+body.tema-oscuro .panel-fijados { background: #1e3a5f !important; border-color: #3A5698 !important; }
+body.tema-oscuro .fijado-item { background: #0f172a !important; }
+body.tema-oscuro .fijado-texto { color: #cbd5e1 !important; }
+body.tema-oscuro .menciones-dropdown { background: #1e293b !important; border-color: #334155 !important; }
+body.tema-oscuro .mencion-opcion:hover,
+body.tema-oscuro .mencion-opcion.activo { background: #1e3a5f !important; }
+body.tema-oscuro .mencion-nombre { color: #f1f5f9 !important; }
+body.tema-oscuro .btn-fijados { background: #334155 !important; color: #94a3b8 !important; }
+body.tema-oscuro .btn-fijados.activo { background: #1e3a5f !important; color: #93c5fd !important; }
+body.tema-oscuro .reply-bar.editando { background: #2d1f00 !important; border-color: #f59e0b !important; }
+body.tema-oscuro .chat-cancel-btn { background: #334155 !important; color: #94a3b8 !important; }
+
 @media (max-width: 600px) {
   .modal-chat {
     border-radius: 16px;
