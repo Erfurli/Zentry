@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../enviroments/enviroment';
 
-type TipoFiltro = 'todos' | 'entrada' | 'salida' | 'vacaciones' | 'ausencia' | 'incidencia';
+type TipoFiltro = 'todos' | 'no-leidas' | 'entrada' | 'salida' | 'vacaciones' | 'ausencia' | 'incidencia' | 'chat';
 
 interface Notificacion {
   id: string;
@@ -33,18 +33,22 @@ export class NotificacionesComponent implements OnInit {
   readonly marcandoTodas   = signal(false);
 
   readonly FILTROS: { valor: TipoFiltro; label: string; icon: string }[] = [
-    { valor: 'todos',       label: 'Todas',      icon: 'fa-bell' },
-    { valor: 'vacaciones',  label: 'Vacaciones', icon: 'fa-plane' },
-    { valor: 'ausencia',    label: 'Ausencias',  icon: 'fa-user-slash' },
-    { valor: 'entrada',     label: 'Entradas',   icon: 'fa-clock' },
-    { valor: 'salida',      label: 'Salidas',    icon: 'fa-sign-out-alt' },
-    { valor: 'incidencia',  label: 'Incidencias',icon: 'fa-triangle-exclamation' },
-  ];
+  { valor: 'todos',       label: 'Todas',       icon: 'fa-bell' },
+  { valor: 'no-leidas',   label: 'No leídas',   icon: 'fa-bell-slash' },
+  { valor: 'vacaciones',  label: 'Vacaciones',  icon: 'fa-plane' },
+  { valor: 'ausencia',    label: 'Ausencias',   icon: 'fa-user-slash' },
+  { valor: 'chat',        label: 'Chat',        icon: 'fa-comments' },
+  { valor: 'entrada',     label: 'Entradas',    icon: 'fa-clock' },
+  { valor: 'salida',      label: 'Salidas',     icon: 'fa-sign-out-alt' },
+  { valor: 'incidencia',  label: 'Incidencias', icon: 'fa-triangle-exclamation' },
+];
 
   readonly notificacionesFiltradas = computed(() => {
     const f = this.filtroActivo();
     return f === 'todos'
       ? this.notificaciones()
+      : f === 'no-leidas'
+      ? this.notificaciones().filter(n => !n.leida)
       : this.notificaciones().filter(n => n.tipo === f);
   });
 
@@ -119,6 +123,7 @@ export class NotificacionesComponent implements OnInit {
       salida:     'fa-sign-out-alt',
       vacaciones: 'fa-plane',
       ausencia:   'fa-user-slash',
+      chat:       'fa-comments',
       incidencia: 'fa-triangle-exclamation',
     };
     return mapa[tipo] ?? 'fa-bell';
