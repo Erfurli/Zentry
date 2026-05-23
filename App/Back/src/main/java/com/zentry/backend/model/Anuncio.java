@@ -26,7 +26,7 @@ public class Anuncio {
     private String categoria;
     private String autorId;
     private String autorNombre;
-    private String imagenBase64;         // foto del anuncio (admin)
+    private String imagenBase64;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaExpiracion;
     private Boolean activo;
@@ -44,7 +44,7 @@ public class Anuncio {
         private String autorNombre;
         private String autorFoto;
         private String texto;
-        private String respuestaAId;       // id del comentario al que responde
+        private String respuestaAId;
         private String respuestaAAutor;
         private String respuestaATexto;
         private LocalDateTime fecha;

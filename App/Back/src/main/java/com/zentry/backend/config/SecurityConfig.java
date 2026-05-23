@@ -44,12 +44,13 @@ public class SecurityConfig {
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/auth/me").authenticated()
                         .requestMatchers("/api/usuarios/mi-password").authenticated()
-                        .requestMatchers("/api/empleados/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/empleados/**").authenticated()
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/auth/recuperar-password").permitAll()
                         .requestMatchers("/api/auth/resetear-password").permitAll()
                         .requestMatchers("/api/anuncios/**").authenticated()
+
 
                         .anyRequest().authenticated()
                 )

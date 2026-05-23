@@ -37,7 +37,6 @@ public class AnuncioController {
     public ResponseEntity<List<Anuncio>> getAnuncios() {
         LocalDateTime ahora = LocalDateTime.now();
         List<Anuncio> todos = anuncioRepository.findByActivoTrueOrderByDestacadoDescFechaCreacionDesc();
-        // Filtrar los expirados
         List<Anuncio> vigentes = todos.stream()
                 .filter(a -> a.getFechaExpiracion() == null || a.getFechaExpiracion().isAfter(ahora))
                 .toList();
@@ -224,7 +223,6 @@ public class AnuncioController {
                         .filter(c -> c.getId().equals(respuestaAId))
                         .findFirst()
                         .ifPresent(c -> {});
-                // Resolver autor y texto del comentario padre
                 var padre = anuncio.getComentarios().stream()
                         .filter(c -> c.getId().equals(respuestaAId))
                         .findFirst();

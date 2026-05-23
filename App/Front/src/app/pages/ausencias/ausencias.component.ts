@@ -31,6 +31,7 @@ export class AusenciasComponent implements OnInit {
   private exportService = inject(ExportService);
   private badgesService = inject(BadgesService);
 
+
   readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
 
   readonly ausencias = signal<AusenciaVista[]>([]);
@@ -50,6 +51,11 @@ export class AusenciasComponent implements OnInit {
   readonly formFechaInicio = signal('');
   readonly formFechaFin = signal('');
   readonly formMotivo = signal('');
+
+  readonly formJustificanteBase64 = signal<string | null>(null);
+readonly formJustificanteNombre = signal<string | null>(null);
+readonly formJustificanteTipo   = signal<string | null>(null);
+readonly subiendoJustificante   = signal(false);
 
   readonly ausenciasFiltradas = computed(() => {
     const tipo = this.filtroTipo();
@@ -117,36 +123,113 @@ export class AusenciasComponent implements OnInit {
     this.mensajeExito.set('');
     this.errorModal.set('');
     this.modalAbierto.set(true);
+    this.formJustificanteBase64.set(null);
+  this.formJustificanteNombre.set(null);
+  this.formJustificanteTipo.set(null);
   }
 
   cerrarModal(): void {
     this.modalAbierto.set(false);
   }
 
-  enviarSolicitud(): void {
-    if (!this.formValido() || this.enviando()) return;
+  onArchivoSeleccionado(event: Event): void {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (!file) return;
 
-    this.enviando.set(true);
-    this.errorModal.set('');
-
-    this.ausenciasService.solicitar({
-      fechaInicio: this.formFechaInicio(),
-      fechaFin: this.formFechaFin(),
-      tipo: this.formTipo(),
-      motivo: this.formMotivo()
-    }).subscribe({
-      next: () => {
-        this.mensajeExito.set('¡Ausencia solicitada correctamente!');
-        this.enviando.set(false);
-        this.cargarAusencias();
-        setTimeout(() => this.cerrarModal(), 1800);
-      },
-      error: () => {
-        this.errorModal.set('Error al enviar la solicitud. Inténtalo de nuevo.');
-        this.enviando.set(false);
-      }
-    });
+  const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+  if (!tiposPermitidos.includes(file.type)) {
+    this.errorModal.set('Solo se permiten imágenes (JPG, PNG) o PDF.');
+    return;
   }
+
+  if (file.size > 5 * 1024 * 1024) {
+    this.errorModal.set('El archivo no puede superar 5 MB.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    this.formJustificanteBase64.set(reader.result as string);
+    this.formJustificanteNombre.set(file.name);
+    this.formJustificanteTipo.set(file.type);
+    this.errorModal.set('');
+  };
+  reader.readAsDataURL(file);
+}
+
+quitarJustificante(): void {
+  this.formJustificanteBase64.set(null);
+  this.formJustificanteNombre.set(null);
+  this.formJustificanteTipo.set(null);
+}
+
+subirJustificanteExistente(id: string, event: Event): void {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+
+  const tiposPermitidos = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+  if (!tiposPermitidos.includes(file.type)) {
+    this.error.set('Solo se permiten imágenes (JPG, PNG) o PDF.');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    this.error.set('El archivo no puede superar 5 MB.');
+    return;
+  }
+
+  this.subiendoJustificante.set(true);
+  const reader = new FileReader();
+  reader.onload = () => {
+    this.ausenciasService.subirJustificante(id, reader.result as string, file.name, file.type)
+      .subscribe({
+        next: () => {
+          this.subiendoJustificante.set(false);
+          this.cargarAusencias();
+        },
+        error: () => {
+          this.subiendoJustificante.set(false);
+          this.error.set('Error al subir el justificante.');
+        }
+      });
+  };
+  reader.readAsDataURL(file);
+}
+
+verJustificante(ausencia: AusenciaVista): void {
+  if (!ausencia.justificanteBase64) return;
+  const link = document.createElement('a');
+  link.href = ausencia.justificanteBase64;
+  link.download = ausencia.justificanteNombre ?? 'justificante';
+  link.click();
+}
+
+
+  enviarSolicitud(): void {
+  if (!this.formValido() || this.enviando()) return;
+  this.enviando.set(true);
+  this.errorModal.set('');
+
+  this.ausenciasService.solicitar({
+    fechaInicio:          this.formFechaInicio(),
+    fechaFin:             this.formFechaFin(),
+    tipo:                 this.formTipo(),
+    motivo:               this.formMotivo(),
+    justificanteBase64:   this.formJustificanteBase64() ?? undefined,
+    justificanteNombre:   this.formJustificanteNombre() ?? undefined,
+    justificanteTipo:     this.formJustificanteTipo() ?? undefined,
+  }).subscribe({
+    next: () => {
+      this.mensajeExito.set('¡Ausencia solicitada correctamente!');
+      this.enviando.set(false);
+      this.cargarAusencias();
+      setTimeout(() => this.cerrarModal(), 1800);
+    },
+    error: () => {
+      this.errorModal.set('Error al enviar la solicitud. Inténtalo de nuevo.');
+      this.enviando.set(false);
+    }
+  });
+}
 
   onTipoChange(event: Event): void {
     this.filtroTipo.set((event.target as HTMLSelectElement).value);
@@ -180,4 +263,6 @@ export class AusenciasComponent implements OnInit {
     this.isEmpleado ? 'Mis ausencias' : 'Todos los empleados'
   );
 }
+
+
 }

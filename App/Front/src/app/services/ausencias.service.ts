@@ -15,6 +15,9 @@ export interface AusenciaVista {
   estado: 'Pendiente' | 'Justificada' | 'No Justificada';
   motivo?: string;
   fechaSolicitud?: string;
+  justificanteBase64?: string;
+  justificanteNombre?: string;
+  justificanteTipo?: string;
 }
 
 export interface SolicitarAusenciaRequest {
@@ -22,6 +25,9 @@ export interface SolicitarAusenciaRequest {
   fechaFin: string;
   tipo: string;
   motivo?: string;
+  justificanteBase64?: string;
+  justificanteNombre?: string;
+  justificanteTipo?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -51,4 +57,10 @@ export class AusenciasService {
   noJustificar(id: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/no-justificar`, {});
   }
+
+  subirJustificante(id: string, base64: string, nombre: string, tipo: string) {
+  return this.http.patch(`${environment.apiUrl}/ausencias/${id}/justificante`, {
+    base64, nombre, tipo
+  });
+}
 }

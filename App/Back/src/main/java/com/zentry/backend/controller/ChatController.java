@@ -61,7 +61,7 @@ public class ChatController {
                     }
 
                     return new UsuarioResumenDTO(
-                            u.getId(),              // <- BIEN: usuarioId
+                            u.getId(),
                             nombre,
                             iniciales(nombre),
                             rol,

@@ -3,6 +3,7 @@ package com.zentry.backend.controller;
 import com.zentry.backend.dto.AusenciaVistaDTO;
 import com.zentry.backend.model.Ausencia;
 import com.zentry.backend.model.Empleado;
+import com.zentry.backend.model.RolEmpresa;
 import com.zentry.backend.model.Usuario;
 import com.zentry.backend.repository.AusenciaRepository;
 import com.zentry.backend.repository.EmpleadoRepository;
@@ -39,12 +40,32 @@ public class AusenciaController {
     @GetMapping("/vista")
     public List<AusenciaVistaDTO> getVista(
             @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) String estado) {
+            @RequestParam(required = false) String estado,
+            Authentication authentication) {
+
+        Usuario usuarioActual = usuarioRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario autenticado no encontrado"));
+
+        Empleado empleadoActual = empleadoRepository.findById(usuarioActual.getEmpleadoId())
+                .orElseThrow(() -> new RuntimeException("Empleado asociado no encontrado"));
+
+        boolean esAdmin = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+
+        boolean esMando = empleadoActual.getRolEmpresa() == RolEmpresa.MANDO;
 
         return ausenciaRepository.findAll().stream()
-                .filter(a -> empleadoRepository.findById(a.getEmpleadoId())
-                        .map(emp -> Boolean.TRUE.equals(emp.getActivo()))
-                        .orElse(false))
+                .filter(a -> {
+                    Empleado emp = empleadoRepository.findById(a.getEmpleadoId()).orElse(null);
+                    if (emp == null || !Boolean.TRUE.equals(emp.getActivo())) return false;
+
+                    if (esMando && !esAdmin) {
+                        return emp.getDepartamento() != null &&
+                                emp.getDepartamento().equalsIgnoreCase(empleadoActual.getDepartamento());
+                    }
+
+                    return true;
+                })
                 .filter(a -> tipo == null || tipo.equalsIgnoreCase(a.getTipo()))
                 .filter(a -> estado == null || estado.equalsIgnoreCase(a.getEstado()))
                 .map(this::toDTO)
@@ -93,6 +114,9 @@ public class AusenciaController {
                 .estado("Pendiente")
                 .motivo(motivo)
                 .fechaSolicitud(LocalDate.now().toString())
+                .justificanteBase64(body.getOrDefault("justificanteBase64", null))
+                .justificanteNombre(body.getOrDefault("justificanteNombre", null))
+                .justificanteTipo(body.getOrDefault("justificanteTipo", null))
                 .build();
 
         ausenciaRepository.save(ausencia);
@@ -146,19 +170,22 @@ public class AusenciaController {
 
     private AusenciaVistaDTO toDTO(Ausencia a) {
         Empleado emp = empleadoRepository.findById(a.getEmpleadoId()).orElse(null);
-        return new AusenciaVistaDTO(
-                a.getId(),
-                a.getEmpleadoId(),
-                emp != null ? emp.getNombre()       : "Empleado desconocido",
-                emp != null ? emp.getDepartamento() : "-",
-                a.getFechaInicio(),
-                a.getFechaFin(),
-                a.getDias(),
-                a.getTipo(),
-                a.getEstado(),
-                a.getMotivo(),
-                a.getFechaSolicitud()
-        );
+        return AusenciaVistaDTO.builder()
+                .id(a.getId())
+                .empleadoId(a.getEmpleadoId())
+                .empleado(emp != null ? emp.getNombre() : "Empleado desconocido")
+                .departamento(emp != null ? emp.getDepartamento() : "-")
+                .fechaInicio(a.getFechaInicio())
+                .fechaFin(a.getFechaFin())
+                .dias(a.getDias())
+                .tipo(a.getTipo())
+                .estado(a.getEstado())
+                .motivo(a.getMotivo())
+                .fechaSolicitud(a.getFechaSolicitud())
+                .justificanteBase64(a.getJustificanteBase64())
+                .justificanteNombre(a.getJustificanteNombre())
+                .justificanteTipo(a.getJustificanteTipo())
+                .build();
     }
 
     private void notificarEmpleado(String empleadoId, String titulo, String mensaje) {
@@ -176,5 +203,28 @@ public class AusenciaController {
                 .filter(a -> "Pendiente".equalsIgnoreCase(a.getEstado()))
                 .count();
         return ResponseEntity.ok(Map.of("count", count));
+    }
+
+    @PatchMapping("/{id}/justificante")
+    public ResponseEntity<Ausencia> subirJustificante(
+            @PathVariable String id,
+            @RequestBody Map<String, String> body,
+            Authentication authentication) {
+
+        Usuario usuario = usuarioRepository.findByUsername(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        return ausenciaRepository.findById(id).map(a -> {
+            boolean esAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+            if (!esAdmin && !a.getEmpleadoId().equals(usuario.getEmpleadoId())) {
+                return ResponseEntity.status(403).<Ausencia>build();
+            }
+
+            a.setJustificanteBase64(body.get("base64"));
+            a.setJustificanteNombre(body.get("nombre"));
+            a.setJustificanteTipo(body.get("tipo"));
+            return ResponseEntity.ok(ausenciaRepository.save(a));
+        }).orElse(ResponseEntity.notFound().build());
     }
 }

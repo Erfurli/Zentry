@@ -32,15 +32,16 @@ export class AuthService {
   );
 
   currentUser$ = this.currentUserSubject.asObservable();
-  getUsuarioActual(): { id: string; nombre: string } | null {
-  const user = this.getCurrentUser();
-  if (!user) return null;
 
-  return {
-    id: user.userId,
-    nombre: user.username
-  };
-}
+  getUsuarioActual(): { id: string; nombre: string } | null {
+    const user = this.getCurrentUser();
+    if (!user) return null;
+
+    return {
+      id: user.userId,
+      nombre: user.username
+    };
+  }
 
   login(data: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, data).pipe(
@@ -51,16 +52,16 @@ export class AuthService {
   }
 
   saveSession(data: LoginResponse): void {
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('userId', data.userId);
-  localStorage.setItem('username', data.username);
-  localStorage.setItem('companyRole', data.companyRole);
-  localStorage.setItem('systemRole', data.systemRole);
-  localStorage.setItem('empleadoId', String(data.empleadoId));
-  localStorage.setItem('mustChangePassword', String(data.mustChangePassword));
-  localStorage.setItem('currentUser', JSON.stringify(data));
-  this.currentUserSubject.next(data);
-}
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userId', data.userId);
+    localStorage.setItem('username', data.username);
+    localStorage.setItem('companyRole', data.companyRole);
+    localStorage.setItem('systemRole', data.systemRole);
+    localStorage.setItem('empleadoId', String(data.empleadoId));
+    localStorage.setItem('mustChangePassword', String(data.mustChangePassword));
+    localStorage.setItem('currentUser', JSON.stringify(data));
+    this.currentUserSubject.next(data);
+  }
 
   private getStoredSession(): LoginResponse | null {
     const stored = localStorage.getItem('currentUser');
@@ -118,13 +119,13 @@ export class AuthService {
   }
 
   logout(): void {
-  localStorage.removeItem('token');
-  localStorage.removeItem('userId');
-  localStorage.removeItem('username');
-  localStorage.removeItem('companyRole');
-  localStorage.removeItem('systemRole');
-  localStorage.removeItem('empleadoId');
-  localStorage.removeItem('currentUser');
-  this.currentUserSubject.next(null);
-}
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('companyRole');
+    localStorage.removeItem('systemRole');
+    localStorage.removeItem('empleadoId');
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+  }
 }

@@ -188,4 +188,27 @@ export class TablonAnunciosComponent implements OnInit {
   mostrarExpiracion(anuncio: Anuncio): boolean {
     return !!anuncio.fechaExpiracion && anuncio.categoria.toLowerCase() !== 'urgente';
   }
+
+readonly modalEliminarAbierto = signal(false);
+readonly anuncioAEliminar = signal<Anuncio | null>(null);
+
+abrirModalEliminar(anuncio: Anuncio): void {
+  this.anuncioAEliminar.set(anuncio);
+  this.modalEliminarAbierto.set(true);
+}
+
+cerrarModalEliminar(): void {
+  this.modalEliminarAbierto.set(false);
+  this.anuncioAEliminar.set(null);
+}
+
+confirmarEliminar(): void {
+  const anuncio = this.anuncioAEliminar();
+  if (!anuncio?.id) return;
+
+  this.anuncioService.eliminar(anuncio.id).subscribe(() => {
+    this.cargarAnuncios();
+    this.cerrarModalEliminar();
+  });
+}
 }

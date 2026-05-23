@@ -134,8 +134,6 @@ public class EmailService {
                 urlBoton, color, textoBoton);
     }
 
-    // ─── Emails públicos ──────────────────────────────────────────────────────
-
     public void enviarSugerenciaVacaciones(String email, String nombre,
                                            String nuevaFechaInicio, String nuevaFechaFin) {
         enviar(email, nombre,

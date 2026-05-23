@@ -524,6 +524,118 @@
 
 .export-btn:hover { background: var(--zentry-primary-dark); }
 
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.upload-area:hover {
+  border-color: var(--zentry-primary);
+  color: var(--zentry-primary);
+  background: #eff6ff;
+}
+
+.upload-area i { font-size: 1.5rem; }
+
+.archivo-adjunto {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #065f46;
+}
+
+.archivo-adjunto i { color: #10b981; font-size: 1.1rem; }
+.archivo-nombre { flex: 1; font-weight: 500; }
+
+.btn-quitar-archivo {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  font-size: 1rem;
+  padding: 0;
+  transition: color 0.15s;
+}
+
+.btn-quitar-archivo:hover { color: #ef4444; }
+
+.btn-ver-justificante {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  background: #dbeafe;
+  color: #1d4ed8;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-ver-justificante:hover { background: #bfdbfe; }
+
+.btn-subir-justificante {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  background: #f1f5f9;
+  color: #64748b;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-subir-justificante:hover {
+  background: #e2e8f0;
+  color: var(--zentry-primary);
+}
+
+body.tema-oscuro .upload-area {
+  border-color: #475569 !important;
+  color: #64748b !important;
+  background: #0f172a !important;
+}
+
+body.tema-oscuro .upload-area:hover {
+  border-color: var(--zentry-primary) !important;
+  color: #93c5fd !important;
+  background: #1e3a5f !important;
+}
+
+body.tema-oscuro .archivo-adjunto {
+  background: #052e16 !important;
+  border-color: #166534 !important;
+  color: #86efac !important;
+}
+
+body.tema-oscuro .btn-ver-justificante {
+  background: #1e3a5f !important;
+  color: #93c5fd !important;
+}
+
+body.tema-oscuro .btn-subir-justificante {
+  background: #334155 !important;
+  color: #94a3b8 !important;
+}
 
 @media (max-width: 600px) {
   .form-row { grid-template-columns: 1fr; }

@@ -47,6 +47,9 @@ export class ChatService {
   private globalStompClient: Client | null = null;
   private API = environment.apiUrl;
 
+  public empleadosDisponibles = signal<any[]>([]);
+  public modalNuevoGrupo = signal<boolean>(false);
+
   readonly mensajesActivos = signal<MensajeDTO[]>([]);
   readonly conversaciones = signal<ConversacionDTO[]>([]);
 
@@ -76,6 +79,13 @@ export class ChatService {
       {},
     );
   }
+
+  private abrirModalSubject = new Subject<boolean>();
+abrirModal$ = this.abrirModalSubject.asObservable();
+
+abrirModal() {
+  this.abrirModalSubject.next(true);
+}
 
   getEmpleadosParaChat() {
     return this.http.get<UsuarioResumen[]>(`${this.API}/chat/usuarios`);

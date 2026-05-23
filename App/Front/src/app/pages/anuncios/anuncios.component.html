@@ -71,9 +71,9 @@
                   <button class="btn-accion editar" (click)="editarAnuncio(anuncio); $event.stopPropagation()">
                     <i class="fa-solid fa-pen"></i>
                   </button>
-                  <button class="btn-accion eliminar" (click)="eliminarAnuncio(anuncio); $event.stopPropagation()">
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
+                  <button class="btn-accion eliminar" (click)="abrirModalEliminar(anuncio); $event.stopPropagation()">
+  <i class="fa-solid fa-trash"></i>
+</button>
                 </div>
               }
             </div>
@@ -150,4 +150,37 @@
       </div>
     </div>
   }
+
+  @if (modalEliminarAbierto()) {
+  <div class="modal-backdrop" style="z-index: 1100;" (click)="cerrarModalEliminar()">
+    <div class="modal-panel" (click)="$event.stopPropagation()" style="max-width: 440px;">
+
+      <div class="modal-header" style="background: #fef2f2; border-bottom: 1px solid #fee2e2;">
+        <div class="modal-header-icon" style="background: #ef4444;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="modal-header-copy">
+          <h2 style="color: #991b1b;">Eliminar Anuncio</h2>
+          <p>Esta acción no se puede deshacer.</p>
+        </div>
+        <button class="close-btn" (click)="cerrarModalEliminar()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.5rem 2rem; color: #374151;">
+        <p>¿Estás seguro de que deseas eliminar permanentemente el anuncio? Esta acción es irreversible.</p>
+      </div>
+
+      <div class="modal-actions" style="display: flex; justify-content: flex-end; gap: 1rem; padding: 1rem 2rem;">
+        <button class="secondary-btn" (click)="cerrarModalEliminar()">Cancelar</button>
+        <button class="primary-btn" style="background: #dc2626;" (click)="confirmarEliminar()">
+          <i class="fa-solid fa-trash"></i>Eliminar
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
 </div>

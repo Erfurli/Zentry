@@ -19,30 +19,45 @@ export class BadgesService {
   }
 
   cargar(): void {
-    if (!this.esAdmin) return;
-
-    this.http.get<{ count: number }>(`${this.API}/ausencias/pendientes/count`)
-      .subscribe({ next: r => this.ausenciasPendientes.set(r.count) });
-
-    this.http.get<{ count: number }>(`${this.API}/vacaciones/pendientes/count`)
-      .subscribe({ next: r => this.vacacionesPendientes.set(r.count) });
-
-    this.http.get<{ count: number }>(`${this.API}/asistencia/incidencias/count`)
-      .subscribe({ next: r => this.incidenciasPendientes.set(r.count) });
+    this.recargarAusencias();
+    this.recargarVacaciones();
+    this.recargarIncidencias();
   }
 
   recargarAusencias(): void {
-    this.http.get<{ count: number }>(`${this.API}/ausencias/pendientes/count`)
-      .subscribe({ next: r => this.ausenciasPendientes.set(r.count) });
+    const url = this.esAdmin
+      ? `${this.API}/ausencias/pendientes/count`
+      : `${this.API}/ausencias/mis-ausencias/count`;
+
+    this.http.get<{ count: number }>(url)
+      .subscribe({
+        next: r => this.ausenciasPendientes.set(r.count),
+        error: () => this.ausenciasPendientes.set(0)
+      });
   }
 
   recargarVacaciones(): void {
-    this.http.get<{ count: number }>(`${this.API}/vacaciones/pendientes/count`)
-      .subscribe({ next: r => this.vacacionesPendientes.set(r.count) });
+    const url = this.esAdmin
+      ? `${this.API}/vacaciones/pendientes/count`
+      : `${this.API}/vacaciones/mis-vacaciones/count`;
+
+    this.http.get<{ count: number }>(url)
+      .subscribe({
+        next: r => this.vacacionesPendientes.set(r.count),
+        error: () => this.vacacionesPendientes.set(0)
+      });
   }
 
   recargarIncidencias(): void {
+    if (!this.esAdmin) {
+      this.incidenciasPendientes.set(0);
+      return;
+    }
+
     this.http.get<{ count: number }>(`${this.API}/asistencia/incidencias/count`)
-      .subscribe({ next: r => this.incidenciasPendientes.set(r.count) });
+      .subscribe({
+        next: r => this.incidenciasPendientes.set(r.count),
+        error: () => this.incidenciasPendientes.set(0)
+      });
   }
 }

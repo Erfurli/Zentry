@@ -2,15 +2,19 @@
 
   <div class="page-header">
     <div class="header-content">
-      <h1>Asistencia Empleados</h1>
+      <h1>
+        @if (esAdmin()) {
+          Asistencia Empleados (Panel Global)
+        } @else {
+          Mi Asistencia
+        }
+      </h1>
       <div class="breadcrumbs">
         <a routerLink="/dashboard">Dashboard</a> / Asistencia
       </div>
     </div>
 
     <div class="header-actions">
-      
-
       @if (esAdmin()) {
         <div class="vista-toggle">
           <button class="toggle-btn-vista" [class.active]="!vistaGrafico()" (click)="activarVistaLista()" title="Vista lista">
@@ -24,15 +28,14 @@
     </div>
   </div>
 
-  @if (puedeVerVistaPersonal() && mensajeAccion()) {
+  @if (mensajeAccion()) {
     <div class="mensaje-accion">{{ mensajeAccion() }}</div>
   }
 
-  @if (puedeVerVistaPersonal()) {
+  @if (!esAdmin()) {
     <div class="empleado-layout">
 
       <div class="empleado-col-main">
-
         <div class="estado-card-v2">
           <div class="estado-card-v2-top">
             <div>
@@ -80,20 +83,16 @@
           </div>
 
           <div class="acciones-rapidas">
-            <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()"
-              (click)="ejecutarFichaje('entrada')">
+            <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()" (click)="ejecutarFichaje('entrada')">
               <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
             </button>
-            <button class="fichaje-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()"
-              (click)="ejecutarFichaje('descanso')">
+            <button class="fichaje-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()" (click)="ejecutarFichaje('descanso')">
               <i class="fa-solid fa-mug-hot"></i> Iniciar descanso
             </button>
-            <button class="fichaje-btn vuelta" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()"
-              (click)="ejecutarFichaje('vuelta')">
+            <button class="fichaje-btn vuelta" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()" (click)="ejecutarFichaje('vuelta')">
               <i class="fa-solid fa-rotate-left"></i> Volver del descanso
             </button>
-            <button class="fichaje-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()"
-              (click)="ejecutarFichaje('salida')">
+            <button class="fichaje-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()" (click)="ejecutarFichaje('salida')">
               <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
             </button>
           </div>
@@ -102,16 +101,13 @@
             <div class="modo-trabajo-inline">
               <span class="modo-label"><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</span>
               <div class="modo-selector">
-                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'"
-                  (click)="modoTrabajo.set('PRESENCIAL')">
+                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'" (click)="modoTrabajo.set('PRESENCIAL')">
                   <i class="fa-solid fa-building"></i><span>Presencial</span>
                 </button>
-                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'"
-                  (click)="modoTrabajo.set('REMOTO')">
+                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'" (click)="modoTrabajo.set('REMOTO')">
                   <i class="fa-solid fa-house"></i><span>Remoto</span>
                 </button>
-                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'"
-                  (click)="modoTrabajo.set('HIBRIDO')">
+                <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'" (click)="modoTrabajo.set('HIBRIDO')">
                   <i class="fa-solid fa-random"></i><span>Híbrido</span>
                 </button>
               </div>
@@ -121,7 +117,6 @@
       </div>
 
       <div class="empleado-col-side">
-
         @if (estadoActual === 'FINALIZADO') {
           <div class="side-card incidencia-card">
             <div class="side-card-icon amber"><i class="fa-solid fa-triangle-exclamation"></i></div>
@@ -139,7 +134,7 @@
           <div class="side-card-icon azul"><i class="fa-solid fa-clock-rotate-left"></i></div>
           <div class="side-card-body">
             <h3>Historial de fichajes</h3>
-            <p>Consulta todos tus fichajes.</p>
+            <p>Consulta todos tus fichajes anteriores.</p>
           </div>
           <button class="log-toggle-btn" (click)="abrirLog()">
             <i class="fa-solid fa-clock-rotate-left"></i> Ver historial
@@ -160,13 +155,82 @@
             </div>
           </div>
         }
-
       </div>
+
     </div>
   }
 
   @if (esAdmin()) {
+    <div class="empleado-layout" style="margin-bottom: 2rem;">
+      <div class="empleado-col-main" style="width: 100%; max-width: 100%;">
+        <div class="estado-card-v2">
+          <div class="estado-card-v2-top">
+            <div>
+              <div class="estado-titulo">Mi fichaje personal (Modo Administrador)</div>
+              <div class="estado-valor">{{ labelEstado() }}</div>
+            </div>
+            <div class="estado-chip-grande" [ngClass]="estadoActual?.toLowerCase() ?? 'no_fichado'">
+              @switch (estadoActual) {
+                @case ('TRABAJANDO') { <i class="fa-solid fa-briefcase"></i> }
+                @case ('EN_DESCANSO') { <i class="fa-solid fa-mug-hot"></i> }
+                @case ('FINALIZADO') { <i class="fa-solid fa-circle-check"></i> }
+                @default { <i class="fa-solid fa-user-clock"></i> }
+              }
+            </div>
+          </div>
+
+          <div class="estado-metricas-v2">
+            <div class="metrica-item">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+              <span class="metrica-label">Entrada</span>
+              <span class="metrica-val">{{ miAsistencia()?.entrada || '–' }}</span>
+            </div>
+            <div class="metrica-item">
+              <i class="fa-solid fa-mug-hot"></i>
+              <span class="metrica-label">Descanso</span>
+              <span class="metrica-val">
+                {{ miAsistencia()?.inicioDescanso || '–' }} / {{ miAsistencia()?.finDescanso || '–' }}
+              </span>
+            </div>
+            <div class="metrica-item">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              <span class="metrica-label">Salida</span>
+              <span class="metrica-val">{{ miAsistencia()?.salida || '–' }}</span>
+            </div>
+            <div class="metrica-item destaca">
+              <i class="fa-regular fa-clock"></i>
+              <span class="metrica-label">Horas hoy</span>
+              <span class="metrica-val">{{ miAsistencia()?.horasTotales ?? 0 }}h</span>
+            </div>
+            <div class="metrica-item">
+              <i class="fa-solid fa-plus"></i>
+              <span class="metrica-label">Horas extra</span>
+              <span class="metrica-val">{{ miAsistencia()?.horasExtra ?? 0 }}h</span>
+            </div>
+          </div>
+
+          <div class="acciones-rapidas">
+            <button class="fichaje-btn entrada" [disabled]="cargandoAccion() || !puedeFicharEntrada()" (click)="ejecutarFichaje('entrada')">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Fichar entrada
+            </button>
+            <button class="fichaje-btn descanso" [disabled]="cargandoAccion() || !puedeIniciarDescanso()" (click)="ejecutarFichaje('descanso')">
+              <i class="fa-solid fa-mug-hot"></i> Iniciar descanso
+            </button>
+            <button class="fichaje-btn vuelta" [disabled]="cargandoAccion() || !puedeFinalizarDescanso()" (click)="ejecutarFichaje('vuelta')">
+              <i class="fa-solid fa-rotate-left"></i> Volver del descanso
+            </button>
+            <button class="fichaje-btn salida" [disabled]="cargandoAccion() || !puedeFicharSalida()" (click)="ejecutarFichaje('salida')">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 2rem 0;" />
+
     <div class="filters-section">
+      <h3 style="margin-top: 0; margin-bottom: 1rem; color: #475569;"><i class="fa-solid fa-users-gear"></i> Gestión y Control de Equipo</h3>
       <div class="filters">
         <input type="date" class="filter-date" [value]="fechaSeleccionada()" (change)="onFechaChange($event)" />
         <select class="filter-select" [value]="filtroDepartamento()" (change)="onDeptoChange($event)">
@@ -186,7 +250,7 @@
           </select>
         }
 
-        <input type="text" class="filter-select" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
+        <input type="text" class="filter-select" placeholder="Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
 
         <button class="export-btn" type="button" (click)="exportar()">
           <i class="fa-solid fa-download"></i> Exportar
@@ -317,7 +381,6 @@
 @if (modalIncidenciaAbierto()) {
   <div class="modal-backdrop" (click)="modalIncidenciaAbierto.set(false)">
     <div class="modal-panel" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
         <div class="modal-header-icon" style="background:#f59e0b">
           <i class="fa-solid fa-pen-to-square"></i>
@@ -346,23 +409,19 @@
           </div>
           <div class="form-field">
             <label><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada</label>
-            <input type="time" class="form-input" [value]="incidenciaEntrada()"
-              (change)="incidenciaEntrada.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incidenciaEntrada()" (change)="incidenciaEntrada.set($any($event.target).value)" />
           </div>
           <div class="form-field">
             <label><i class="fa-solid fa-mug-hot"></i> Inicio descanso</label>
-            <input type="time" class="form-input" [value]="incidenciaInicioDesc()"
-              (change)="incidenciaInicioDesc.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incidenciaInicioDesc()" (change)="incidenciaInicioDesc.set($any($event.target).value)" />
           </div>
           <div class="form-field">
             <label><i class="fa-solid fa-rotate-left"></i> Fin descanso</label>
-            <input type="time" class="form-input" [value]="incidenciaFinDesc()"
-              (change)="incidenciaFinDesc.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incidenciaFinDesc()" (change)="incidenciaFinDesc.set($any($event.target).value)" />
           </div>
           <div class="form-field">
             <label><i class="fa-solid fa-arrow-right-from-bracket"></i> Salida</label>
-            <input type="time" class="form-input" [value]="incidenciaSalida()"
-              (change)="incidenciaSalida.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incidenciaSalida()" (change)="incidenciaSalida.set($any($event.target).value)" />
           </div>
         </div>
 
@@ -374,17 +433,12 @@
       </div>
 
       <div class="modal-footer">
-        <button class="secondary-btn" (click)="modalIncidenciaAbierto.set(false)">
-          Cancelar
-        </button>
-        <button class="primary-btn"
-          [disabled]="guardandoIncidencia() || !incidenciaAsistenciaId()"
-          (click)="guardarIncidencia()">
+        <button class="secondary-btn" (click)="modalIncidenciaAbierto.set(false)">Cancelar</button>
+        <button class="primary-btn" [disabled]="guardandoIncidencia() || !incidenciaAsistenciaId()" (click)="guardarIncidencia()">
           <i class="fa-solid fa-floppy-disk"></i>
           {{ guardandoIncidencia() ? 'Guardando...' : 'Guardar cambios' }}
         </button>
       </div>
-
     </div>
   </div>
 }
@@ -392,7 +446,6 @@
 @if (modalFichajeAbierto()) {
   <div class="modal-backdrop" (click)="modalFichajeAbierto.set(false)">
     <div class="modal-panel" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
         <div class="modal-header-icon"><i class="fa-solid fa-clock"></i></div>
         <div class="modal-header-copy">
@@ -405,7 +458,6 @@
       </div>
 
       <div class="modal-body">
-
         <div class="fichaje-estado-visual">
           <div class="fichaje-estado-chip" [ngClass]="estadoActual?.toLowerCase() ?? 'no_fichado'">
             @switch (estadoActual) {
@@ -442,23 +494,16 @@
             <label><i class="fa-solid fa-laptop-house"></i> Modo de trabajo</label>
             <div class="modo-selector">
               <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'PRESENCIAL'" (click)="modoTrabajo.set('PRESENCIAL')">
-                <i class="fa-solid fa-building"></i>
-                <span>Presencial</span>
+                <i class="fa-solid fa-building"></i><span>Presencial</span>
               </button>
               <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'REMOTO'" (click)="modoTrabajo.set('REMOTO')">
-                <i class="fa-solid fa-house"></i>
-                <span>Remoto</span>
+                <i class="fa-solid fa-house"></i><span>Remoto</span>
               </button>
               <button type="button" class="modo-btn" [class.activo]="modoTrabajo() === 'HIBRIDO'" (click)="modoTrabajo.set('HIBRIDO')">
-                <i class="fa-solid fa-random"></i>
-                <span>Híbrido</span>
+                <i class="fa-solid fa-random"></i><span>Híbrido</span>
               </button>
             </div>
           </div>
-        }
-
-        @if (mensajeAccion()) {
-          <div class="alert-success"><i class="fa-solid fa-check"></i> {{ mensajeAccion() }}</div>
         }
 
         <div class="fichaje-botones">
@@ -475,7 +520,6 @@
             <i class="fa-solid fa-arrow-right-from-bracket"></i> Fichar salida
           </button>
         </div>
-
       </div>
     </div>
   </div>
@@ -484,7 +528,6 @@
 @if (modalIncidenciaEmpleadoAbierto()) {
   <div class="modal-backdrop" (click)="modalIncidenciaEmpleadoAbierto.set(false)">
     <div class="modal-panel" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
         <div class="modal-header-icon" style="background: #f59e0b">
           <i class="fa-solid fa-triangle-exclamation"></i>
@@ -500,9 +543,7 @@
 
       <div class="modal-body">
         <div class="form-field">
-          <label class="form-label">
-            <i class="fa-solid fa-tag"></i> Tipo de incidencia
-          </label>
+          <label class="form-label"><i class="fa-solid fa-tag"></i> Tipo de incidencia</label>
           <select class="form-select" [value]="incTipo()" (change)="incTipo.set($any($event.target).value)">
             <option value="descanso_olvidado">Olvidé fichar el descanso</option>
             <option value="descanso_incorrecto">Horario de descanso incorrecto</option>
@@ -515,62 +556,38 @@
         <div class="form-grid">
           <div class="form-field">
             <label class="form-label"><i class="fa-solid fa-mug-hot"></i> Inicio descanso</label>
-            <input type="time" class="form-input" [value]="incInicioDesc()"
-                   (change)="incInicioDesc.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incInicioDesc()" (change)="incInicioDesc.set($any($event.target).value)" />
           </div>
           <div class="form-field">
             <label class="form-label"><i class="fa-solid fa-rotate-left"></i> Fin descanso</label>
-            <input type="time" class="form-input" [value]="incFinDesc()"
-                   (change)="incFinDesc.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incFinDesc()" (change)="incFinDesc.set($any($event.target).value)" />
           </div>
           <div class="form-field">
             <label class="form-label"><i class="fa-solid fa-arrow-right-to-bracket"></i> Entrada</label>
-            <input type="time" class="form-input" [value]="incEntrada()"
-                   (change)="incEntrada.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incEntrada()" (change)="incEntrada.set($any($event.target).value)" />
           </div>
           <div class="form-field">
             <label class="form-label"><i class="fa-solid fa-arrow-right-from-bracket"></i> Salida</label>
-            <input type="time" class="form-input" [value]="incSalida()"
-                   (change)="incSalida.set($any($event.target).value)" />
+            <input type="time" class="form-input" [value]="incSalida()" (change)="incSalida.set($any($event.target).value)" />
           </div>
         </div>
 
         <div class="form-field">
-          <label class="form-label">
-            <i class="fa-solid fa-pen-to-square"></i> Descripción
-            <span class="opcional">(opcional)</span>
-          </label>
-          <textarea class="form-textarea" rows="3"
-                    placeholder="Ej: Me olvidé de fichar el descanso de 13:00 a 13:30..."
-                    [value]="incDescripcion()"
-                    (input)="incDescripcion.set($any($event.target).value)"></textarea>
+          <label class="form-label"><i class="fa-solid fa-pen-to-square"></i> Descripción <span class="opcional">(opcional)</span></label>
+          <textarea class="form-textarea" rows="3" placeholder="Ej: Me olvidé de fichar..." [value]="incDescripcion()" (input)="incDescripcion.set($any($event.target).value)"></textarea>
         </div>
 
-        @if (mensajeIncEmpleado()) {
-          <div class="alert-success"><i class="fa-solid fa-circle-check"></i> {{ mensajeIncEmpleado() }}</div>
-        }
-        @if (errorIncEmpleado()) {
-          <div class="error-box"><i class="fa-solid fa-circle-exclamation"></i> {{ errorIncEmpleado() }}</div>
-        }
+        @if (mensajeIncEmpleado()) { <div class="alert-success">{{ mensajeIncEmpleado() }}</div> }
+        @if (errorIncEmpleado()) { <div class="error-box">{{ errorIncEmpleado() }}</div> }
       </div>
 
       <div class="modal-footer">
-        <button class="secondary-btn" type="button"
-                (click)="modalIncidenciaEmpleadoAbierto.set(false)"
-                [disabled]="enviandoIncEmpleado()">
-          Cancelar
-        </button>
-        <button class="primary-btn" type="button"
-                (click)="enviarIncidenciaEmpleado()"
-                [disabled]="enviandoIncEmpleado()">
-          @if (enviandoIncEmpleado()) {
-            <i class="fa-solid fa-spinner fa-spin"></i> Enviando...
-          } @else {
-            <i class="fa-solid fa-paper-plane"></i> Enviar incidencia
-          }
+        <button class="secondary-btn" type="button" (click)="modalIncidenciaEmpleadoAbierto.set(false)" [disabled]="enviandoIncEmpleado()">Cancelar</button>
+        <button class="primary-btn" type="button" (click)="enviarIncidenciaEmpleado()" [disabled]="enviandoIncEmpleado()">
+          @if (enviandoIncEmpleado()) { <i class="fa-solid fa-spinner fa-spin"></i> Enviando... }
+          @else { <i class="fa-solid fa-paper-plane"></i> Enviar incidencia }
         </button>
       </div>
-
     </div>
   </div>
 }
@@ -578,44 +595,22 @@
 @if (logAbierto()) {
   <div class="modal-backdrop" (click)="logAbierto.set(false)">
     <div class="modal-panel modal-panel-lg" (click)="$event.stopPropagation()">
-
       <div class="modal-header">
-        <div class="modal-header-icon" style="background:#3A5698">
-          <i class="fa-solid fa-clock-rotate-left"></i>
-        </div>
+        <div class="modal-header-icon" style="background:#3A5698"><i class="fa-solid fa-clock-rotate-left"></i></div>
         <div class="modal-header-copy">
           <h2>Historial de fichajes</h2>
           <p>{{ misRegistros().length }} registros totales</p>
         </div>
-        <button class="close-btn" (click)="logAbierto.set(false)">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="close-btn" (click)="logAbierto.set(false)"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div class="log-filtros">
         <div class="form-field">
           <label>Modo de trabajo</label>
           <div class="modo-selector" style="gap: 0.5rem">
-            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'Todos'"
-              (click)="filtroModo.set('Todos'); cargarMisRegistros()">
-              <i class="fa-solid fa-list"></i>
-              <span>Todos</span>
-            </button>
-            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'PRESENCIAL'"
-              (click)="filtroModo.set('PRESENCIAL'); cargarMisRegistros()">
-              <i class="fa-solid fa-building"></i>
-              <span>Presencial</span>
-            </button>
-            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'REMOTO'"
-              (click)="filtroModo.set('REMOTO'); cargarMisRegistros()">
-              <i class="fa-solid fa-house"></i>
-              <span>Remoto</span>
-            </button>
-            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'HIBRIDO'"
-              (click)="filtroModo.set('HIBRIDO'); cargarMisRegistros()">
-              <i class="fa-solid fa-random"></i>
-              <span>Híbrido</span>
-            </button>
+            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'Todos'" (click)="filtroModo.set('Todos'); cargarMisRegistros()"><span>Todos</span></button>
+            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'PRESENCIAL'" (click)="filtroModo.set('PRESENCIAL'); cargarMisRegistros()"><span>Presencial</span></button>
+            <button type="button" class="modo-btn" [class.activo]="filtroModo() === 'REMOTO'" (click)="filtroModo.set('REMOTO'); cargarMisRegistros()"><span>Remoto</span></button>
           </div>
         </div>
 
@@ -627,29 +622,11 @@
             <option value="sin">Sin incidencia</option>
           </select>
         </div>
-
-        <div class="log-resumen">
-          <span class="log-stat verde">
-            <i class="fa-solid fa-check"></i>
-            {{ registrosSinIncidencia() }} sin incidencias
-          </span>
-          <span class="log-stat amber">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            {{ registrosConIncidencia() }} con incidencias
-          </span>
-        </div>
       </div>
 
       <div class="modal-body" style="padding: 0">
         @if (cargandoLog()) {
-          <div class="log-loading">
-            <i class="fa-solid fa-spinner fa-spin"></i> Cargando registros...
-          </div>
-        } @else if (misRegistros().length === 0) {
-          <div class="empty-state" style="padding: 3rem">
-            <i class="fa-solid fa-calendar-check"></i>
-            <p>No hay registros para los filtros seleccionados</p>
-          </div>
+          <div class="log-loading"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...</div>
         } @else {
           <div class="log-tabla-wrapper">
             <table class="log-tabla">
@@ -670,52 +647,18 @@
               <tbody>
                 @for (r of registrosPaginados(); track r.fecha) {
                   <tr [class.fila-incidencia]="r.incidenciaTipo">
-                    <td class="fecha-cell">{{ r.fecha }}</td>
+                    <td>{{ r.fecha }}</td>
                     <td>{{ r.entrada || '-' }}</td>
-                    <td class="descanso-cell">{{ r.inicioDescanso || '-' }} / {{ r.finDescanso || '-' }}</td>
+                    <td>{{ r.inicioDescanso || '-' }} / {{ r.finDescanso || '-' }}</td>
                     <td>{{ r.salida || '-' }}</td>
-                    <td>
-                      <strong class="horas-val">{{ r.horasTotales ?? '-' }}</strong>
-                      @if (r.horasTotales) { <span class="horas-unit">h</span> }
-                    </td>
-                    <td>
-                      @if ((r.horasExtra ?? 0) > 0) {
-                        <span class="badge-extra">+{{ r.horasExtra }}h</span>
-                      } @else {
-                        <span class="text-gris">-</span>
-                      }
-                    </td>
-                    <td>
-                      <span class="badge-modo" [ngClass]="r.modo?.toLowerCase() ?? 'sin-modo'">
-                        {{ labelModo(r.modo) }}
-                      </span>
-                    </td>
-                    <td>
-                      <span class="estado-badge" [ngClass]="r.estado?.toLowerCase()">
-                        {{ r.estado }}
-                      </span>
-                    </td>
-                    <td>
-                      @if (r.incidenciaTipo) {
-                        <div class="incidencia-info">
-                          <span class="badge-incidencia" [ngClass]="r.incidenciaEstado?.toLowerCase() ?? 'pendiente'">
-                            {{ r.incidenciaEstado ?? 'PENDIENTE' }}
-                          </span>
-                          <span class="incidencia-tipo">{{ labelIncidencia(r.incidenciaTipo) }}</span>
-                        </div>
-                      } @else {
-                        <span class="text-gris">—</span>
-                      }
-                    </td>
+                    <td><strong>{{ r.horasTotales ?? '-' }}</strong>h</td>
+                    <td>{{ r.horasExtra ? '+' + r.horasExtra + 'h' : '-' }}</td>
+                    <td>{{ labelModo(r.modo) }}</td>
+                    <td>{{ r.estado }}</td>
+                    <td>{{ r.incidenciaTipo ? labelIncidencia(r.incidenciaTipo) : '—' }}</td>
                     <td>
                       @if (r.estado === 'FINALIZADO' && !r.incidenciaTipo) {
-                        <button class="btn-inc-log" title="Crear incidencia"
-                          (click)="$event.stopPropagation(); abrirIncidenciaDesdeLog(r)">
-                          <i class="fa-solid fa-triangle-exclamation"></i>
-                        </button>
-                      }
-                      @if (r.incidenciaTipo) {
-                        <i class="fa-solid fa-circle-check text-verde" title="Incidencia reportada"></i>
+                        <button class="btn-inc-log" (click)="abrirIncidenciaDesdeLog(r)"><i class="fa-solid fa-triangle-exclamation"></i></button>
                       }
                     </td>
                   </tr>
@@ -726,26 +669,15 @@
 
           @if (totalPaginas() > 1) {
             <div class="paginacion">
-              <button class="pag-btn" [disabled]="paginaActual() === 1" (click)="paginaAnterior()">
-                <i class="fa-solid fa-chevron-left"></i>
-              </button>
+              <button class="pag-btn" [disabled]="paginaActual() === 1" (click)="paginaAnterior()"><i class="fa-solid fa-chevron-left"></i></button>
               @for (p of paginasArray(); track p) {
-                <button class="pag-btn pag-num" [class.activa]="paginaActual() === p" (click)="irPagina(p)">
-                  {{ p }}
-                </button>
+                <button class="pag-btn pag-num" [class.activa]="paginaActual() === p" (click)="irPagina(p)">{{ p }}</button>
               }
-              <button class="pag-btn" [disabled]="paginaActual() === totalPaginas()" (click)="paginaSiguiente()">
-                <i class="fa-solid fa-chevron-right"></i>
-              </button>
-              <span class="pag-info">
-                Página {{ paginaActual() }} de {{ totalPaginas() }}
-                · {{ misRegistros().length }} registros
-              </span>
+              <button class="pag-btn" [disabled]="paginaActual() === totalPaginas()" (click)="paginaSiguiente()"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
           }
         }
       </div>
-
     </div>
   </div>
 }

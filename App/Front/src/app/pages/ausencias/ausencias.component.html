@@ -39,7 +39,7 @@
       </select>
 
       @if (!isEmpleado) {
-        <input type="text" class="filter-select" placeholder="🔍 Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
+        <input type="text" class="filter-select" placeholder="Buscar por nombre..." [value]="filtroNombre()" (input)="onNombreChange($event)" />
         <button class="export-btn" type="button" (click)="exportar()">
           <i class="fa-solid fa-download"></i> Exportar
         </button>
@@ -84,6 +84,7 @@
             <th>Tipo</th>
             <th>Motivo</th>
             <th>Estado</th>
+            <th>Justificante</th>
             @if (!isEmpleado) {
               <th>Acciones</th>
             }
@@ -109,6 +110,24 @@
                   {{ ausencia.estado }}
                 </span>
               </td>
+              <td class="justificante-cell">
+                @if (ausencia.justificanteBase64) {
+                  <button class="btn-ver-justificante" (click)="verJustificante(ausencia)"
+                          title="Descargar justificante">
+                    <i class="fa-solid fa-file-arrow-down"></i>
+                    {{ ausencia.justificanteNombre | slice:0:15 }}...
+                  </button>
+                } @else if (isEmpleado && ausencia.estado === 'Pendiente') {
+                  <label class="btn-subir-justificante" title="Adjuntar justificante">
+                    <i class="fa-solid fa-paperclip"></i> Adjuntar
+                    <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf"
+                           (change)="subirJustificanteExistente(ausencia.id, $event)" hidden />
+                  </label>
+                } @else {
+                  <span class="sin-acciones">—</span>
+                }
+              </td>
+
               @if (!isEmpleado) {
                 <td class="acciones-cell">
                   @if (ausencia.estado === 'Pendiente') {
@@ -226,6 +245,30 @@
         </div>
 
       </div>
+
+      <div class="form-group">
+  <label class="form-label">
+    <i class="fa-solid fa-paperclip"></i> Justificante
+    <span class="opcional">(opcional — JPG, PNG o PDF, máx. 5 MB)</span>
+  </label>
+
+  @if (!formJustificanteBase64()) {
+    <label class="upload-area">
+      <i class="fa-solid fa-cloud-arrow-up"></i>
+      <span>Haz clic para adjuntar o arrastra aquí</span>
+      <input type="file" accept=".jpg,.jpeg,.png,.webp,.pdf"
+             (change)="onArchivoSeleccionado($event)" hidden />
+    </label>
+  } @else {
+    <div class="archivo-adjunto">
+      <i class="fa-solid fa-file-check"></i>
+      <span class="archivo-nombre">{{ formJustificanteNombre() }}</span>
+      <button type="button" class="btn-quitar-archivo" (click)="quitarJustificante()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  }
+</div>
 
       <div class="modal-footer">
         <button class="btn-cancelar" type="button" (click)="cerrarModal()" [disabled]="enviando()">

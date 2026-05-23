@@ -1,0 +1,179 @@
+<div class="page-container">
+
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-top">
+        <div>
+          <h1>Mi Equipo</h1>
+          <div class="breadcrumbs">
+            <a routerLink="/dashboard">Dashboard</a> / Mi Equipo
+          </div>
+        </div>
+        @if (esAdmin || esMando) {
+          <button class="btn-nueva-ausencia" type="button" (click)="abrirModalCrearSubequipo()">
+            <i class="fa-solid fa-plus"></i> Crear Subequipo
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-subequipos">
+    @for (sub of listaSubequipos; track sub.id) {
+      <div class="card-sub">
+        <div class="card-sub-header">
+          <div class="card-sub-icono">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="card-sub-titulo">
+            <h3>{{ sub.nombre }}</h3>
+            <span class="badge-dept">{{ sub.departamento || 'General' }}</span>
+          </div>
+          @if (esAdmin || esMando) {
+            <div class="card-sub-btns">
+              <button class="accion-btn editar" (click)="abrirModalEditar(sub)" title="Editar">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="accion-btn eliminar" (click)="abrirModalEliminar(sub)" title="Eliminar">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          }
+        </div>
+
+        <div class="card-sub-body">
+          <div class="dato-item">
+            <span class="dato-label"><i class="fa-solid fa-user-tie"></i> Líder</span>
+            <span class="dato-valor">{{ getNombreEmpleado(sub.liderId) }}</span>
+          </div>
+          <div class="dato-item">
+            <span class="dato-label"><i class="fa-solid fa-users"></i> Miembros</span>
+            <span class="dato-valor">{{ sub.miembrosIds?.length || 0 }}</span>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="empty-state-grid">
+        <i class="fa-solid fa-users-slash"></i>
+        <p>No hay subequipos configurados</p>
+        @if (esAdmin || esMando) {
+          <button class="btn-nueva-ausencia" type="button" (click)="abrirModalCrearSubequipo()">
+            <i class="fa-solid fa-plus"></i> Crear el primero
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+</div>
+
+@if (modalSubequipoAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModalSubequipo()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div>
+          <h2>{{ esEdicion() ? 'Editar subequipo' : 'Nuevo subequipo' }}</h2>
+          <p>Completa los datos del subequipo</p>
+        </div>
+        <button class="modal-close" type="button" (click)="cerrarModalSubequipo()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa-solid fa-tag"></i> Nombre del subequipo
+          </label>
+          <input type="text" class="form-input" [(ngModel)]="subequipoForm.nombre"
+                 placeholder="Ej: Desarrollo Backend" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa-solid fa-user-tie"></i> Líder
+          </label>
+          <select class="form-select" [(ngModel)]="subequipoForm.liderId">
+            <option value="">Selecciona un líder</option>
+            @for (emp of listaEmpleados; track emp.id) {
+              <option [value]="emp.id">{{ emp.nombre }} {{ emp.apellido || '' }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa-solid fa-users"></i> Miembros
+          </label>
+          <div class="miembros-lista">
+            @for (emp of listaEmpleados; track emp.id) {
+              <label class="miembro-row" [class.seleccionado]="isMiembroSeleccionado(emp.id)">
+                <input type="checkbox"
+                       [checked]="isMiembroSeleccionado(emp.id)"
+                       (change)="toggleMiembro(emp.id)" />
+                <span class="miembro-nombre">{{ emp.nombre }} {{ emp.apellido || '' }}</span>
+                @if (isMiembroSeleccionado(emp.id)) {
+                  <i class="fa-solid fa-check miembro-check"></i>
+                }
+              </label>
+            } @empty {
+              <p class="empty-miembros">No hay empleados disponibles</p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancelar" type="button" (click)="cerrarModalSubequipo()">
+          Cancelar
+        </button>
+        <button class="btn-enviar" type="button" (click)="guardarSubequipo()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          {{ esEdicion() ? 'Guardar cambios' : 'Crear subequipo' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+@if (modalEliminarAbierto()) {
+  <div class="modal-overlay" (click)="cerrarModalEliminar()">
+    <div class="modal-card modal-card-danger" (click)="$event.stopPropagation()">
+
+      <div class="modal-header modal-header-danger">
+        <div class="modal-header-icon danger">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div>
+          <h2>Eliminar subequipo</h2>
+          <p>Esta acción no se puede deshacer</p>
+        </div>
+        <button class="modal-close" type="button" (click)="cerrarModalEliminar()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="texto-confirmar">
+          ¿Estás seguro de que quieres eliminar el subequipo
+          <strong>{{ subequipoEliminando()?.nombre }}</strong>? Esta acción es irreversible y se perderá toda la información asociada a este subequipo.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancelar" type="button" (click)="cerrarModalEliminar()">
+          Cancelar
+        </button>
+        <button class="btn-eliminar" type="button" (click)="confirmarEliminar()">
+          <i class="fa-solid fa-trash"></i> Eliminar
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

@@ -61,12 +61,12 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly esAdmin = computed(() => this.authService.getSystemRole() === 'ADMIN');
 
-  readonly esEmpleado = computed(() => {
-    const companyRole = this.authService.getCompanyRole();
-    return companyRole === 'EMPLEADO';
+  readonly esGestionGlobal = computed(() => {
+    return this.authService.getSystemRole() === 'ADMIN' ||
+           this.authService.getCompanyRole() === 'RRHH';
   });
 
-  readonly puedeVerVistaPersonal = computed(() => this.esEmpleado() || this.esAdmin());
+  readonly puedeVerVistaPersonal = computed(() => !this.esGestionGlobal());
 
   readonly esFuturo = computed(() => {
     const hoy = new Date();
@@ -94,23 +94,16 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.miAsistencia()?.estado ?? null;
   }
 
-  puedeFicharEntrada(): boolean {
+  readonly puedeFicharEntrada = computed(() => {
     const e = this.estadoActual;
     return !e || e === 'NO_FICHADO' || e === 'FINALIZADO';
-  }
+  });
 
-  puedeIniciarDescanso(): boolean {
-    return this.estadoActual === 'TRABAJANDO';
-  }
-
-  puedeFinalizarDescanso(): boolean {
-    return this.estadoActual === 'EN_DESCANSO';
-  }
-
-  puedeFicharSalida(): boolean {
+  readonly puedeIniciarDescanso = computed(() => this.estadoActual === 'TRABAJANDO');
+  readonly puedeFinalizarDescanso = computed(() => this.estadoActual === 'EN_DESCANSO');
+  readonly puedeFicharSalida = computed(() => {
     return this.estadoActual === 'TRABAJANDO' || this.estadoActual === 'EN_DESCANSO';
-  }
-
+  });
   labelEstado(): string {
     const mapa: Record<string, string> = {
       NO_FICHADO: 'Sin fichar',
@@ -123,8 +116,9 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.cargarDatos();
+    this.cargarMiAsistenciaHoy();
+
     if (this.puedeVerVistaPersonal()) {
-      this.cargarMiAsistenciaHoy();
       this.cargarMisRegistros();
     }
   }
@@ -155,7 +149,7 @@ export class AsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   refrescarTodo(): void {
     this.cargarDatos();
-    if (this.puedeVerVistaPersonal()) this.cargarMiAsistenciaHoy();
+    this.cargarMiAsistenciaHoy();
     if (this.vistaGrafico()) setTimeout(() => this.renderChart(), 0);
   }
 

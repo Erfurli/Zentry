@@ -54,7 +54,7 @@ public class FestivosService {
         );
 
         for (String fecha : festivosMadrid) {
-            String sufijo = fecha.substring(4); // -MM-DD
+            String sufijo = fecha.substring(4);
             Map<String, String> festivo = new HashMap<>();
             festivo.put("fecha", fecha);
             festivo.put("nombre", nombresMadrid.getOrDefault(sufijo, "Festivo Madrid"));

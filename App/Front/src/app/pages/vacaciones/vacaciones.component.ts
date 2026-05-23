@@ -34,7 +34,7 @@ export class VacacionesComponent implements OnInit, AfterViewInit {
 
   @ViewChild('cal') calendar!: MatCalendar<Date>;
 
-  readonly isEmpleado: boolean = this.authService.getCompanyRole() === 'EMPLEADO';
+readonly isEmpleado: boolean = this.authService.getSystemRole() !== 'ADMIN';
 
   readonly festivos             = signal<Festivo[]>([]);
   readonly solicitudes          = signal<VacacionesVista[]>([]);

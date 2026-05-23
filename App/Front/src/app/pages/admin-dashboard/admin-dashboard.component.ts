@@ -207,6 +207,14 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit, OnDestroy
     });
   }
 
+  noJustificarAusencia(id: string): void {
+    this.ausenciasService.noJustificar(id).subscribe(() => {
+      this.ausenciasPend.update(l => l.filter(a => a.id !== id));
+      this.kpis.update(k => k ? { ...k, ausenciasPendientes: k.ausenciasPendientes - 1 } : k);
+    });
+  }
+
+
   getPct(valor: number): number {
     const k = this.kpis();
     if (!k || k.totalEmpleados === 0) return 0;
