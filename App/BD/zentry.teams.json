@@ -1,0 +1,13 @@
+[{
+  "_id": {
+    "$oid": "6a11be1eb5a44a8a9f2fe982"
+  },
+  "nombre": "Desarrollo Back",
+  "departamento": "RRHH",
+  "liderId": "6a1044a321ef9578b9b460e0",
+  "miembrosIds": [
+    "6a103564880f420383a8f24d",
+    "6a1044a321ef9578b9b460e0"
+  ],
+  "_class": "com.zentry.backend.model.Equipo"
+}]

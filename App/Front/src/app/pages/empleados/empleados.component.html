@@ -243,26 +243,28 @@
 
 @if (modalEstructuraAdminAbierto()) {
   <div class="modal-overlay" (click)="cerrarModalEstructuraAdmin()">
-    <div class="modal-info-card" (click)="$event.stopPropagation()" style="max-width: 450px;">
-      <div class="modal-info-header">
-        <div class="modal-info-avatar" style="background-color: #4f46e5;">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-header-icon" style="background: #4f46e5;">
           <i class="fa-solid fa-building-shield"></i>
         </div>
         <div>
           <h2>Estructura Organizativa</h2>
-          <span class="modal-info-puesto">Configuración de departamentos y mandos</span>
+          <p>Configuración de departamentos y mandos intermedios</p>
         </div>
-        <button class="modal-close-btn" (click)="cerrarModalEstructuraAdmin()">
+        <button class="modal-close" type="button" (click)="cerrarModalEstructuraAdmin()">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <div class="modal-info-body" style="padding: 1.5rem 0;">
-        <div style="margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem;">
-          <label style="font-weight: 600; color: #4a5568;">Seleccionar Empleado:</label>
-          <select
-            style="padding: 0.6rem; border: 1px solid #cbd5e0; border-radius: 6px; background-color: #fff;"
-            (change)="onEmpleadoEstructuraSeleccionado($event)">
+      <div class="modal-body">
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fa-solid fa-user"></i> Seleccionar Empleado
+          </label>
+          <select class="form-select" (change)="onEmpleadoEstructuraSeleccionado($event)">
             <option value="">-- Elige un empleado --</option>
             @for (emp of todosLosEmpleados(); track emp.id) {
               <option [value]="emp.id">{{ emp.nombre }} ({{ emp.departamento || 'Sin Dpto' }})</option>
@@ -271,40 +273,42 @@
         </div>
 
         @if (empleadoEstructuraSeleccionado()) {
-          <div style="margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem;">
-            <label style="font-weight: 600; color: #4a5568;">Departamento Corporativo:</label>
-            <input
-              type="text"
-              style="padding: 0.6rem; border: 1px solid #cbd5e0; border-radius: 6px;"
-              [(ngModel)]="departamentoEstructuraInput"
-              placeholder="Ej: IT, RRHH, Ventas, Marketing...">
+
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fa-solid fa-building"></i> Departamento Corporativo
+            </label>
+            <input type="text" class="form-input" [(ngModel)]="departamentoEstructuraInput"
+                   placeholder="Ej: IT, RRHH, Ventas, Marketing..." />
           </div>
 
-          <div style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.6rem; background: #f7fafc; padding: 0.8rem; border-radius: 6px;">
-            <input
-              type="checkbox"
-              id="mandoCheck"
-              style="width: 1.1rem; height: 1.1rem; cursor: pointer;"
-              [(ngModel)]="esMandoEstructuraInput">
-            <label for="mandoCheck" style="font-weight: 600; color: #2d3748; cursor: pointer;">
-              Nombrar Responsable (MANDO INTERMEDIO)
+          <div class="form-group" style="margin-top: 0.5rem;">
+            <label class="miembro-row seleccionado" for="mandoCheck" style="padding: 0.8rem 1rem;">
+              <input type="checkbox" id="mandoCheck" [(ngModel)]="esMandoEstructuraInput" />
+              <span class="miembro-nombre" style="font-weight: 600;">
+                Nombrar Responsable (MANDO INTERMEDIO)
+              </span>
+              @if (esMandoEstructuraInput) {
+                <i class="fa-solid fa-shield-halved miembro-check" style="color: #4f46e5;"></i>
+              }
             </label>
           </div>
+
         }
       </div>
 
-      <div class="modal-exportar-footer" style="border-top: 1px solid #e2e8f0; padding-top: 1rem; display: flex; justify-content: flex-end; gap: 0.5rem;">
-        <button class="exportar-btn-cancelar" (click)="cerrarModalEstructuraAdmin()">
+      <div class="modal-footer">
+        <button class="btn-cancelar" type="button" (click)="cerrarModalEstructuraAdmin()">
           Cancelar
         </button>
-        <button
-          class="exportar-btn-confirmar"
-          style="background-color: #4f46e5;"
-          [disabled]="!empleadoEstructuraSeleccionado()"
-          (click)="guardarCambiosEstructuraAdmin()">
-          <i class="fa-solid fa-floppy-disk"></i> Aplicar Cambios
+        <button class="btn-enviar" type="button" style="background: #4f46e5;"
+                [disabled]="!empleadoEstructuraSeleccionado()"
+                (click)="guardarCambiosEstructuraAdmin()">
+          <i class="fa-solid fa-floppy-disk"></i>
+          Aplicar Cambios
         </button>
       </div>
+
     </div>
   </div>
 }

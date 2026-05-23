@@ -222,4 +222,34 @@
   "horasTotales": 8,
   "horasExtra": 0,
   "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a11bcd9b5a44a8a9f2fe978"
+  },
+  "empleadoId": "6a102fdd93681acb9d5515ad",
+  "fecha": "2026-05-23",
+  "entrada": "16:42",
+  "salida": "16:46",
+  "inicioDescanso": "16:46",
+  "finDescanso": "16:46",
+  "estado": "FINALIZADO",
+  "horasTotales": 0.07,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
+},
+{
+  "_id": {
+    "$oid": "6a11bcffb5a44a8a9f2fe97b"
+  },
+  "empleadoId": "6a103564880f420383a8f24d",
+  "fecha": "2026-05-23",
+  "entrada": "16:43",
+  "salida": "16:43",
+  "inicioDescanso": "16:43",
+  "finDescanso": "16:43",
+  "estado": "FINALIZADO",
+  "horasTotales": 0,
+  "horasExtra": 0,
+  "_class": "com.zentry.backend.model.Asistencia"
 }]

@@ -1,1 +1,45 @@
-[]
+[{
+  "_id": {
+    "$oid": "6a1071528136967375c275e7"
+  },
+  "vacacionesId": "6a10531940f18a6d247ff832",
+  "empleadoId": "6a103564880f420383a8f24d",
+  "creadoPor": "paula.burdalo",
+  "nuevaFechaInicio": "2026-06-21",
+  "nuevaFechaFin": "2026-06-28",
+  "nuevosDias": 8,
+  "estado": "Pendiente",
+  "fechaCreacion": "2026-05-22",
+  "mensaje": "",
+  "_class": "com.zentry.backend.model.SugerenciaVacaciones"
+},
+{
+  "_id": {
+    "$oid": "6a11d6a408bf50a7b86e8f65"
+  },
+  "vacacionesId": "6a10531940f18a6d247ff832",
+  "empleadoId": "6a103564880f420383a8f24d",
+  "creadoPor": "paula.burdalo",
+  "nuevaFechaInicio": "2026-06-23",
+  "nuevaFechaFin": "2026-06-30",
+  "nuevosDias": 8,
+  "estado": "Pendiente",
+  "fechaCreacion": "2026-05-23",
+  "mensaje": "",
+  "_class": "com.zentry.backend.model.SugerenciaVacaciones"
+},
+{
+  "_id": {
+    "$oid": "6a11d6d608bf50a7b86e8f67"
+  },
+  "vacacionesId": "6a10531940f18a6d247ff832",
+  "empleadoId": "6a103564880f420383a8f24d",
+  "creadoPor": "mari.luz",
+  "nuevaFechaInicio": "2026-06-01",
+  "nuevaFechaFin": "2026-06-08",
+  "nuevosDias": 8,
+  "estado": "Pendiente",
+  "fechaCreacion": "2026-05-23",
+  "mensaje": "",
+  "_class": "com.zentry.backend.model.SugerenciaVacaciones"
+}]

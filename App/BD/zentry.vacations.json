@@ -17,6 +17,17 @@
   "fechaInicio": "2026-06-01",
   "fechaFin": "2026-06-08",
   "dias": 8,
-  "estado": "Pendiente",
+  "estado": "Aprobada",
+  "_class": "com.zentry.backend.model.Vacaciones"
+},
+{
+  "_id": {
+    "$oid": "6a1071208136967375c275e4"
+  },
+  "empleadoId": "6a102fdd93681acb9d5515ad",
+  "fechaInicio": "2026-07-20",
+  "fechaFin": "2026-07-30",
+  "dias": 11,
+  "estado": "Aprobada",
   "_class": "com.zentry.backend.model.Vacaciones"
 }]

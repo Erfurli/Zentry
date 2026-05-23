@@ -92,4 +92,20 @@
     "$date": "2026-05-22T12:54:01.566Z"
   },
   "_class": "com.zentry.backend.entity.Conversacion"
+},
+{
+  "_id": {
+    "$oid": "6a11d22ece07de10dd9ba9f2"
+  },
+  "nombre": "Desarrollo Back",
+  "tipo": "GRUPO",
+  "participantes": [
+    "6a103573880f420383a8f24e",
+    "6a1044b821ef9578b9b460e1"
+  ],
+  "creadorId": "6a1044b821ef9578b9b460e1",
+  "creadaEn": {
+    "$date": "2026-05-23T16:13:34.305Z"
+  },
+  "_class": "com.zentry.backend.entity.Conversacion"
 }]
