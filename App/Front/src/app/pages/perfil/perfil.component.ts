@@ -41,8 +41,10 @@ export class PerfilComponent implements OnInit {
   );
 
   readonly esAdmin = computed(() => this.authService.isAdmin());
+  readonly esMando = computed(() => this.authService.getCompanyRole() === 'MANDO');
+  readonly esRrhh  = computed(() => this.authService.getCompanyRole() === 'RRHH');
 
-  readonly puedeVerInfo = computed(() => this.esAdmin() || this.esPropioP());
+  readonly puedeVerInfo = computed(() => this.esAdmin() || this.esMando() || this.esRrhh() || this.esPropioP());
 
   readonly diasAprobados  = computed(() =>
     this.vacaciones().filter(v => v.estado === 'Aprobada').reduce((a, v) => a + v.dias, 0)
@@ -63,32 +65,34 @@ export class PerfilComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    const empleadoIdParam = this.route.snapshot.queryParamMap.get('empleadoId');
-    const miEmpleadoId    = this.esPropioEmpleadoId;
-    const empleadoId      = empleadoIdParam ?? miEmpleadoId;
+    this.route.queryParamMap.subscribe(params => {
+      const empleadoIdParam = params.get('empleadoId');
+      const miEmpleadoId    = this.esPropioEmpleadoId;
+      const empleadoId      = empleadoIdParam ?? miEmpleadoId;
 
-    this.empleadoIdVisto.set(empleadoIdParam);
+      this.empleadoIdVisto.set(empleadoIdParam);
 
-    if (empleadoId) {
-      this.http.get<any>(`${environment.apiUrl}/empleados/${empleadoId}`).subscribe({
-        next: emp => {
-          this.empleado.set(emp);
-          if (emp.foto) this.fotoPreview.set(emp.foto);
-        }
-      });
-    }
-
-    if (this.esPropioP() || this.esAdmin()) {
-      if (empleadoIdParam && this.esAdmin()) {
-        this.http.get<VacacionesVista[]>(
-          `${environment.apiUrl}/vacaciones/empleado/${empleadoIdParam}`
-        ).subscribe({ next: v => this.vacaciones.set(v), error: () => {} });
-      } else {
-        this.vacService.getMisVacaciones().subscribe({
-          next: vacs => this.vacaciones.set(vacs)
+      if (empleadoId) {
+        this.http.get<any>(`${environment.apiUrl}/empleados/${empleadoId}`).subscribe({
+          next: emp => {
+            this.empleado.set(emp);
+            if (emp.foto) this.fotoPreview.set(emp.foto);
+          }
         });
       }
-    }
+
+      if (this.puedeVerInfo()) {
+        if (empleadoIdParam && (this.esAdmin() || this.esMando() || this.esRrhh())) {
+          this.http.get<VacacionesVista[]>(
+            `${environment.apiUrl}/vacaciones/empleado/${empleadoIdParam}`
+          ).subscribe({ next: v => this.vacaciones.set(v), error: () => {} });
+        } else {
+          this.vacService.getMisVacaciones().subscribe({
+            next: vacs => this.vacaciones.set(vacs)
+          });
+        }
+      }
+    });
 
     this.cargarFestivos();
   }

@@ -50,8 +50,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/recuperar-password").permitAll()
                         .requestMatchers("/api/auth/resetear-password").permitAll()
                         .requestMatchers("/api/anuncios/**").authenticated()
-
-
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

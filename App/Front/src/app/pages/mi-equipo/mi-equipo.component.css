@@ -601,6 +601,60 @@ body.tema-oscuro .modal-close {
   color: #94a3b8 !important;
 }
 
+/* ==========================================================================
+   BOTÓN CHAT DE GRUPO (Alineado con el sistema de diseño Zentry)
+   ========================================================================== */
+.btn-chat-grupo {
+  padding: 0.75rem 1.75rem;
+  background: #10b981; /* Verde esmeralda moderno para comunicación */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  /* En resoluciones grandes, lo empujamos a la izquierda para separarlo de Cancelar/Guardar */
+  margin-right: auto;
+}
+
+.btn-chat-grupo:hover {
+  background: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.btn-chat-grupo:active {
+  transform: translateY(0);
+}
+
+/* Soporte para Tema Oscuro */
+body.tema-oscuro .btn-chat-grupo {
+  background: #059669 !important;
+}
+
+body.tema-oscuro .btn-chat-grupo:hover {
+  background: #10b981 !important;
+}
+
+/* Adaptación móvil (Media query existente) */
+@media (max-width: 768px) {
+  .modal-footer {
+    display: flex;
+    flex-direction: column-reverse; /* En móvil se apilan, dejando las acciones principales arriba */
+    gap: 0.75rem;
+  }
+
+  .btn-chat-grupo {
+    margin-right: 0; /* Centrar anchura en móviles */
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 768px) {
   .grid-subequipos {
     grid-template-columns: 1fr;

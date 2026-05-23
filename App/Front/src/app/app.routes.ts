@@ -33,11 +33,13 @@ export const routes: Routes = [
       { path: 'asistencia', component: AsistenciaComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
       { path: 'vacaciones', component: VacacionesComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
       { path: 'ausencias', component: AusenciasComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
-      { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH'] } },
-      { path: 'reportes', component: ReportesComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH'] } },
-      { path: 'empleados', component: EmpleadosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH'] } },
+      { path: 'admin-dashboard', component: AdminDashboardComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['MANDO', 'RRHH'] } },
+      { path: 'reportes', component: ReportesComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['MANDO', 'RRHH'] } },
+
+      { path: 'empleados', component: EmpleadosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['MANDO', 'RRHH'] } },
       { path: 'mi-equipo', component: MiEquipoComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['MANDO', 'RRHH'] } },
-      { path: 'usuarios', component: UsuariosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['RRHH'] } },
+      { path: 'usuarios', component: UsuariosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['MANDO', 'RRHH'] } },
+
       { path: 'chat', component: ChatComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
       { path: 'perfil', component: PerfilComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },
       { path: 'anuncios', component: TablonAnunciosComponent, canActivate: [authGuard, changePasswordGuard], data: { roles: ['EMPLEADO', 'MANDO', 'RRHH'] } },

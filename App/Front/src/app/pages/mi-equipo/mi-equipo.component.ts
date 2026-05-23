@@ -1,9 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { EquipoService, Equipo } from '../../services/equipo.service';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-mi-equipo',
@@ -13,6 +14,8 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./mi-equipo.component.css']
 })
 export class MiEquipoComponent implements OnInit {
+  private chatService = inject(ChatService);
+  private router = inject(Router);
   listaEmpleados: any[] = [];
   listaSubequipos: Equipo[] = [];
 
@@ -123,4 +126,51 @@ toggleMiembro(id: string): void {
     this.subequipoForm.miembrosIds.push(id);
   }
 }
+
+subequipoSeleccionado: any = {
+    nombre: 'Desarrollo Frontend',
+    miembros: [ { id: 'usr123', nombre: 'Paula' }, { id: 'usr456', nombre: 'Carlos' } ]
+  };
+
+  crearChatGrupoDeSubequipo() {
+  if (!this.subequipoForm || !this.subequipoForm.nombre) return;
+
+  const nombreGrupo = `${this.subequipoForm.nombre}`;
+  const empleadosSeleccionadosIds: string[] = this.subequipoForm.miembrosIds || [];
+
+  this.chatService.getEmpleadosParaChat().subscribe({
+    next: (usuariosChat) => {
+      const participanteIds: string[] = [];
+
+      empleadosSeleccionadosIds.forEach((empId: string) => {
+        const empleado = this.listaEmpleados.find(e => e.id === empId);
+
+        if (empleado) {
+          const usuarioCoincidente = usuariosChat.find(u =>
+            u.nombre.trim().toLowerCase() === empleado.nombre.trim().toLowerCase()
+          );
+
+          if (usuarioCoincidente) {
+            participanteIds.push(usuarioCoincidente.id);
+          }
+        }
+      });
+
+      this.chatService.crearGrupo(nombreGrupo, participanteIds).subscribe({
+        next: (conversacionCreada) => {
+          this.cerrarModalSubequipo();
+          this.router.navigate(['/chat'], { queryParams: { id: conversacionCreada.id } });
+        },
+        error: (err) => {
+          console.error('Error al generar el grupo:', err);
+        }
+      });
+
+    },
+    error: (err) => {
+      console.error('Error al obtener los usuarios del chat:', err);
+    }
+  });
 }
+}
+
